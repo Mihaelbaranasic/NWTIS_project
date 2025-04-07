@@ -303,6 +303,27 @@ public class PosluziteljTvrtka {
 	        out.flush();
 	    }
 	}
+	
+	private void obradiKomanduPopis(PrintWriter out) {
+	    try {
+	        List<PartnerPopis> popisPartnera = new ArrayList<>();
+	        
+	        for (Partner p : partneri.values()) {
+	            popisPartnera.add(new PartnerPopis(p.id(), p.naziv(), p.vrstaKuhinje(), p.adresa(), p.mreznaVrata(), p.gpsSirina(), p.gpsDuzina()));
+	        }
+	        
+	        String jsonPopis = gson.toJson(popisPartnera);
+	        
+	        out.write("OK\n");
+	        out.write(jsonPopis + "\n");
+	        out.flush();
+	        
+	    } catch (Exception e) {
+	        System.out.println("Greška pri obradi komande POPIS: " + e.getMessage());
+	        out.write("ERROR 29\n");
+	        out.flush();
+	    }
+	}
 
 	/**
 	 * Ucitaj konfiguraciju.
