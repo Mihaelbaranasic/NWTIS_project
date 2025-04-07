@@ -25,6 +25,7 @@ import edu.unizg.foi.nwtis.konfiguracije.NeispravnaKonfiguracija;
 import edu.unizg.foi.nwtis.vjezba_04_dz_1.podaci.Jelovnik;
 import edu.unizg.foi.nwtis.vjezba_04_dz_1.podaci.KartaPica;
 import edu.unizg.foi.nwtis.vjezba_04_dz_1.podaci.Narudzba;
+import edu.unizg.foi.nwtis.vjezba_04_dz_1.podaci.Obracun;
 
 public class PosluziteljPartner {
 
@@ -406,6 +407,142 @@ public class PosluziteljPartner {
 		}
 	}
 
+	 private void obradiKomanduRacun(String komanda, PrintWriter out, int kvotaNarudzbi) {
+	        try {
+	            // Format: RAČUN korisnik
+	            String[] dijelovi = komanda.trim().split(" ");
+	            if (dijelovi.length != 2) {
+	                out.write("ERROR 40\n");
+	                out.flush();
+	                return;
+	            }
+	            
+	            String korisnik = dijelovi[1];
+	            
+	            // Provjera postoji li otvorena narudžba za korisnika
+	            if (!otvoreneNarudzbe.containsKey(korisnik) || otvoreneNarudzbe.get(korisnik) == null || otvoreneNarudzbe.get(korisnik).isEmpty()) {
+	                out.write("ERROR 43\n");
+	                out.flush();
+	                return;
+	            }
+	            
+	            // Prebacivanje iz otvorenih u plaćene narudžbe
+	            List<Narudzba> narudzba = otvoreneNarudzbe.get(korisnik);
+	            
+	            if (!placeneNarudzbe.containsKey(korisnik)) {
+	                placeneNarudzbe.put(korisnik, new ArrayList<>());
+	            }
+	            
+	            placeneNarudzbe.get(korisnik).addAll(narudzba);
+	            otvoreneNarudzbe.remove(korisnik);
+	            
+	            brojNaplacenihNarudzbi++;
+	            
+	            // Provjera kvote za obračun
+	            if (brojNaplacenihNarudzbi % kvotaNarudzbi == 0) {
+	                // Kreiranje obračuna
+	                List<Obracun> obracuni = new ArrayList<>();
+	                
+	                // Grupiranje plaćenih narudžbi po ID-u i vrsti stavke
+	                Map<String, Float> kolicinePoID = new HashMap<>();
+	                
+	                for (List<Narudzba> narudzbe : placeneNarudzbe.values()) {
+	                    for (Narudzba n : narudzbe) {
+	                        String kljuc = n.id() + (n.jelo() ? "_jelo" : "_pice");
+	                        kolicinePoID.put(kljuc, kolicinePoID.getOrDefault(kljuc, 0f) + n.kolicina());
+	                    }
+	                }
+	                
+	                // Kreiranje obračuna za svaku stavku
+	                int idPartnera = Integer.parseInt(this.konfig.dajPostavku("id"));
+	                for (Map.Entry<String, Float> entry : kolicinePoID.entrySet()) {
+	                    String[] dijeloviKljuca = entry.getKey().split("_");
+	                    String id = dijeloviKljuca[0];
+	                    boolean jelo = dijeloviKljuca[1].equals("jelo");
+	                    float kolicina = entry.getValue();
+	                    
+	                    // Pronalaženje cijene
+	                    float cijena = 0f;
+	                    if (jelo) {
+	                        for (Jelovnik j : jelovnici) {
+	                            if (j.id().equals(id)) {
+	                                cijena = j.cijena();
+	                                break;
+	                            }
+	                        }
+	                    } else {
+	                        for (KartaPica p : kartaPica) {
+	                            if (p.id().equals(id)) {
+	                                cijena = p.cijena();
+	                                break;
+	                            }
+	                        }
+	                    }
+	                    
+	                    Obracun o = new Obracun(idPartnera, id, jelo, kolicina, cijena, System.currentTimeMillis() / 1000);
+	                    obracuni.add(o);
+	                }
+	                
+	                placeneNarudzbe.clear();
+	                
+	                if (posaljiObracun(obracuni)) {
+	                    String jsonObracun = gson.toJson(obracuni);
+	                    out.write("OK\n");
+	                    out.write(jsonObracun + "\n");
+	                    out.flush();
+	                } else {
+	                    out.write("ERROR 45\n");
+	                    out.flush();
+	                }
+	            } else {
+	                out.write("OK\n");
+	                out.flush();
+	            }
+	            
+	        } catch (Exception e) {
+	            System.out.println("Greška pri obradi komande RAČUN: " + e.getMessage());
+	            out.write("ERROR 49\n");
+	            out.flush();
+	        }
+	    }
+	
+	 private boolean posaljiObracun(List<Obracun> obracuni) {
+	        try {
+	            // Pretvaranje obračuna u JSON
+	            String jsonObracun = gson.toJson(obracuni);
+	            
+	            // Spajanje na poslužitelj tvrtke
+	            String adresa = this.konfig.dajPostavku("adresa");
+	            int mreznaVrataRad = Integer.parseInt(this.konfig.dajPostavku("mreznaVrataRad"));
+	            int id = Integer.parseInt(this.konfig.dajPostavku("id"));
+	            String sigKod = this.konfig.dajPostavku("sigKod");
+	            
+	            Socket socket = new Socket(adresa, mreznaVrataRad);
+	            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "utf8"));
+	            PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "utf8"));
+	            
+	            String komanda = "OBRAČUN " + id + " " + sigKod + "\n";
+	            out.write(komanda);
+	            out.write(jsonObracun + "\n");
+	            out.flush();
+	            
+	            String odgovor = in.readLine();
+	            if (odgovor != null && odgovor.equals("OK")) {
+	                System.out.println("Obračun uspješno poslan.");
+	                socket.close();
+	                return true;
+	            } else {
+	                System.out.println("Greška pri slanju obračuna: " + odgovor);
+	                socket.close();
+	                return false;
+	            }
+	            
+	        } catch (Exception e) {
+	            System.out.println("Greška pri slanju obračuna: " + e.getMessage());
+	            return false;
+	        }
+	    }
+	 
 	/**
 	 * Ucitaj konfiguraciju.
 	 *
