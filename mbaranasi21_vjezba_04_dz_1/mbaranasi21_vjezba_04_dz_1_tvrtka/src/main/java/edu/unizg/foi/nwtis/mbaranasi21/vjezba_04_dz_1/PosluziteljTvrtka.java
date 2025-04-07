@@ -24,116 +24,184 @@ import edu.unizg.foi.nwtis.vjezba_04_dz_1.podaci.Partner;
 
 public class PosluziteljTvrtka {
 
-  /** Konfiguracijski podaci */
-  private Konfiguracija konfig;
+	/** Konfiguracijski podaci */
+	private Konfiguracija konfig;
 
-  /** Pokretač dretvi */
-  private ExecutorService executor = null;
+	/** Pokretač dretvi */
+	private ExecutorService executor = null;
 
-  /** Pauza dretve. */
-  private int pauzaDretve = 1000;
+	/** Pauza dretve. */
+	private int pauzaDretve = 1000;
 
-  /** Kod za kraj rada */
-  private String kodZaKraj = "";
+	/** Kod za kraj rada */
+	private String kodZaKraj = "";
 
-  /** Zastavica za kraj rada */
-  private AtomicBoolean kraj = new AtomicBoolean(false);
-  
-  private Map<String, String> kuhinje = new ConcurrentHashMap<>();
-  private Map<String, Map<String, Jelovnik>> jelovnici = new ConcurrentHashMap<>();
-  private Map<String, KartaPica> kartaPica = new ConcurrentHashMap<>();
-  private Map<Integer, Partner> partneri = new ConcurrentHashMap<>();
+	/** Zastavica za kraj rada */
+	private AtomicBoolean kraj = new AtomicBoolean(false);
 
-  public static void main(String[] args) {
-    if (args.length != 1) {
-      System.out.println("Broj argumenata nije 1.");
-      return;
-    }
+	/** Mapa kuhinja */
+	private Map<String, String> kuhinje = new ConcurrentHashMap<>();
+	/** Mapa jelovnika po kuhinji */
+	private Map<String, Map<String, Jelovnik>> jelovnici = new ConcurrentHashMap<>();
+	/** Mapa karte pića */
+	private Map<String, KartaPica> kartaPica = new ConcurrentHashMap<>();
+	/** Mapa partnera */
+	private Map<Integer, Partner> partneri = new ConcurrentHashMap<>();
 
-    var program = new PosluziteljTvrtka();
-    var nazivDatoteke = args[0];
+	public static void main(String[] args) {
+		if (args.length != 1) {
+			System.out.println("Broj argumenata nije 1.");
+			return;
+		}
 
-    program.pripremiKreni(nazivDatoteke);
-  }
+		var program = new PosluziteljTvrtka();
+		var nazivDatoteke = args[0];
 
-  public void pripremiKreni(String nazivDatoteke) {
-    if (!this.ucitajKonfiguraciju(nazivDatoteke)) {
-      return;
-    }
-    this.kodZaKraj = this.konfig.dajPostavku("kodZaKraj");
-    this.pauzaDretve = Integer.parseInt(this.konfig.dajPostavku("pauzaDretve"));
+		program.pripremiKreni(nazivDatoteke);
+	}
 
-    var builder = Thread.ofVirtual();
-    var factory = builder.factory();
-    this.executor = Executors.newThreadPerTaskExecutor(factory);
+	public void pripremiKreni(String nazivDatoteke) {
+		if (!this.ucitajKonfiguraciju(nazivDatoteke)) {
+			return;
+		}
+		this.kodZaKraj = this.konfig.dajPostavku("kodZaKraj");
+		this.pauzaDretve = Integer.parseInt(this.konfig.dajPostavku("pauzaDretve"));
 
-    var dretvaZaKraj = this.executor.submit(() -> this.pokreniPosluziteljKraj());
+		var builder = Thread.ofVirtual();
+		var factory = builder.factory();
+		this.executor = Executors.newThreadPerTaskExecutor(factory);
 
-    while (!dretvaZaKraj.isDone()) {
-      try {
-        Thread.sleep(this.pauzaDretve);
-      } catch (InterruptedException e) {
-      }
-    }
-  }
+		var dretvaZaKraj = this.executor.submit(() -> this.pokreniPosluziteljKraj());
 
-  public void pokreniPosluziteljKraj() {
-    var mreznaVrata = Integer.parseInt(this.konfig.dajPostavku("mreznaVrataKraj"));
-    var brojCekaca = 0;
-    try (ServerSocket ss = new ServerSocket(mreznaVrata, brojCekaca)) {
-      while (!this.kraj.get()) {
-        var mreznaUticnica = ss.accept();
-        this.obradiKraj(mreznaUticnica);
-      }
-      ss.close();
+		while (!dretvaZaKraj.isDone()) {
+			try {
+				Thread.sleep(this.pauzaDretve);
+			} catch (InterruptedException e) {
+			}
+		}
+	}
 
-    } catch (IOException e) {
-    }
-  }
+	public void pokreniPosluziteljKraj() {
+		var mreznaVrata = Integer.parseInt(this.konfig.dajPostavku("mreznaVrataKraj"));
+		var brojCekaca = 0;
+		try (ServerSocket ss = new ServerSocket(mreznaVrata, brojCekaca)) {
+			while (!this.kraj.get()) {
+				var mreznaUticnica = ss.accept();
+				this.obradiKraj(mreznaUticnica);
+			}
+			ss.close();
 
-  public Boolean obradiKraj(Socket mreznaUticnica) {
-    try {
-      BufferedReader in =
-          new BufferedReader(new InputStreamReader(mreznaUticnica.getInputStream(), "utf8"));
-      PrintWriter out =
-          new PrintWriter(new OutputStreamWriter(mreznaUticnica.getOutputStream(), "utf8"));
-      String linija = in.readLine();
-      mreznaUticnica.shutdownInput();
-      if (linija.trim().equals("KRAJ " + this.kodZaKraj)) {
-        out.write("OK\n");
-        this.kraj.set(true);
-      } else {
-        out.write("ERROR 10\n");
-      }
+		} catch (IOException e) {
+		}
+	}
 
-      out.flush();
-      mreznaUticnica.shutdownOutput();
-      mreznaUticnica.close();
-    } catch (Exception e) {
+	public Boolean obradiKraj(Socket mreznaUticnica) {
+		try {
+			BufferedReader in = new BufferedReader(new InputStreamReader(mreznaUticnica.getInputStream(), "utf8"));
+			PrintWriter out = new PrintWriter(new OutputStreamWriter(mreznaUticnica.getOutputStream(), "utf8"));
+			String linija = in.readLine();
+			mreznaUticnica.shutdownInput();
+			if (linija.trim().equals("KRAJ " + this.kodZaKraj)) {
+				out.write("OK\n");
+				this.kraj.set(true);
+			} else {
+				out.write("ERROR 10\n");
+			}
 
-    }
-    return Boolean.TRUE;
-  }
-  
-  private boolean ucitajKartuPica () {
-    var nazivDatotekePica = this.konfig.dajPostavku("datotekaKartaPica");
-    var datoteka = Path.of(nazivDatotekePica);
-    return true;
-  }
+			out.flush();
+			mreznaUticnica.shutdownOutput();
+			mreznaUticnica.close();
+		} catch (Exception e) {
 
-  /**
-   * Ucitaj konfiguraciju.
-   *
-   * @param nazivDatoteke naziv datoteke
-   * @return true, ako je uspješno učitavanje konfiguracije
-   */
-  public boolean ucitajKonfiguraciju(String nazivDatoteke) {
-    try {
-      this.konfig = KonfiguracijaApstraktna.preuzmiKonfiguraciju(nazivDatoteke);
-      return true;
-    } catch (NeispravnaKonfiguracija ex) {
-      Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-    }
-    return false;
-  }
+		}
+		return Boolean.TRUE;
+	}
+
+	private boolean ucitajKartuPica() {
+		var nazivDatotekePica = this.konfig.dajPostavku("datotekaKartaPica");
+		var datoteka = Path.of(nazivDatotekePica);
+		return true;
+	}
+	
+	private void ucitajPodatke() {
+	    try {
+	        // Učitaj kuhinje iz konfiguracije
+	        for (int i = 1; i <= 9; i++) {
+	            String kljucKuhinje = "kuhinja_" + i;
+	            if (this.konfig.postojiPostavka(kljucKuhinje)) {
+	                String vrijednostKuhinje = this.konfig.dajPostavku(kljucKuhinje);
+	                String[] dijelovi = vrijednostKuhinje.split(";");
+	                if (dijelovi.length >= 2) {
+	                    String oznaka = dijelovi[0];
+	                    String naziv = dijelovi[1];
+	                    this.kuhinje.put(oznaka, naziv);
+	                }
+	            }
+	        }
+	        
+	        // Učitaj partnere
+	        String datotekaPartnera = this.konfig.dajPostavku("datotekaPartnera");
+	        BufferedReader reader = new BufferedReader(new FileReader(datotekaPartnera));
+	        List<Partner> partneriLista = gson.fromJson(reader, new TypeToken<List<Partner>>(){}.getType());
+	        reader.close();
+	        
+	        if (partneriLista != null) {
+	            for (Partner p : partneriLista) {
+	                this.partneri.put(p.id(), p);
+	            }
+	        }
+	        
+	        // Učitaj jelovnike za svaku kuhinju
+	        for (String vrstaKuhinje : this.kuhinje.keySet()) {
+	            String datotekaJelovnika = "kuhinja_" + vrstaKuhinje + ".json";
+	            try {
+	                reader = new BufferedReader(new FileReader(datotekaJelovnika));
+	                List<Jelovnik> jelovniciLista = gson.fromJson(reader, new TypeToken<List<Jelovnik>>(){}.getType());
+	                reader.close();
+	                
+	                Map<String, Jelovnik> jelovnikMapa = new ConcurrentHashMap<>();
+	                if (jelovniciLista != null) {
+	                    for (Jelovnik j : jelovniciLista) {
+	                        jelovnikMapa.put(j.id(), j);
+	                    }
+	                }
+	                this.jelovnici.put(vrstaKuhinje, jelovnikMapa);
+	            } catch (IOException e) {
+	                System.out.println("Nije moguće učitati jelovnik za kuhinju: " + vrstaKuhinje);
+	            }
+	        }
+	        
+	        // Učitaj kartu pića
+	        String datotekaKartaPica = this.konfig.dajPostavku("datotekaKartaPica");
+	        reader = new BufferedReader(new FileReader(datotekaKartaPica));
+	        List<KartaPica> kartaPicaLista = gson.fromJson(reader, new TypeToken<List<KartaPica>>(){}.getType());
+	        reader.close();
+	        
+	        if (kartaPicaLista != null) {
+	            for (KartaPica kp : kartaPicaLista) {
+	                this.kartaPica.put(kp.id(), kp);
+	            }
+	        }
+	        
+	        System.out.println("Podaci uspješno učitani.");
+	    } catch (IOException e) {
+	        System.out.println("Greška pri učitavanju podataka: " + e.getMessage());
+	    }
+	}
+
+	/**
+	 * Ucitaj konfiguraciju.
+	 *
+	 * @param nazivDatoteke naziv datoteke
+	 * @return true, ako je uspješno učitavanje konfiguracije
+	 */
+	public boolean ucitajKonfiguraciju(String nazivDatoteke) {
+		try {
+			this.konfig = KonfiguracijaApstraktna.preuzmiKonfiguraciju(nazivDatoteke);
+			return true;
+		} catch (NeispravnaKonfiguracija ex) {
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+		}
+		return false;
+	}
 }
