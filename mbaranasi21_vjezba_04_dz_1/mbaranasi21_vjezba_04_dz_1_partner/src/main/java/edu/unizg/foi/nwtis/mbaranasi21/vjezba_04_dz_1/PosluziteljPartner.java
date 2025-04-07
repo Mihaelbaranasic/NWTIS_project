@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import edu.unizg.foi.nwtis.konfiguracije.Konfiguracija;
 import edu.unizg.foi.nwtis.konfiguracije.KonfiguracijaApstraktna;
@@ -145,6 +146,47 @@ public class PosluziteljPartner {
             
         } catch (Exception e) {
             System.out.println("Greška pri registraciji partnera: " + e.getMessage());
+        }
+    }
+	
+	private boolean preuzmiJelovnik() {
+        try {
+            String adresa = this.konfig.dajPostavku("adresa");
+            int mreznaVrataRad = Integer.parseInt(this.konfig.dajPostavku("mreznaVrataRad"));
+            int id = Integer.parseInt(this.konfig.dajPostavku("id"));
+            String sigKod = this.konfig.dajPostavku("sigKod");
+            
+            Socket socket = new Socket(adresa, mreznaVrataRad);
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "utf8"));
+            PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "utf8"));
+            
+            String komanda = "JELOVNIK " + id + " " + sigKod + "\n";
+            out.write(komanda);
+            out.flush();
+            
+            String odgovorStatus = in.readLine();
+            if (odgovorStatus != null && odgovorStatus.equals("OK")) {
+                StringBuilder jsonBuilder = new StringBuilder();
+                String red;
+                while ((red = in.readLine()) != null) {
+                    jsonBuilder.append(red);
+                }
+                
+                String json = jsonBuilder.toString();
+                this.jelovnici = gson.fromJson(json, new TypeToken<List<Jelovnik>>(){}.getType());
+                
+                System.out.println("Jelovnik uspješno preuzet. Broj jela: " + this.jelovnici.size());
+                socket.close();
+                return true;
+            } else {
+                System.out.println("Greška pri dohvatu jelovnika: " + odgovorStatus);
+                socket.close();
+                return false;
+            }
+            
+        } catch (Exception e) {
+            System.out.println("Greška pri preuzimanju jelovnika: " + e.getMessage());
+            return false;
         }
     }
 	
