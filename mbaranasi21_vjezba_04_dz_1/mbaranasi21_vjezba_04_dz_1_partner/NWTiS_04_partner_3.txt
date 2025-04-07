@@ -1,0 +1,16 @@
+#NWTiS 2024.
+#Sun Mar 30 09:27:36 CEST 2025
+adresa=localhost
+brojCekaca=10
+gpsDuzina=16.32023
+gpsSirina=46.30154 
+id=3
+kodZaKraj=BABECABACC
+kuhinja=VK
+mreznaVrata=8030
+mreznaVrataKraj=8000
+mreznaVrataRad=8002
+mreznaVrataRegistracija=8001
+naziv=FOLT 3 - Varaždin, Ul. Braće Radić 102
+pauzaDretve=100
+kvotaNarudzbi=5

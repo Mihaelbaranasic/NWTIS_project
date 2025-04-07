@@ -1,0 +1,16 @@
+#NWTiS 2024.
+#Sun Mar 30 09:27:36 CEST 2025
+adresa=localhost
+brojCekaca=10
+gpsDuzina=16.33620
+gpsSirina=46.28918 
+id=4
+kodZaKraj=BABECABACC
+kuhinja=KK
+mreznaVrata=8040
+mreznaVrataKraj=8000
+mreznaVrataRad=8002
+mreznaVrataRegistracija=8001
+naziv=FOLT 4 - Varaždin, Trg Ivana Perkovca 39
+pauzaDretve=100
+kvotaNarudzbi=5
