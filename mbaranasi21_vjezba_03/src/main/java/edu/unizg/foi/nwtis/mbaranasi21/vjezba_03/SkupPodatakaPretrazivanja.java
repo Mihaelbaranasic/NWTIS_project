@@ -11,6 +11,6 @@ public class SkupPodatakaPretrazivanja {
   }
 
   public boolean dodajPodatak(PodaciPretrazivanja noviPodatak) {
-    return this.podaci.dodajnovi();
+	  return this.podaci.add(noviPodatak);
   }
 }
