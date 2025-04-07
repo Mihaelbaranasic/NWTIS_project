@@ -280,6 +280,37 @@ public class PosluziteljPartner {
 			out.flush();
 		}
 	}
+	
+	private void obradiKomanduNarudzba(String komanda, PrintWriter out) {
+        try {
+            String[] dijelovi = komanda.trim().split(" ");
+            if (dijelovi.length != 2) {
+                out.write("ERROR 40\n");
+                out.flush();
+                return;
+            }
+            
+            String korisnik = dijelovi[1];
+            
+            if (otvoreneNarudzbe.containsKey(korisnik) && !otvoreneNarudzbe.get(korisnik).isEmpty()) {
+                out.write("ERROR 44\n");
+                out.flush();
+                return;
+            }
+            
+            otvoreneNarudzbe.put(korisnik, new ArrayList<>());
+            
+            out.write("OK\n");
+            out.flush();
+            
+        } catch (Exception e) {
+            System.out.println("Greška pri obradi komande NARUDŽBA: " + e.getMessage());
+            out.write("ERROR 49\n");
+            out.flush();
+        }
+    }
+	
+
 
 	/**
 	 * Ucitaj konfiguraciju.
