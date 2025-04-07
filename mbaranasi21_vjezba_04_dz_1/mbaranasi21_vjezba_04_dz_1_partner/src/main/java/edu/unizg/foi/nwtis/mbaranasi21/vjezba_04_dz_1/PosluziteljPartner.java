@@ -6,20 +6,49 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import edu.unizg.foi.nwtis.konfiguracije.Konfiguracija;
 import edu.unizg.foi.nwtis.konfiguracije.KonfiguracijaApstraktna;
 import edu.unizg.foi.nwtis.konfiguracije.NeispravnaKonfiguracija;
+import edu.unizg.foi.nwtis.vjezba_04_dz_1.podaci.Jelovnik;
+import edu.unizg.foi.nwtis.vjezba_04_dz_1.podaci.KartaPica;
+import edu.unizg.foi.nwtis.vjezba_04_dz_1.podaci.Narudzba;
 
 public class PosluziteljPartner {
 
 	/** Konfiguracijski podaci */
 	private Konfiguracija konfig;
-
-    /** Predložak za kraj */
-	private Pattern predlozakKraj = Pattern.compile("^KRAJ$");
+	/** Predložak za kraj */
+    private Pattern predlozakKraj = Pattern.compile("^KRAJ$");
+    /** Predložak za partner */
+    private Pattern predlozakPartner = Pattern.compile("^PARTNER$");
+    /** Gson objekt za rad s JSON-om */
+    private Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    /** Kolekcija jelovnika */
+    private List<Jelovnik> jelovnici = new ArrayList<>();
+    /** Kolekcija karte pića */
+    private List<KartaPica> kartaPica = new ArrayList<>();
+    /** Mapa otvorenih narudžbi po korisnicima */
+    private Map<String, List<Narudzba>> otvoreneNarudzbe = new HashMap<>();
+    /** Mapa plaćenih narudžbi po korisnicima */
+    private Map<String, List<Narudzba>> placeneNarudzbe = new HashMap<>();
+    /** Broj naplaćenih narudžbi */
+    private int brojNaplacenihNarudzbi = 0;
+    /** Zastavica za kraj rada */
+    private volatile boolean kraj = false;
+    /** Izvršitelj dretve */
+    private ExecutorService executor;
 
 	public static void main(String[] args) {
 		if (args.length > 2) {
