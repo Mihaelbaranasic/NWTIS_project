@@ -280,37 +280,131 @@ public class PosluziteljPartner {
 			out.flush();
 		}
 	}
-	
-	private void obradiKomanduNarudzba(String komanda, PrintWriter out) {
-        try {
-            String[] dijelovi = komanda.trim().split(" ");
-            if (dijelovi.length != 2) {
-                out.write("ERROR 40\n");
-                out.flush();
-                return;
-            }
-            
-            String korisnik = dijelovi[1];
-            
-            if (otvoreneNarudzbe.containsKey(korisnik) && !otvoreneNarudzbe.get(korisnik).isEmpty()) {
-                out.write("ERROR 44\n");
-                out.flush();
-                return;
-            }
-            
-            otvoreneNarudzbe.put(korisnik, new ArrayList<>());
-            
-            out.write("OK\n");
-            out.flush();
-            
-        } catch (Exception e) {
-            System.out.println("Greška pri obradi komande NARUDŽBA: " + e.getMessage());
-            out.write("ERROR 49\n");
-            out.flush();
-        }
-    }
-	
 
+	private void obradiKomanduNarudzba(String komanda, PrintWriter out) {
+		try {
+			String[] dijelovi = komanda.trim().split(" ");
+			if (dijelovi.length != 2) {
+				out.write("ERROR 40\n");
+				out.flush();
+				return;
+			}
+
+			String korisnik = dijelovi[1];
+
+			if (otvoreneNarudzbe.containsKey(korisnik) && !otvoreneNarudzbe.get(korisnik).isEmpty()) {
+				out.write("ERROR 44\n");
+				out.flush();
+				return;
+			}
+
+			otvoreneNarudzbe.put(korisnik, new ArrayList<>());
+
+			out.write("OK\n");
+			out.flush();
+
+		} catch (Exception e) {
+			System.out.println("Greška pri obradi komande NARUDŽBA: " + e.getMessage());
+			out.write("ERROR 49\n");
+			out.flush();
+		}
+	}
+
+	private void obradiKomanduJelo(String komanda, PrintWriter out) {
+		try {
+			String[] dijelovi = komanda.trim().split(" ");
+			if (dijelovi.length != 4) {
+				out.write("ERROR 40\n");
+				out.flush();
+				return;
+			}
+
+			String korisnik = dijelovi[1];
+			String idJela = dijelovi[2];
+			float kolicina = Float.parseFloat(dijelovi[3]);
+
+			if (!otvoreneNarudzbe.containsKey(korisnik) || otvoreneNarudzbe.get(korisnik) == null) {
+				out.write("ERROR 43\n");
+				out.flush();
+				return;
+			}
+
+			Jelovnik jelo = null;
+			for (Jelovnik j : jelovnici) {
+				if (j.id().equals(idJela)) {
+					jelo = j;
+					break;
+				}
+			}
+
+			if (jelo == null) {
+				out.write("ERROR 41\n");
+				out.flush();
+				return;
+			}
+
+			int idPartnera = Integer.parseInt(this.konfig.dajPostavku("id"));
+			Narudzba stavka = new Narudzba(korisnik, idJela, true, kolicina, jelo.cijena(),
+					System.currentTimeMillis() / 1000);
+			otvoreneNarudzbe.get(korisnik).add(stavka);
+
+			out.write("OK\n");
+			out.flush();
+
+		} catch (Exception e) {
+			System.out.println("Greška pri obradi komande JELO: " + e.getMessage());
+			out.write("ERROR 49\n");
+			out.flush();
+		}
+	}
+
+	private void obradiKomanduPice(String komanda, PrintWriter out) {
+		try {
+			String[] dijelovi = komanda.trim().split(" ");
+			if (dijelovi.length != 4) {
+				out.write("ERROR 40\n");
+				out.flush();
+				return;
+			}
+
+			String korisnik = dijelovi[1];
+			String idPica = dijelovi[2];
+			float kolicina = Float.parseFloat(dijelovi[3]);
+
+			if (!otvoreneNarudzbe.containsKey(korisnik) || otvoreneNarudzbe.get(korisnik) == null) {
+				out.write("ERROR 43\n");
+				out.flush();
+				return;
+			}
+
+			KartaPica pice = null;
+			for (KartaPica p : kartaPica) {
+				if (p.id().equals(idPica)) {
+					pice = p;
+					break;
+				}
+			}
+
+			if (pice == null) {
+				out.write("ERROR 42\n");
+				out.flush();
+				return;
+			}
+
+			int idPartnera = Integer.parseInt(this.konfig.dajPostavku("id"));
+			Narudzba stavka = new Narudzba(korisnik, idPica, false, kolicina, pice.cijena(),
+					System.currentTimeMillis() / 1000);
+			otvoreneNarudzbe.get(korisnik).add(stavka);
+
+			out.write("OK\n");
+			out.flush();
+
+		} catch (Exception e) {
+			System.out.println("Greška pri obradi komande PIĆE: " + e.getMessage());
+			out.write("ERROR 49\n");
+			out.flush();
+		}
+	}
 
 	/**
 	 * Ucitaj konfiguraciju.
