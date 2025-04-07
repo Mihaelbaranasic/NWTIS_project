@@ -261,6 +261,48 @@ public class PosluziteljTvrtka {
 	        out.flush();
 	    }
 	}
+	
+	private void obradiKomanduObrisi(String linija, PrintWriter out) {
+	    try {
+	        // Format: OBRIŠI id sigurnosniKod
+	        // Npr: OBRIŠI 1 4958583733
+	        String[] dijelovi = linija.trim().split(" ");
+	        
+	        if (dijelovi.length != 3) {
+	            out.write("ERROR 20\n");
+	            out.flush();
+	            return;
+	        }
+	        
+	        int id = Integer.parseInt(dijelovi[1]);
+	        String sigurnosniKod = dijelovi[2];
+	        
+	        Partner partner = partneri.get(id);
+	        
+	        if (partner == null) {
+	            out.write("ERROR 23\n");
+	            out.flush();
+	            return;
+	        }
+	        
+	        if (!partner.sigurnosniKod().equals(sigurnosniKod)) {
+	            out.write("ERROR 22\n");
+	            out.flush();
+	            return;
+	        }
+	        
+	        partneri.remove(id);
+	        spremiPartnere();
+	        
+	        out.write("OK\n");
+	        out.flush();
+	        
+	    } catch (Exception e) {
+	        System.out.println("Greška pri obradi komande OBRIŠI: " + e.getMessage());
+	        out.write("ERROR 29\n");
+	        out.flush();
+	    }
+	}
 
 	/**
 	 * Ucitaj konfiguraciju.
