@@ -173,7 +173,7 @@ public class PosluziteljTvrtka {
             mreznaUticnica.shutdownInput();
             
             if (linija == null) {
-                out.write("ERROR 19\n");
+                out.write("ERROR 19 - Nije dobro napisana komanda za kraj\n");
                 out.flush();
                 mreznaUticnica.shutdownOutput();
                 mreznaUticnica.close();
@@ -182,7 +182,8 @@ public class PosluziteljTvrtka {
             
             String[] dijelovi = linija.trim().split(" ");
             if (dijelovi.length != 2 || !dijelovi[0].equals("KRAJ") || !dijelovi[1].equals(this.kodZaKraj)) {
-                out.write("ERROR 10\n");
+                out.write("ERROR 10 - Format komande nije ispravan ili nije ispravan kod za kraj\n"
+                		+ "\n");
                 out.flush();
                 mreznaUticnica.shutdownOutput();
                 mreznaUticnica.close();
@@ -194,7 +195,7 @@ public class PosluziteljTvrtka {
             InetAddress lokalnaAdresa = InetAddress.getLocalHost();
             
             if (!adresaZahtjeva.equals(lokalnaAdresa) && !adresaZahtjeva.isLoopbackAddress()) {
-                out.write("ERROR 11\n");
+                out.write("ERROR 11 - Adresa računala s kojeg je poslan zahtjev nije lokalna adresa\n");
                 out.flush();
                 mreznaUticnica.shutdownOutput();
                 mreznaUticnica.close();
@@ -243,7 +244,7 @@ public class PosluziteljTvrtka {
             mreznaUticnica.shutdownInput();
             
             if (linija == null) {
-                out.write("ERROR 29\n");
+                out.write("ERROR 29 - Nije napisana komanda\n");
                 out.flush();
                 mreznaUticnica.shutdownOutput();
                 mreznaUticnica.close();
@@ -264,7 +265,7 @@ public class PosluziteljTvrtka {
             }
             // Nepoznata komanda
             else {
-                out.write("ERROR 20\n");
+                out.write("ERROR 20 - Format komande nije ispravan\n");
                 out.flush();
             }
             
@@ -291,7 +292,7 @@ public class PosluziteljTvrtka {
             int krajNaziva = linija.indexOf("\"", pocetakNaziva + 1);
             
             if (pocetakNaziva == -1 || krajNaziva == -1) {
-                out.write("ERROR 20\n");
+                out.write("ERROR 20 - Format komande nije ispravan\n");
                 out.flush();
                 return;
             }
@@ -303,7 +304,7 @@ public class PosluziteljTvrtka {
             String[] parametri = ostatakLinije.split(" ");
             
             if (parametri.length != 5) {
-                out.write("ERROR 20\n");
+                out.write("ERROR 20 - Format komande nije ispravan\n");
                 out.flush();
                 return;
             }
@@ -318,7 +319,7 @@ public class PosluziteljTvrtka {
             // Izdvajanje ID-a partnera
             String[] prviDio = linija.substring(0, pocetakNaziva).trim().split(" ");
             if (prviDio.length != 2) {
-                out.write("ERROR 20\n");
+                out.write("ERROR 20 - Format komande nije ispravan\n");
                 out.flush();
                 return;
             }
@@ -327,7 +328,7 @@ public class PosluziteljTvrtka {
             // Provjera postoji li već partner s istim ID-om
             for (Partner p : partneri) {
                 if (p.id() == id) {
-                    out.write("ERROR 21\n");
+                    out.write("ERROR 21 - Već postoji partner s id u kolekciji partnera\n");
                     out.flush();
                     return;
                 }
@@ -351,7 +352,7 @@ public class PosluziteljTvrtka {
             
         } catch (Exception e) {
             System.out.println("Greška pri obradi komande PARTNER: " + e.getMessage());
-            out.write("ERROR 29\n");
+            out.write("ERROR 29 - Nešto je pošlo po krivu\n");
             out.flush();
         }
     }
@@ -366,7 +367,7 @@ public class PosluziteljTvrtka {
             String[] dijelovi = linija.trim().split(" ");
             
             if (dijelovi.length != 3) {
-                out.write("ERROR 20\n");
+                out.write("ERROR 20 - Format komande nije ispravan\n");
                 out.flush();
                 return;
             }
@@ -383,13 +384,13 @@ public class PosluziteljTvrtka {
             }
             
             if (partnerZaBrisanje == null) {
-                out.write("ERROR 23\n");
+                out.write("ERROR 23 - Ne postoji partner s id u kolekciji partnera i/ili neispravan sigurnosni kod partnera\n");
                 out.flush();
                 return;
             }
             
             if (!partnerZaBrisanje.sigurnosniKod().equals(sigurnosniKod)) {
-                out.write("ERROR 22\n");
+                out.write("ERROR 22 - Neispravan sigurnosni kod partnera\n");
                 out.flush();
                 return;
             }
@@ -402,7 +403,7 @@ public class PosluziteljTvrtka {
             
         } catch (Exception e) {
             System.out.println("Greška pri obradi komande OBRIŠI: " + e.getMessage());
-            out.write("ERROR 29\n");
+            out.write("ERROR 29 - Došlo je do greške pri obradi komande\n");
             out.flush();
         }
     }
@@ -426,7 +427,7 @@ public class PosluziteljTvrtka {
             
         } catch (Exception e) {
             System.out.println("Greška pri obradi komande POPIS: " + e.getMessage());
-            out.write("ERROR 29\n");
+            out.write("ERROR 29 - Došlo je do greške pri obradi komande\n");
             out.flush();
         }
     }
@@ -473,7 +474,7 @@ public class PosluziteljTvrtka {
             String linija = in.readLine();
             
             if (linija == null) {
-                out.write("ERROR 39\n");
+                out.write("ERROR 39 - Komanda nije zadana\n");
                 out.flush();
                 mreznaUticnica.shutdownOutput();
                 mreznaUticnica.close();
@@ -494,7 +495,7 @@ public class PosluziteljTvrtka {
             }
             // Nepoznata komanda
             else {
-                out.write("ERROR 30\n");
+                out.write("ERROR 30 - Format komande nije ispravan\n");
                 out.flush();
             }
             
@@ -518,7 +519,7 @@ public class PosluziteljTvrtka {
             String[] dijelovi = linija.trim().split(" ");
             
             if (dijelovi.length != 3) {
-                out.write("ERROR 30\n");
+                out.write("ERROR 30 - Format komande nije ispravan\n");
                 out.flush();
                 return;
             }
@@ -535,7 +536,7 @@ public class PosluziteljTvrtka {
             }
             
             if (partner == null || !partner.sigurnosniKod().equals(sigurnosniKod)) {
-                out.write("ERROR 31\n");
+                out.write("ERROR 31 - Ne postoji partner s id u kolekciji partnera i/ili neispravan sigurnosni kod partnera\n");
                 out.flush();
                 return;
             }
@@ -551,7 +552,7 @@ public class PosluziteljTvrtka {
             }
             
             if (jelovnikPartnera.isEmpty()) {
-                out.write("ERROR 32\n");
+                out.write("ERROR 32 - Ne postoji jelovnik s vrstom kuhinje koju partner ima ugovorenu\n");
                 out.flush();
                 return;
             }
@@ -564,7 +565,7 @@ public class PosluziteljTvrtka {
             
         } catch (Exception e) {
             System.out.println("Greška pri obradi komande JELOVNIK: " + e.getMessage());
-            out.write("ERROR 39\n");
+            out.write("ERROR 39 - Došlo je do greške pri obradi komande\n");
             out.flush();
         }
     }
@@ -579,7 +580,7 @@ public class PosluziteljTvrtka {
             String[] dijelovi = linija.trim().split(" ");
             
             if (dijelovi.length != 3) {
-                out.write("ERROR 30\n");
+                out.write("ERROR 30 - Format komande nije ispravan\n");
                 out.flush();
                 return;
             }
@@ -596,13 +597,13 @@ public class PosluziteljTvrtka {
             }
             
             if (partner == null || !partner.sigurnosniKod().equals(sigurnosniKod)) {
-                out.write("ERROR 31\n");
+                out.write("ERROR 31 - Ne postoji partner s id u kolekciji partnera i/ili neispravan sigurnosni kod partnera\n");
                 out.flush();
                 return;
             }
             
             if (kartaPica.isEmpty()) {
-                out.write("ERROR 34\n");
+                out.write("ERROR 34 - Neispravna karta pića\n");
                 out.flush();
                 return;
             }
@@ -615,7 +616,7 @@ public class PosluziteljTvrtka {
             
         } catch (Exception e) {
             System.out.println("Greška pri obradi komande KARTAPIĆA: " + e.getMessage());
-            out.write("ERROR 39\n");
+            out.write("ERROR 39 - Greška pri obradi komande\n");
             out.flush();
         }
     }
@@ -630,7 +631,7 @@ public class PosluziteljTvrtka {
             String[] dijelovi = linija.trim().split(" ");
             
             if (dijelovi.length != 3) {
-                out.write("ERROR 30\n");
+                out.write("ERROR 30 - Format komande nije ispravan\n");
                 out.flush();
                 return;
             }
@@ -647,7 +648,7 @@ public class PosluziteljTvrtka {
             }
             
             if (partner == null || !partner.sigurnosniKod().equals(sigurnosniKod)) {
-                out.write("ERROR 31\n");
+                out.write("ERROR 31 - Ne postoji partner s id u kolekciji partnera i/ili neispravan sigurnosni kod partnera\n");
                 out.flush();
                 return;
             }
@@ -696,13 +697,13 @@ public class PosluziteljTvrtka {
                 
             } catch (Exception e) {
                 System.out.println("Greška pri obradi JSON obračuna: " + e.getMessage());
-                out.write("ERROR 35\n");
+                out.write("ERROR 35 - Neispravan obračun\n");
                 out.flush();
             }
             
         } catch (Exception e) {
             System.out.println("Greška pri obradi komande OBRAČUN: " + e.getMessage());
-            out.write("ERROR 39\n");
+            out.write("ERROR 39 - Greška kod obrade komande\n");
             out.flush();
         }
     }
