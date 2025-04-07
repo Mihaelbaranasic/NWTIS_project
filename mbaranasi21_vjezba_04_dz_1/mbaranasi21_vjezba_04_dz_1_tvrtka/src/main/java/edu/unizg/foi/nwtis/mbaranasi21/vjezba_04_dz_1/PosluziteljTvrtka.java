@@ -337,6 +337,52 @@ public class PosluziteljTvrtka {
 	    }
 	}
 	
+	private void obradiKomanduJelovnik(String linija, PrintWriter out) {
+	    try {
+	        // Format: JELOVNIK id sigurnosniKod
+	        // Npr: JELOVNIK 1 4958583733
+	        String[] dijelovi = linija.trim().split(" ");
+	        
+	        if (dijelovi.length != 3) {
+	            out.write("ERROR 30\n");
+	            out.flush();
+	            return;
+	        }
+	        
+	        int id = Integer.parseInt(dijelovi[1]);
+	        String sigurnosniKod = dijelovi[2];
+	        
+	        Partner partner = partneri.get(id);
+	        
+	        if (partner == null || !partner.sigurnosniKod().equals(sigurnosniKod)) {
+	            out.write("ERROR 31\n");
+	            out.flush();
+	            return;
+	        }
+	        
+	        // Dohvat jelovnika za vrstu kuhinje partnera
+	        String vrstaKuhinje = partner.vrstaKuhinje();
+	        Map<String, Jelovnik> jelovnikKuhinje = jelovnici.get(vrstaKuhinje);
+	        
+	        if (jelovnikKuhinje == null || jelovnikKuhinje.isEmpty()) {
+	            out.write("ERROR 32\n");
+	            out.flush();
+	            return;
+	        }
+	        
+	        String jsonJelovnik = gson.toJson(new ArrayList<>(jelovnikKuhinje.values()));
+	        
+	        out.write("OK\n");
+	        out.write(jsonJelovnik + "\n");
+	        out.flush();
+	        
+	    } catch (Exception e) {
+	        System.out.println("Greška pri obradi komande JELOVNIK: " + e.getMessage());
+	        out.write("ERROR 39\n");
+	        out.flush();
+	    }
+	}
+	
 	/**
 	 * Ucitaj konfiguraciju.
 	 *
