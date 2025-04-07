@@ -234,29 +234,53 @@ public class PosluziteljPartner {
 	}
 
 	private void obradiKomanduJelovnik(String komanda, PrintWriter out) {
-        try {
-            String[] dijelovi = komanda.trim().split(" ");
-            if (dijelovi.length != 2) {
-                out.write("ERROR 40\n");
-                out.flush();
-                return;
-            }
-            
-            String korisnik = dijelovi[1];
-            
-            String jsonJelovnik = gson.toJson(this.jelovnici);
-            
-            out.write("OK\n");
-            out.write(jsonJelovnik + "\n");
-            out.flush();
-            
-        } catch (Exception e) {
-            System.out.println("Greška pri obradi komande JELOVNIK: " + e.getMessage());
-            out.write("ERROR 49\n");
-            out.flush();
-        }
-    }
-	
+		try {
+			String[] dijelovi = komanda.trim().split(" ");
+			if (dijelovi.length != 2) {
+				out.write("ERROR 40\n");
+				out.flush();
+				return;
+			}
+
+			String korisnik = dijelovi[1];
+
+			String jsonJelovnik = gson.toJson(this.jelovnici);
+
+			out.write("OK\n");
+			out.write(jsonJelovnik + "\n");
+			out.flush();
+
+		} catch (Exception e) {
+			System.out.println("Greška pri obradi komande JELOVNIK: " + e.getMessage());
+			out.write("ERROR 49\n");
+			out.flush();
+		}
+	}
+
+	private void obradiKomanduKartaPica(String komanda, PrintWriter out) {
+		try {
+			String[] dijelovi = komanda.trim().split(" ");
+			if (dijelovi.length != 2) {
+				out.write("ERROR 40\n");
+				out.flush();
+				return;
+			}
+
+			String korisnik = dijelovi[1];
+
+			String jsonKartaPica = gson.toJson(this.kartaPica);
+
+			out.write("OK\n");
+			out.write(jsonKartaPica + "\n");
+			out.flush();
+
+		} catch (Exception e) {
+			System.out.println("Greška pri obradi komande KARTAPIĆA: " + e.getMessage());
+			out.write("ERROR 49\n");
+			out.flush();
+		}
+	}
+
 	/**
 	 * Ucitaj konfiguraciju.
 	 *
