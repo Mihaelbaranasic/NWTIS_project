@@ -325,6 +325,18 @@ public class PosluziteljTvrtka {
 	    }
 	}
 
+	private void spremiPartnere() {
+	    try {
+	        String datotekaPartnera = this.konfig.dajPostavku("datotekaPartnera");
+	        FileWriter writer = new FileWriter(datotekaPartnera);
+	        List<Partner> partneriLista = new ArrayList<>(partneri.values());
+	        gson.toJson(partneriLista, writer);
+	        writer.close();
+	    } catch (IOException e) {
+	        System.out.println("Greška pri spremanju partnera: " + e.getMessage());
+	    }
+	}
+	
 	/**
 	 * Ucitaj konfiguraciju.
 	 *
