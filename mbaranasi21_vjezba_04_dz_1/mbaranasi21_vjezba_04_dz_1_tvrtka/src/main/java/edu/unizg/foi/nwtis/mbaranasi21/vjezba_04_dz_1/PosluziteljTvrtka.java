@@ -383,6 +383,48 @@ public class PosluziteljTvrtka {
 	    }
 	}
 	
+	private void obradiKomanduKartaPica(String linija, PrintWriter out) {
+	    try {
+	        // Format: KARTAPIĆA id sigurnosniKod
+	        // Npr: KARTAPIĆA 1 4958583733
+	        String[] dijelovi = linija.trim().split(" ");
+	        
+	        if (dijelovi.length != 3) {
+	            out.write("ERROR 30\n");
+	            out.flush();
+	            return;
+	        }
+	        
+	        int id = Integer.parseInt(dijelovi[1]);
+	        String sigurnosniKod = dijelovi[2];
+	        
+	        Partner partner = partneri.get(id);
+	        
+	        if (partner == null || !partner.sigurnosniKod().equals(sigurnosniKod)) {
+	            out.write("ERROR 31\n");
+	            out.flush();
+	            return;
+	        }
+	        
+	        if (kartaPica.isEmpty()) {
+	            out.write("ERROR 34\n");
+	            out.flush();
+	            return;
+	        }
+	        
+	        String jsonKartaPica = gson.toJson(new ArrayList<>(kartaPica.values()));
+	        
+	        out.write("OK\n");
+	        out.write(jsonKartaPica + "\n");
+	        out.flush();
+	        
+	    } catch (Exception e) {
+	        System.out.println("Greška pri obradi komande KARTAPIĆA: " + e.getMessage());
+	        out.write("ERROR 39\n");
+	        out.flush();
+	    }
+	}
+	
 	/**
 	 * Ucitaj konfiguraciju.
 	 *
