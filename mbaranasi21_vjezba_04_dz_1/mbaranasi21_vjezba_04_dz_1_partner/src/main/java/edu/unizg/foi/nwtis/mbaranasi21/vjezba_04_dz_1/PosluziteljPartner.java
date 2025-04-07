@@ -79,27 +79,75 @@ public class PosluziteljPartner {
 	}
 
 	private void posaljiKraj() {
-		var kodZaKraj = this.konfig.dajPostavku("kodZaKraj");
-		var adresa = this.konfig.dajPostavku("adresa");
-		var mreznaVrata = Integer.parseInt(this.konfig.dajPostavku("mreznaVrataKraj"));
+        var kodZaKraj = this.konfig.dajPostavku("kodZaKraj");
+        var adresa = this.konfig.dajPostavku("adresa");
+        var mreznaVrata = Integer.parseInt(this.konfig.dajPostavku("mreznaVrataKraj"));
+        try {
+            var mreznaUticnica = new Socket(adresa, mreznaVrata);
+            BufferedReader in = new BufferedReader(new InputStreamReader(mreznaUticnica.getInputStream(), "utf8"));
+            PrintWriter out = new PrintWriter(new OutputStreamWriter(mreznaUticnica.getOutputStream(), "utf8"));
+            out.write("KRAJ " + kodZaKraj + "\n");
+            out.flush();
+            mreznaUticnica.shutdownOutput();
+            var linija = in.readLine();
+            mreznaUticnica.shutdownInput();
+            if (linija.equals("OK")) {
+                System.out.println("Uspješan kraj poslužitelja.");
+            }
+            mreznaUticnica.close();
+        } catch (IOException e) {
+            System.out.println("Greška pri slanju zahtjeva za kraj: " + e.getMessage());
+        }
+    }
 
-		try {
-			var mreznaUticnica = new Socket(adresa, mreznaVrata);
-			BufferedReader in = new BufferedReader(new InputStreamReader(mreznaUticnica.getInputStream(), "utf8"));
-			PrintWriter out = new PrintWriter(new OutputStreamWriter(mreznaUticnica.getOutputStream(), "utf8"));
-			out.write("KRAJ " + kodZaKraj + "\n");
-			out.flush();
-			mreznaUticnica.shutdownOutput();
-			var linija = in.readLine();
-			mreznaUticnica.shutdownInput();
-			if (linija.equals("OK")) {
-				System.out.println("Uspješan kraj poslužitelja.");
-			}
-			mreznaUticnica.close();
-		} catch (IOException e) {
-		}
-	}
-
+	private void registrirajPartnera() {
+        try {
+            var adresa = this.konfig.dajPostavku("adresa");
+            var mreznaVrata = Integer.parseInt(this.konfig.dajPostavku("mreznaVrataRegistracija"));
+            var mreznaUticnica = new Socket(adresa, mreznaVrata);
+            
+            BufferedReader in = new BufferedReader(new InputStreamReader(mreznaUticnica.getInputStream(), "utf8"));
+            PrintWriter out = new PrintWriter(new OutputStreamWriter(mreznaUticnica.getOutputStream(), "utf8"));
+            
+            int id = Integer.parseInt(this.konfig.dajPostavku("id"));
+            String naziv = this.konfig.dajPostavku("naziv");
+            String vrstaKuhinje = this.konfig.dajPostavku("vrstaKuhinje");
+            String partnerAdresa = this.konfig.dajPostavku("adresa");
+            int partnerMreznaVrata = Integer.parseInt(this.konfig.dajPostavku("mreznaVrata"));
+            float gpsSirina = Float.parseFloat(this.konfig.dajPostavku("gpsSirina"));
+            float gpsDuzina = Float.parseFloat(this.konfig.dajPostavku("gpsDuzina"));
+            
+            String komanda = String.format("PARTNER %d \"%s\" %s %s %d %.5f %.5f\n", 
+                    id, naziv, vrstaKuhinje, partnerAdresa, partnerMreznaVrata, gpsSirina, gpsDuzina);
+            
+            out.write(komanda);
+            out.flush();
+            mreznaUticnica.shutdownOutput();
+            
+            String odgovor = in.readLine();
+            mreznaUticnica.shutdownInput();
+            
+            if (odgovor != null && odgovor.startsWith("OK")) {
+                String[] dijelovi = odgovor.split(" ");
+                if (dijelovi.length >= 2) {
+                    String sigKod = dijelovi[1];
+                    
+                    this.konfig.spremiPostavku("sigKod", sigKod);
+                    this.konfig.spremiKonfiguraciju();
+                    
+                    System.out.println("Partner uspješno registriran. Sigurnosni kod: " + sigKod);
+                }
+            } else {
+                System.out.println("Greška pri registraciji partnera: " + odgovor);
+            }
+            
+            mreznaUticnica.close();
+            
+        } catch (Exception e) {
+            System.out.println("Greška pri registraciji partnera: " + e.getMessage());
+        }
+    }
+	
 	/**
 	 * Ucitaj konfiguraciju.
 	 *
