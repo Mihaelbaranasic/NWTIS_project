@@ -301,36 +301,36 @@ public class PosluziteljTvrtka {
         try {
             // Format: PARTNER id "Naziv partnera" vrstaKuhinje adresa mreznaVrata gpsSirina gpsDuzina
             // Npr: PARTNER 1 "Roštilj Pero" MK localhost 8010 46.29950 16.33001
-            
+
             // Izvlačenje naziva partnera između navodnika
             int pocetakNaziva = linija.indexOf("\"");
             int krajNaziva = linija.indexOf("\"", pocetakNaziva + 1);
-            
+
             if (pocetakNaziva == -1 || krajNaziva == -1) {
                 out.write("ERROR 20 - Format komande nije ispravan\n");
                 out.flush();
                 return;
             }
-            
+
             String naziv = linija.substring(pocetakNaziva + 1, krajNaziva);
-            
+
             // Preostali dio linije nakon zatvaranja navodnika
             String ostatakLinije = linija.substring(krajNaziva + 1).trim();
             String[] parametri = ostatakLinije.split(" ");
-            
+
             if (parametri.length != 5) {
                 out.write("ERROR 20 - Format komande nije ispravan\n");
                 out.flush();
                 return;
             }
-            
+
             // Izdvajanje parametara
             String vrstaKuhinje = parametri[0];
             String adresa = parametri[1];
             int mreznaVrata = Integer.parseInt(parametri[2]);
             float gpsSirina = Float.parseFloat(parametri[3]);
             float gpsDuzina = Float.parseFloat(parametri[4]);
-            
+
             // Izdvajanje ID-a partnera
             String[] prviDio = linija.substring(0, pocetakNaziva).trim().split(" ");
             if (prviDio.length != 2) {
@@ -339,7 +339,7 @@ public class PosluziteljTvrtka {
                 return;
             }
             int id = Integer.parseInt(prviDio[1]);
-            
+
             // Provjera postoji li već partner s istim ID-om
             for (Partner p : partneri) {
                 if (p.id() == id) {
@@ -348,26 +348,46 @@ public class PosluziteljTvrtka {
                     return;
                 }
             }
-            
+
+            // Provjera postoji li kuhinja
+            boolean kuhinjaPostoji = false;
+            for (int i = 1; i <= 9; i++) {
+                String kljucKuhinje = "kuhinja_" + i;
+                if (this.konfig.postojiPostavka(kljucKuhinje)) {
+                    String vrijednostKuhinje = this.konfig.dajPostavku(kljucKuhinje);
+                    String[] dijelovi = vrijednostKuhinje.split(";");
+                    if (dijelovi.length >= 1 && dijelovi[0].equals(vrstaKuhinje)) {
+                        kuhinjaPostoji = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!kuhinjaPostoji) {
+                out.write("ERROR 29 - Registracija za nepostojeću kuhinju\n");
+                out.flush();
+                return;
+            }
+
             // Generiranje sigurnosnog koda
             String podatakZaKod = naziv + adresa;
             int hash = podatakZaKod.hashCode();
             String sigurnosniKod = Integer.toHexString(hash);
-            
+
             // Kreiranje novog partnera
             Partner noviPartner = new Partner(id, naziv, vrstaKuhinje, adresa, mreznaVrata, gpsSirina, gpsDuzina, sigurnosniKod);
             partneri.add(noviPartner);
-            
+
             // Spremanje u datoteku
             spremiPartnere();
-            
+
             // Slanje odgovora
             out.write("OK " + sigurnosniKod + "\n");
             out.flush();
-            
+
         } catch (Exception e) {
             System.out.println("Greška pri obradi komande PARTNER: " + e.getMessage());
-            out.write("ERROR 29 - Nešto je pošlo po krivu\n");
+            out.write("ERROR 29 - Nešto drugo nije u redu\n");
             out.flush();
         }
     }
