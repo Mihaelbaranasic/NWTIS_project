@@ -17,7 +17,7 @@ import edu.unizg.foi.nwtis.konfiguracije.NeispravnaKonfiguracija;
 public class KorisnikKupac {
     /** Konfiguracijski podaci */
     private Konfiguracija konfig;
-    
+
     public static void main(String[] args) {
         if (args.length != 2) {
             System.out.println("Broj argumenata nije 2. Očekivano: datoteka_konfiguracije.txt datoteka_podataka.csv");
@@ -44,11 +44,13 @@ public class KorisnikKupac {
         }
         
         try {
+            // Otvaranje datoteke s komandama
             BufferedReader reader = new BufferedReader(new FileReader(datotekaPodataka));
             
             String linija;
             while ((linija = reader.readLine()) != null) {
                 try {
+                    // Parsiranje linije
                     String[] dijelovi = linija.split(";");
                     if (dijelovi.length != 5) {
                         System.out.println("Nevažeći format linije: " + linija);
@@ -61,8 +63,10 @@ public class KorisnikKupac {
                     int spavanje = Integer.parseInt(dijelovi[3]);
                     String komanda = dijelovi[4];
                     
+                    // Spavanje prije slanja komande
                     Thread.sleep(spavanje);
                     
+                    // Slanje komande
                     posaljiKomandu(adresa, mreznaVrata, komanda);
                     
                 } catch (Exception e) {
@@ -104,15 +108,19 @@ public class KorisnikKupac {
     private void posaljiKomandu(String adresa, int mreznaVrata, String komanda) {
         try {
             Socket socket = new Socket(adresa, mreznaVrata);
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
-            PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"), true);
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "utf8"));
+            PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "utf8"));
             
-            out.println(komanda);
+            // Slanje komande
+            out.write(komanda + "\n");
+            out.flush();
             
+            // Čitanje i ispis odgovora
             String odgovor = in.readLine();
             System.out.println("Komanda: " + komanda);
             System.out.println("Odgovor: " + odgovor);
             
+            // Ako je odgovor OK, a komanda traži podatke, ispisi i podatke
             if (odgovor != null && odgovor.equals("OK") && 
                 (komanda.startsWith("JELOVNIK") || komanda.startsWith("KARTAPIĆA") || komanda.startsWith("RAČUN"))) {
                 

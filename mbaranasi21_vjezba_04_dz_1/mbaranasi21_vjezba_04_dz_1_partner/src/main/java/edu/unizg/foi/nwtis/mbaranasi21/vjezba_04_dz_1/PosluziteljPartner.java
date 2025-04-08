@@ -207,6 +207,10 @@ public class PosluziteljPartner {
 
 	private void registrirajPartnera() {
 		try {
+			if (this.konfig.postojiPostavka("sigKod") && !this.konfig.dajPostavku("sigKod").isEmpty()) {
+		        System.out.println("Partner je već registriran. Sigurnosni kod: " + this.konfig.dajPostavku("sigKod"));
+		        return;
+		    }
 			var adresa = this.konfig.dajPostavku("adresa");
 			var mreznaVrata = Integer.parseInt(this.konfig.dajPostavku("mreznaVrataRegistracija"));
 			var mreznaUticnica = new Socket(adresa, mreznaVrata);
