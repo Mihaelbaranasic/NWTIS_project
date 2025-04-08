@@ -18,5 +18,15 @@
     "gpsSirina": 46.30838,
     "gpsDuzina": 16.34782,
     "sigurnosniKod": "e57a5998"
+  },
+  {
+    "id": 3,
+    "naziv": "FOLT 3 - VaraÅ¾din, Ul. BraÄe RadiÄ 102",
+    "vrstaKuhinje": "VK",
+    "adresa": "localhost",
+    "mreznaVrata": 8030,
+    "gpsSirina": 46.30154,
+    "gpsDuzina": 16.32023,
+    "sigurnosniKod": "1c37dd3e"
   }
 ]

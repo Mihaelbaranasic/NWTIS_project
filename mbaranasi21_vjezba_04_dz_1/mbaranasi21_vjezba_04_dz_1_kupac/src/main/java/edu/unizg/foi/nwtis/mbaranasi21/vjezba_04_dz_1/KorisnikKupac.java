@@ -1,4 +1,4 @@
-package edu.unizg.foi.nwtis.mbaranasi21_vjezba_04_dz_1;
+package edu.unizg.foi.nwtis.mbaranasi21.vjezba_04_dz_1;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
