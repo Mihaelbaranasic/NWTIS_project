@@ -389,7 +389,7 @@ public class PosluziteljPartner {
 		}
 	}
 
-	private void obradiKomanduNarudzba(String komanda, PrintWriter out) {
+	private synchronized void obradiKomanduNarudzba(String komanda, PrintWriter out) {
 		try {
 			String[] dijelovi = komanda.trim().split(" ");
 			if (dijelovi.length != 2) {
@@ -418,7 +418,7 @@ public class PosluziteljPartner {
 		}
 	}
 
-	private void obradiKomanduJelo(String komanda, PrintWriter out) {
+	private synchronized void obradiKomanduJelo(String komanda, PrintWriter out) {
 		try {
 			String[] dijelovi = komanda.trim().split(" ");
 			if (dijelovi.length != 4) {
@@ -466,7 +466,7 @@ public class PosluziteljPartner {
 		}
 	}
 
-	private void obradiKomanduPice(String komanda, PrintWriter out) {
+	private synchronized void obradiKomanduPice(String komanda, PrintWriter out) {
 		try {
 			String[] dijelovi = komanda.trim().split(" ");
 			if (dijelovi.length != 4) {
@@ -514,7 +514,7 @@ public class PosluziteljPartner {
 		}
 	}
 
-	private void obradiKomanduRacun(String komanda, PrintWriter out) {
+	private synchronized void obradiKomanduRacun(String komanda, PrintWriter out) {
 		try {
 			// Format: RAČUN korisnik
 			String[] dijelovi = komanda.trim().split(" ");
