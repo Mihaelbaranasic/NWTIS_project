@@ -11,11 +11,13 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -53,6 +55,9 @@ public class PosluziteljTvrtka {
     private List<Obracun> obracuni = new ArrayList<>();
     /** Gson objekt za rad s JSON-om */
     private Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private AtomicInteger brojPrekinutihDretvi = new AtomicInteger(0);
+    private AtomicInteger brojZatvorenihVeza = new AtomicInteger(0);
+    private List<Thread> aktivneDretve = Collections.synchronizedList(new ArrayList<>());
 
     public static void main(String[] args) {
         if (args.length != 1) {
@@ -155,12 +160,27 @@ public class PosluziteljTvrtka {
         var brojCekaca = 0;
         try (ServerSocket ss = new ServerSocket(mreznaVrata, brojCekaca)) {
             while (!this.kraj.get()) {
-                var mreznaUticnica = ss.accept();
-                this.obradiKraj(mreznaUticnica);
+                try {
+                    var mreznaUticnica = ss.accept();
+                    this.executor.submit(() -> {
+                        // Dodajemo trenutnu dretvu u listu aktivnih
+                        aktivneDretve.add(Thread.currentThread());
+                        try {
+                            return this.obradiKraj(mreznaUticnica);
+                        } finally {
+                            // Uklanjamo dretvu iz liste aktivnih kad završi
+                            aktivneDretve.remove(Thread.currentThread());
+                        }
+                    });
+                } catch (IOException e) {
+                    if (!this.kraj.get()) {
+                        System.out.println("Greška u poslužitelju za kraj: " + e.getMessage());
+                    }
+                }
             }
             ss.close();
         } catch (IOException e) {
-            System.out.println("Greška u poslužitelju za kraj: " + e.getMessage());
+            System.out.println("Greška pri pokretanju poslužitelja za kraj: " + e.getMessage());
         }
     }
 
@@ -173,20 +193,17 @@ public class PosluziteljTvrtka {
             mreznaUticnica.shutdownInput();
             
             if (linija == null) {
-                out.write("ERROR 19 - Nije dobro napisana komanda za kraj\n");
+                out.write("ERROR 19 - Prazna datoteka\n");
                 out.flush();
-                mreznaUticnica.shutdownOutput();
-                mreznaUticnica.close();
+                zatvoriVezu(mreznaUticnica);
                 return Boolean.FALSE;
             }
             
             String[] dijelovi = linija.trim().split(" ");
             if (dijelovi.length != 2 || !dijelovi[0].equals("KRAJ") || !dijelovi[1].equals(this.kodZaKraj)) {
-                out.write("ERROR 10 - Format komande nije ispravan ili nije ispravan kod za kraj\n"
-                		+ "\n");
+                out.write("ERROR 10 - Format komande nije ispravan ili nije ispravan kod za kraj\n");
                 out.flush();
-                mreznaUticnica.shutdownOutput();
-                mreznaUticnica.close();
+                zatvoriVezu(mreznaUticnica);
                 return Boolean.FALSE;
             }
             
@@ -197,8 +214,7 @@ public class PosluziteljTvrtka {
             if (!adresaZahtjeva.equals(lokalnaAdresa) && !adresaZahtjeva.isLoopbackAddress()) {
                 out.write("ERROR 11 - Adresa računala s kojeg je poslan zahtjev nije lokalna adresa\n");
                 out.flush();
-                mreznaUticnica.shutdownOutput();
-                mreznaUticnica.close();
+                zatvoriVezu(mreznaUticnica);
                 return Boolean.FALSE;
             }
             
@@ -206,10 +222,10 @@ public class PosluziteljTvrtka {
             out.flush();
             this.kraj.set(true);
             
-            mreznaUticnica.shutdownOutput();
-            mreznaUticnica.close();
+            zatvoriVezu(mreznaUticnica);
         } catch (Exception e) {
             System.out.println("Greška pri obradi zahtjeva za kraj: " + e.getMessage());
+            zatvoriVezu(mreznaUticnica);
             return Boolean.FALSE;
         }
         return Boolean.TRUE;
@@ -244,10 +260,9 @@ public class PosluziteljTvrtka {
             mreznaUticnica.shutdownInput();
             
             if (linija == null) {
-                out.write("ERROR 29 - Nije napisana komanda\n");
+                out.write("ERROR 29 - Prazna datoteka\n");
                 out.flush();
-                mreznaUticnica.shutdownOutput();
-                mreznaUticnica.close();
+                zatvoriVezu(mreznaUticnica);
                 return Boolean.FALSE;
             }
             
@@ -269,10 +284,10 @@ public class PosluziteljTvrtka {
                 out.flush();
             }
             
-            mreznaUticnica.shutdownOutput();
-            mreznaUticnica.close();
+            zatvoriVezu(mreznaUticnica);
         } catch (Exception e) {
             System.out.println("Greška pri obradi zahtjeva za registraciju: " + e.getMessage());
+            zatvoriVezu(mreznaUticnica);
             return Boolean.FALSE;
         }
         
@@ -455,17 +470,30 @@ public class PosluziteljTvrtka {
         
         try (ServerSocket ss = new ServerSocket(mreznaVrata, brojCekaca)) {
             while (!this.kraj.get()) {
-                Socket mreznaUticnica = ss.accept();
-                this.executor.submit(() -> obradiRad(mreznaUticnica));
+                try {
+                    Socket mreznaUticnica = ss.accept();
+                    this.executor.submit(() -> {
+                        // Dodajemo trenutnu dretvu u listu aktivnih
+                        aktivneDretve.add(Thread.currentThread());
+                        try {
+                            return obradiRad(mreznaUticnica);
+                        } finally {
+                            // Uklanjamo dretvu iz liste aktivnih kad završi
+                            aktivneDretve.remove(Thread.currentThread());
+                        }
+                    });
+                } catch (IOException e) {
+                    if (!this.kraj.get()) {
+                        System.out.println("Greška u poslužitelju za rad s partnerima: " + e.getMessage());
+                    }
+                }
             }
         } catch (IOException e) {
-            System.out.println("Greška u poslužitelju za rad s partnerima: " + e.getMessage());
+            System.out.println("Greška pri pokretanju poslužitelja za rad s partnerima: " + e.getMessage());
         }
     }
     
-    /**
-     * Obrađuje zahtjeve za rad s partnerima
-     */
+    
     private Boolean obradiRad(Socket mreznaUticnica) {
         try {
             BufferedReader in = new BufferedReader(new InputStreamReader(mreznaUticnica.getInputStream(), "utf8"));
@@ -474,10 +502,9 @@ public class PosluziteljTvrtka {
             String linija = in.readLine();
             
             if (linija == null) {
-                out.write("ERROR 39 - Komanda nije zadana\n");
+                out.write("ERROR 39 - Nešto drugo nije u redu\n");
                 out.flush();
-                mreznaUticnica.shutdownOutput();
-                mreznaUticnica.close();
+                zatvoriVezu(mreznaUticnica);
                 return Boolean.FALSE;
             }
             
@@ -499,10 +526,10 @@ public class PosluziteljTvrtka {
                 out.flush();
             }
             
-            mreznaUticnica.shutdownOutput();
-            mreznaUticnica.close();
+            zatvoriVezu(mreznaUticnica);
         } catch (Exception e) {
             System.out.println("Greška pri obradi zahtjeva za rad s partnerima: " + e.getMessage());
+            zatvoriVezu(mreznaUticnica);
             return Boolean.FALSE;
         }
         
@@ -763,5 +790,20 @@ public class PosluziteljTvrtka {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
         return false;
+    }
+    
+    /**
+     * Zatvara mrežnu utičnicu i povećava brojač zatvorenih veza.
+     * @param mreznaUticnica veza koju treba zatvoriti
+     */
+    private void zatvoriVezu(Socket mreznaUticnica) {
+        if (mreznaUticnica != null && !mreznaUticnica.isClosed()) {
+            try {
+                mreznaUticnica.close();
+                brojZatvorenihVeza.incrementAndGet();
+            } catch (IOException e) {
+                System.out.println("Greška pri zatvaranju veze: " + e.getMessage());
+            }
+        }
     }
 }
