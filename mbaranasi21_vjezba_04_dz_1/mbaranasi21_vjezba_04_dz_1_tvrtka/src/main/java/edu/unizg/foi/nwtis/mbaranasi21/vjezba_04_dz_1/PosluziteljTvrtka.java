@@ -624,21 +624,19 @@ public class PosluziteljTvrtka {
     /**
      * Obrađuje komandu za obračun
      */
-    private void obradiKomanduObracun(String linija, BufferedReader in, PrintWriter out) {
+    private synchronized void obradiKomanduObracun(String linija, BufferedReader in, PrintWriter out) {
         try {
-            // Format: OBRAČUN id sigurnosniKod
-            // Npr: OBRAČUN 1 4958583733
             String[] dijelovi = linija.trim().split(" ");
-            
+
             if (dijelovi.length != 3) {
                 out.write("ERROR 30 - Format komande nije ispravan\n");
                 out.flush();
                 return;
             }
-            
+
             int id = Integer.parseInt(dijelovi[1]);
             String sigurnosniKod = dijelovi[2];
-            
+
             Partner partner = null;
             for (Partner p : partneri) {
                 if (p.id() == id) {
@@ -646,64 +644,107 @@ public class PosluziteljTvrtka {
                     break;
                 }
             }
-            
+
             if (partner == null || !partner.sigurnosniKod().equals(sigurnosniKod)) {
                 out.write("ERROR 31 - Ne postoji partner s id u kolekciji partnera i/ili neispravan sigurnosni kod partnera\n");
                 out.flush();
                 return;
             }
-            
-            // Čitanje JSON podataka obračuna
+
             StringBuilder jsonObracun = new StringBuilder();
             String line;
             while ((line = in.readLine()) != null && !line.trim().endsWith("]")) {
                 jsonObracun.append(line).append("\n");
             }
-            
+
             if (line != null) {
                 jsonObracun.append(line);
             }
-            
+
             try {
                 List<Obracun> noviObracuni = gson.fromJson(jsonObracun.toString(), new TypeToken<List<Obracun>>(){}.getType());
                 
-                // Učitavanje postojećih obračuna
+                if (noviObracuni == null || noviObracuni.isEmpty()) {
+                    out.write("ERROR 35 - Neispravan obračun: podaci su prazni\n");
+                    out.flush();
+                    return;
+                }
+                
+                for (Obracun o : noviObracuni) {
+                    if (o.partner() != id) {
+                        out.write("ERROR 35 - Neispravan obračun: ID partnera ne odgovara\n");
+                        out.flush();
+                        return;
+                    }
+                    
+                    String itemId = o.id();
+                    boolean isJelo = o.jelo();
+                    boolean validId = false;
+                    
+                    if (isJelo) {
+                        String vrstaKuhinje = partner.vrstaKuhinje();
+                        for (Jelovnik j : jelovnici) {
+                            if (j.id().equals(itemId) && j.id().startsWith(vrstaKuhinje)) {
+                                validId = true;
+                                break;
+                            }
+                        }
+                    } else {
+                        for (KartaPica p : kartaPica) {
+                            if (p.id().equals(itemId)) {
+                                validId = true;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    if (!validId) {
+                        out.write("ERROR 35 - Neispravan obračun: nepostojeći ID jela/pića\n");
+                        out.flush();
+                        return;
+                    }
+                    
+                    if (o.kolicina() < 1) {
+                        out.write("ERROR 35 - Neispravan obračun: količina mora biti barem 1\n");
+                        out.flush();
+                        return;
+                    }
+                }
+
                 try {
                     String datotekaObracuna = this.konfig.dajPostavku("datotekaObracuna");
                     BufferedReader reader = new BufferedReader(new FileReader(datotekaObracuna));
                     List<Obracun> postojeciObracuni = gson.fromJson(reader, new TypeToken<List<Obracun>>(){}.getType());
                     reader.close();
-                    
+
                     if (postojeciObracuni != null) {
                         obracuni = postojeciObracuni;
                     }
                 } catch (IOException e) {
                     System.out.println("Nije moguće učitati postojeće obračune: " + e.getMessage());
                 }
-                
-                // Dodavanje novih obračuna
+
                 if (noviObracuni != null) {
                     obracuni.addAll(noviObracuni);
                 }
-                
-                // Spremanje obračuna
+
                 String datotekaObracuna = this.konfig.dajPostavku("datotekaObracuna");
                 FileWriter writer = new FileWriter(datotekaObracuna);
                 gson.toJson(obracuni, writer);
                 writer.close();
-                
+
                 out.write("OK\n");
                 out.flush();
-                
+
             } catch (Exception e) {
                 System.out.println("Greška pri obradi JSON obračuna: " + e.getMessage());
-                out.write("ERROR 35 - Neispravan obračun\n");
+                out.write("ERROR 35 - Neispravan obračun: pogreška pri parsiranju JSON-a\n");
                 out.flush();
             }
-            
+
         } catch (Exception e) {
             System.out.println("Greška pri obradi komande OBRAČUN: " + e.getMessage());
-            out.write("ERROR 39 - Greška kod obrade komande\n");
+            out.write("ERROR 39 - Nešto drugo nije u redu\n");
             out.flush();
         }
     }
