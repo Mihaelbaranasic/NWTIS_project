@@ -1,13 +1,13 @@
 [
   {
     "id": 1,
-    "naziv": "FOLT 1 - Varaždin, Pavlinska 9",
+    "naziv": "FOLT 1 - VaraÅ¾din, Pavlinska 9",
     "vrstaKuhinje": "MK",
     "adresa": "localhost",
     "mreznaVrata": 8010,
-    "gpsSirina": 46.30807,
+    "gpsSirina": 46.30803,
     "gpsDuzina": 16.34009,
-    "sigurnosniKod": "da53e5e7"
+    "sigurnosniKod": "a644b76"
   },
   {
     "id": 2,
@@ -15,18 +15,8 @@
     "vrstaKuhinje": "KK",
     "adresa": "localhost",
     "mreznaVrata": 8020,
-    "gpsSirina": 46.30838,
-    "gpsDuzina": 16.34782,
+    "gpsSirina": 46.30835,
+    "gpsDuzina": 16.3478,
     "sigurnosniKod": "e57a5998"
-  },
-  {
-    "id": 3,
-    "naziv": "FOLT 3 - VaraÅ¾din, Ul. BraÄe RadiÄ 102",
-    "vrstaKuhinje": "VK",
-    "adresa": "localhost",
-    "mreznaVrata": 8030,
-    "gpsSirina": 46.30154,
-    "gpsDuzina": 16.32023,
-    "sigurnosniKod": "1c37dd3e"
   }
 ]

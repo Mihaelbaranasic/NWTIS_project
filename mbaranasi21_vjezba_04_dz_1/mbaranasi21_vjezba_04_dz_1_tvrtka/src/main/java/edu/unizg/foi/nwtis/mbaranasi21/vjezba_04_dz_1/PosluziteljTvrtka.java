@@ -1,6 +1,7 @@
 package edu.unizg.foi.nwtis.mbaranasi21.vjezba_04_dz_1;
 
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -473,7 +475,8 @@ public class PosluziteljTvrtka {
     private void spremiPartnere() {
         try {
             String datotekaPartnera = this.konfig.dajPostavku("datotekaPartnera");
-            FileWriter writer = new FileWriter(datotekaPartnera);
+            OutputStreamWriter writer = new OutputStreamWriter(
+                new FileOutputStream(datotekaPartnera), StandardCharsets.UTF_8);
             gson.toJson(partneri, writer);
             writer.close();
         } catch (IOException e) {

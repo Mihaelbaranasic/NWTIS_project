@@ -44,13 +44,11 @@ public class KorisnikKupac {
         }
         
         try {
-            // Otvaranje datoteke s komandama
             BufferedReader reader = new BufferedReader(new FileReader(datotekaPodataka));
             
             String linija;
             while ((linija = reader.readLine()) != null) {
                 try {
-                    // Parsiranje linije
                     String[] dijelovi = linija.split(";");
                     if (dijelovi.length != 5) {
                         System.out.println("Nevažeći format linije: " + linija);
@@ -63,10 +61,8 @@ public class KorisnikKupac {
                     int spavanje = Integer.parseInt(dijelovi[3]);
                     String komanda = dijelovi[4];
                     
-                    // Spavanje prije slanja komande
                     Thread.sleep(spavanje);
                     
-                    // Slanje komande
                     posaljiKomandu(adresa, mreznaVrata, komanda);
                     
                 } catch (Exception e) {
@@ -111,18 +107,15 @@ public class KorisnikKupac {
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "utf8"));
             PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "utf8"));
             
-            // Slanje komande
             out.write(komanda + "\n");
             out.flush();
             
-            // Čitanje i ispis odgovora
             String odgovor = in.readLine();
             System.out.println("Komanda: " + komanda);
             System.out.println("Odgovor: " + odgovor);
             
-            // Ako je odgovor OK, a komanda traži podatke, ispisi i podatke
             if (odgovor != null && odgovor.equals("OK") && 
-                (komanda.startsWith("JELOVNIK") || komanda.startsWith("KARTAPIĆA") || komanda.startsWith("RAČUN"))) {
+                (komanda.startsWith("JELOVNIK") || komanda.startsWith("KARTAPIĆA") || komanda.startsWith("RAČUN") || komanda.startsWith("POPIS"))) {
                 
                 StringBuilder jsonBuilder = new StringBuilder();
                 String red;
