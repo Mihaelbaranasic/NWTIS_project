@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -45,10 +46,6 @@ public class PosluziteljPartner {
 	private List<Jelovnik> jelovnici = new ArrayList<>();
 	/** Kolekcija karte pića */
 	private List<KartaPica> kartaPica = new ArrayList<>();
-	/** Mapa otvorenih narudžbi po korisnicima */
-	private Map<String, List<Narudzba>> otvoreneNarudzbe = new HashMap<>();
-	/** Mapa plaćenih narudžbi po korisnicima */
-	private Map<String, List<Narudzba>> placeneNarudzbe = new HashMap<>();
 	/** Broj naplaćenih narudžbi */
 	private int brojNaplacenihNarudzbi = 0;
 	/** Zastavica za kraj rada */
@@ -61,6 +58,10 @@ public class PosluziteljPartner {
 	private AtomicInteger brojZatvorenihVeza = new AtomicInteger(0);
 	/** Lista aktivnih dretvi */
 	private List<Thread> aktivneDretve = Collections.synchronizedList(new ArrayList<>());
+	/** Mapa otvorenih narudžbi po korisnicima */
+	private Map<String, List<Narudzba>> otvoreneNarudzbe = new ConcurrentHashMap<>();
+	/** Mapa plaćenih narudžbi po korisnicima */
+	private Map<String, List<Narudzba>> placeneNarudzbe = new ConcurrentHashMap<>();
 
 	private int kvotaNarudzbi = 10;
 
@@ -558,50 +559,105 @@ public class PosluziteljPartner {
 	}
 
 	private synchronized void obradiKomanduRacun(String komanda, PrintWriter out) {
-		try {
-			// Format: RAČUN korisnik
-			String[] dijelovi = komanda.trim().split(" ");
-			if (dijelovi.length != 2) {
-				out.write("ERROR 40\n");
-				out.flush();
-				return;
-			}
-
-			String korisnik = dijelovi[1];
-
-			// Provjera postoji li otvorena narudžba za korisnika
-			if (!otvoreneNarudzbe.containsKey(korisnik) || otvoreneNarudzbe.get(korisnik) == null
-					|| otvoreneNarudzbe.get(korisnik).isEmpty()) {
-				out.write("ERROR 43\n");
-				out.flush();
-				return;
-			}
-
-			// Prebacivanje iz otvorenih u plaćene narudžbe
-			List<Narudzba> narudzba = otvoreneNarudzbe.get(korisnik);
-
-			if (!placeneNarudzbe.containsKey(korisnik)) {
-				placeneNarudzbe.put(korisnik, new ArrayList<>());
-			}
-
-			placeneNarudzbe.get(korisnik).addAll(narudzba);
-			otvoreneNarudzbe.remove(korisnik);
-
-			brojNaplacenihNarudzbi++;
-
-			// Provjera kvote za obračun - korištenje this.kvotaNarudzbi
-			if (brojNaplacenihNarudzbi % this.kvotaNarudzbi == 0) {
-				// Kod za obračun...
-			} else {
-				out.write("OK\n");
-				out.flush();
-			}
-
-		} catch (Exception e) {
-			System.out.println("Greška pri obradi komande RAČUN: " + e.getMessage());
-			out.write("ERROR 49\n");
-			out.flush();
-		}
+	    try {
+	        // Format: RAČUN korisnik
+	        String[] dijelovi = komanda.trim().split(" ");
+	        if (dijelovi.length != 2) {
+	            out.write("ERROR 40 - Format komande nije ispravan\n");
+	            out.flush();
+	            return;
+	        }
+	        
+	        String korisnik = dijelovi[1];
+	        
+	        // Provjera postoji li otvorena narudžba za korisnika
+	        if (!otvoreneNarudzbe.containsKey(korisnik) || otvoreneNarudzbe.get(korisnik) == null || otvoreneNarudzbe.get(korisnik).isEmpty()) {
+	            out.write("ERROR 43 - Ne postoji otvorena narudžba za korisnika/kupca\n");
+	            out.flush();
+	            return;
+	        }
+	        
+	        // Prebacivanje iz otvorenih u plaćene narudžbe
+	        List<Narudzba> narudzba = otvoreneNarudzbe.get(korisnik);
+	        
+	        if (!placeneNarudzbe.containsKey(korisnik)) {
+	            placeneNarudzbe.put(korisnik, new ArrayList<>());
+	        }
+	        
+	        placeneNarudzbe.get(korisnik).addAll(narudzba);
+	        otvoreneNarudzbe.remove(korisnik);
+	        
+	        brojNaplacenihNarudzbi++;
+	        
+	        // Provjera kvote za obračun
+	        if (brojNaplacenihNarudzbi % this.kvotaNarudzbi == 0) {
+	            // Kreiranje obračuna
+	            List<Obracun> obracuni = new ArrayList<>();
+	            
+	            // Grupiranje plaćenih narudžbi po ID-u i vrsti stavke
+	            Map<String, Float> kolicinePoID = new HashMap<>();
+	            
+	            for (List<Narudzba> narudzbe : placeneNarudzbe.values()) {
+	                for (Narudzba n : narudzbe) {
+	                    String kljuc = n.id() + (n.jelo() ? "_jelo" : "_pice");
+	                    kolicinePoID.put(kljuc, kolicinePoID.getOrDefault(kljuc, 0f) + n.kolicina());
+	                }
+	            }
+	            
+	            // Kreiranje obračuna za svaku stavku
+	            int idPartnera = Integer.parseInt(this.konfig.dajPostavku("id"));
+	            for (Map.Entry<String, Float> entry : kolicinePoID.entrySet()) {
+	                String[] dijeloviKljuca = entry.getKey().split("_");
+	                String id = dijeloviKljuca[0];
+	                boolean jelo = dijeloviKljuca[1].equals("jelo");
+	                float kolicina = entry.getValue();
+	                
+	                // Pronalaženje cijene
+	                float cijena = 0f;
+	                if (jelo) {
+	                    for (Jelovnik j : jelovnici) {
+	                        if (j.id().equals(id)) {
+	                            cijena = j.cijena();
+	                            break;
+	                        }
+	                    }
+	                } else {
+	                    for (KartaPica p : kartaPica) {
+	                        if (p.id().equals(id)) {
+	                            cijena = p.cijena();
+	                            break;
+	                        }
+	                    }
+	                }
+	                
+	                Obracun o = new Obracun(idPartnera, id, jelo, kolicina, cijena, System.currentTimeMillis() / 1000);
+	                obracuni.add(o);
+	            }
+	            
+	            // Slanje obračuna tvrtki
+	            if (posaljiObracun(obracuni)) {
+	                // Čišćenje plaćenih narudžbi nakon uspješnog slanja obračuna
+	                placeneNarudzbe.clear();
+	                
+	                // Vraćanje obračuna kupcu
+	                String jsonObracun = gson.toJson(obracuni);
+	                out.write("OK\n");
+	                out.write(jsonObracun + "\n");
+	                out.flush();
+	            } else {
+	                out.write("ERROR 45 - Neuspješno slanje obračuna\n");
+	                out.flush();
+	            }
+	        } else {
+	            out.write("OK\n");
+	            out.flush();
+	        }
+	        
+	    } catch (Exception e) {
+	        System.out.println("Greška pri obradi komande RAČUN: " + e.getMessage());
+	        out.write("ERROR 49 - Nešto drugo nije u redu\n");
+	        out.flush();
+	    }
 	}
 
 	private boolean posaljiObracun(List<Obracun> obracuni) {

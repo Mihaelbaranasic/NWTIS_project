@@ -14,7 +14,9 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -75,6 +77,24 @@ public class PosluziteljTvrtka {
         if (!this.ucitajKonfiguraciju(nazivDatoteke)) {
             return;
         }
+        
+        String[] obaveznePostavke = {
+            "datotekaPartnera", "mreznaVrataKraj", "mreznaVrataRegistracija", 
+            "mreznaVrataRad", "kodZaKraj", "datotekaKartaPica", "datotekaObracuna"
+        };
+        
+        for (String postavka : obaveznePostavke) {
+            if (!this.konfig.postojiPostavka(postavka)) {
+                System.out.println("Nedostaje obavezna postavka: " + postavka);
+                return;
+            }
+        }
+        
+        if (!this.konfig.dajPostavku("datotekaPartnera").endsWith(".json")) {
+            System.out.println("Datoteka partnera mora imati .json ekstenziju");
+            return;
+        }
+        
         this.kodZaKraj = this.konfig.dajPostavku("kodZaKraj");
         this.pauzaDretve = Integer.parseInt(this.konfig.dajPostavku("pauzaDretve"));
         
@@ -117,13 +137,11 @@ public class PosluziteljTvrtka {
      */
     private void ucitajPodatke() {
         try {
-            // Učitaj partnere
             String datotekaPartnera = this.konfig.dajPostavku("datotekaPartnera");
             BufferedReader reader = new BufferedReader(new FileReader(datotekaPartnera));
             this.partneri = gson.fromJson(reader, new TypeToken<List<Partner>>(){}.getType());
             reader.close();
             
-            // Učitaj jelovnike za svaku kuhinju
             for (int i = 1; i <= 9; i++) {
                 String kljucKuhinje = "kuhinja_" + i;
                 if (this.konfig.postojiPostavka(kljucKuhinje)) {
@@ -145,11 +163,34 @@ public class PosluziteljTvrtka {
                 }
             }
             
-            // Učitaj kartu pića
             String datotekaKartaPica = this.konfig.dajPostavku("datotekaKartaPica");
             reader = new BufferedReader(new FileReader(datotekaKartaPica));
             this.kartaPica = gson.fromJson(reader, new TypeToken<List<KartaPica>>(){}.getType());
             reader.close();
+            
+            List<Partner> validniPartneri = new ArrayList<>();
+            Set<String> postojeceKuhinje = new HashSet<>();
+            
+            for (int i = 1; i <= 9; i++) {
+                String kljucKuhinje = "kuhinja_" + i;
+                if (this.konfig.postojiPostavka(kljucKuhinje)) {
+                    String vrijednostKuhinje = this.konfig.dajPostavku(kljucKuhinje);
+                    String[] dijelovi = vrijednostKuhinje.split(";");
+                    if (dijelovi.length >= 1) {
+                        postojeceKuhinje.add(dijelovi[0]);
+                    }
+                }
+            }
+            
+            for (Partner p : partneri) {
+                if (postojeceKuhinje.contains(p.vrstaKuhinje())) {
+                    validniPartneri.add(p);
+                } else {
+                    System.out.println("Partner " + p.naziv() + " (ID: " + p.id() + ") ima nepostojeću kuhinju: " + p.vrstaKuhinje());
+                }
+            }
+            
+            partneri = validniPartneri;
             
             System.out.println("Podaci uspješno učitani.");
         } catch (IOException e) {
