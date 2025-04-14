@@ -1,1 +1,98 @@
-[]
+[
+  {
+    "partner": 1,
+    "id": "MK1",
+    "jelo": true,
+    "kolicina": 1.0,
+    "cijena": 10.0,
+    "vrijeme": 1743255985
+  },
+  {
+    "partner": 1,
+    "id": "MK5",
+    "jelo": true,
+    "kolicina": 1.0,
+    "cijena": 8.0,
+    "vrijeme": 1743255985
+  },
+  {
+    "partner": 1,
+    "id": "p1",
+    "jelo": false,
+    "kolicina": 1.0,
+    "cijena": 3.0,
+    "vrijeme": 1743255985
+  },
+  {
+    "partner": 1,
+    "id": "p3",
+    "jelo": false,
+    "kolicina": 1.0,
+    "cijena": 4.0,
+    "vrijeme": 1743255985
+  },
+  {
+    "partner": 1,
+    "id": "MK1",
+    "jelo": true,
+    "kolicina": 10.0,
+    "cijena": 10.0,
+    "vrijeme": 1743255985
+  },
+  {
+    "partner": 1,
+    "id": "MK5",
+    "jelo": true,
+    "kolicina": 1.0,
+    "cijena": 8.0,
+    "vrijeme": 1743255985
+  },
+  {
+    "partner": 1,
+    "id": "p1",
+    "jelo": false,
+    "kolicina": 1.0,
+    "cijena": 3.0,
+    "vrijeme": 1743255985
+  },
+  {
+    "partner": 1,
+    "id": "p3",
+    "jelo": false,
+    "kolicina": 1.0,
+    "cijena": 4.0,
+    "vrijeme": 1743255985
+  },
+  {
+    "partner": 1,
+    "id": "MK1",
+    "jelo": true,
+    "kolicina": 10.0,
+    "cijena": 10.0,
+    "vrijeme": 1743255985
+  },
+  {
+    "partner": 1,
+    "id": "MK5",
+    "jelo": true,
+    "kolicina": 1.0,
+    "cijena": 8.0,
+    "vrijeme": 1743255985
+  },
+  {
+    "partner": 1,
+    "id": "p1",
+    "jelo": false,
+    "kolicina": 1.0,
+    "cijena": 3.0,
+    "vrijeme": 1743255985
+  },
+  {
+    "partner": 1,
+    "id": "p3",
+    "jelo": false,
+    "kolicina": 1.0,
+    "cijena": 4.0,
+    "vrijeme": 1743255985
+  }
+]

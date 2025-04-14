@@ -102,33 +102,30 @@ public class KorisnikKupac {
      * @param komanda komanda za slanje
      */
     private void posaljiKomandu(String adresa, int mreznaVrata, String komanda) {
-        try {
-            Socket socket = new Socket(adresa, mreznaVrata);
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "utf8"));
-            PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "utf8"));
-            
-            out.write(komanda + "\n");
-            out.flush();
-            
-            String odgovor = in.readLine();
-            System.out.println("Komanda: " + komanda);
-            System.out.println("Odgovor: " + odgovor);
-            
-            if (odgovor != null && odgovor.equals("OK") && 
-                (komanda.startsWith("JELOVNIK") || komanda.startsWith("KARTAPIĆA") || komanda.startsWith("RAČUN") || komanda.startsWith("POPIS"))) {
-                
-                StringBuilder jsonBuilder = new StringBuilder();
-                String red;
-                while ((red = in.readLine()) != null) {
-                    jsonBuilder.append(red);
-                    System.out.println(red);
-                }
-            }
-            
-            socket.close();
-            
-        } catch (IOException e) {
-            System.out.println("Greška pri slanju komande: " + e.getMessage());
-        }
-    }
+      try {
+          Socket socket = new Socket(adresa, mreznaVrata);
+          BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
+          PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"), true);
+          
+          out.write(komanda + "\n");
+          out.flush();
+          
+          String odgovor = in.readLine();
+          
+          if (odgovor != null && odgovor.equals("OK") && 
+              (komanda.startsWith("JELOVNIK") || komanda.startsWith("KARTAPIĆA") || 
+               komanda.startsWith("RAČUN") || komanda.startsWith("POPIS"))) {
+              
+              StringBuilder jsonBuilder = new StringBuilder();
+              String red;
+              while ((red = in.readLine()) != null) {
+                  jsonBuilder.append(red);
+              }
+          }
+          
+          socket.close();
+          
+      } catch (IOException e) {
+      }
+  }
 }
