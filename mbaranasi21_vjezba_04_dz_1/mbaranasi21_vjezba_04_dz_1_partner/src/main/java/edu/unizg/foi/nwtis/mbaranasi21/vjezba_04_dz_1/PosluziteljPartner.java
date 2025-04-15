@@ -75,7 +75,6 @@ public class PosluziteljPartner {
 	        System.out.println("Program se prekida (Ctrl+C). Zatvaranje resursa...");
 	        program.kraj = true;
 	        
-	        // Prekid svih aktivnih dretvi
 	        for (Thread dretva : program.aktivneDretve) {
 	            if (dretva != null && dretva.isAlive()) {
 	                dretva.interrupt();
@@ -83,14 +82,12 @@ public class PosluziteljPartner {
 	            }
 	        }
 	        
-	        // Čekamo kratko da se dretve imaju priliku zatvoriti
 	        try {
 	            Thread.sleep(500);
 	        } catch (InterruptedException e) {
 	            Thread.currentThread().interrupt();
 	        }
 	        
-	        // Ispisujemo statistiku
 	        System.out.println("Ukupno zatvoreno veza: " + program.brojZatvorenihVeza.get());
 	        System.out.println("Ukupno prekinuto dretvi: " + program.brojPrekinutihDretvi.get());
 	    }));
@@ -136,7 +133,6 @@ public class PosluziteljPartner {
 	    var factory = builder.factory();
 	    this.executor = Executors.newThreadPerTaskExecutor(factory);
 
-	    // Postavite globalnu varijablu umjesto lokalne
 	    if (this.konfig.postojiPostavka("kvotaNarudzbi")) {
 	        this.kvotaNarudzbi = Integer.parseInt(this.konfig.dajPostavku("kvotaNarudzbi"));
 	    }
@@ -153,12 +149,10 @@ public class PosluziteljPartner {
 	                try {
 	                    Socket socket = ss.accept();
 	                    this.executor.submit(() -> {
-	                        // Dodajemo trenutnu dretvu u listu aktivnih
 	                        aktivneDretve.add(Thread.currentThread());
 	                        try {
 	                            obradiZahtjevKupca(socket);
 	                        } finally {
-	                            // Uklanjamo dretvu iz liste aktivnih kad završi
 	                            aktivneDretve.remove(Thread.currentThread());
 	                        }
 	                    });
@@ -196,6 +190,16 @@ public class PosluziteljPartner {
 	            return;
 	        }
 	        
+	        String[] dijelovi = komanda.split(" ", 2);
+	        String nazivKomande = dijelovi[0];
+	        
+	        if (!nazivKomande.equals(nazivKomande.toUpperCase())) {
+	            out.write("ERROR 40 - Format komande nije ispravan (komanda mora biti velikim slovima)\n");
+	            out.flush();
+	            zatvoriVezu(socket);
+	            return;
+	        }
+	        
 	        if (komanda.startsWith("JELOVNIK ")) {
 	            obradiKomanduJelovnik(komanda, out);
 	        } else if (komanda.startsWith("KARTAPIĆA ")) {
@@ -209,7 +213,7 @@ public class PosluziteljPartner {
 	        } else if (komanda.startsWith("RAČUN ")) {
 	            obradiKomanduRacun(komanda, out);
 	        } else {
-	            out.write("ERROR 49 - Nepoznata komanda\n");
+	            out.write("ERROR 49 - Nepoznata komanda: " + komanda + "\n");
 	            out.flush();
 	        }
 	        
@@ -244,7 +248,6 @@ public class PosluziteljPartner {
 	}
 
 	private void registrirajPartnera() {
-	    // Ako partner već ima sigurnosni kod, ne registriramo ga ponovno
 	    if (this.konfig.postojiPostavka("sigKod") && !this.konfig.dajPostavku("sigKod").isEmpty()) {
 	        System.out.println("Partner je već registriran. Sigurnosni kod: " + this.konfig.dajPostavku("sigKod"));
 	        return;
@@ -386,181 +389,180 @@ public class PosluziteljPartner {
 	}
 
 	private void obradiKomanduJelovnik(String komanda, PrintWriter out) {
-		try {
-			String[] dijelovi = komanda.trim().split(" ");
-			if (dijelovi.length != 2) {
-				out.write("ERROR 40\n");
-				out.flush();
-				return;
-			}
+	    try {
+	        String[] dijelovi = komanda.trim().split(" ");
+	        if (dijelovi.length != 2) {
+	            out.write("ERROR 40 - Format komande nije ispravan\n");
+	            out.flush();
+	            return;
+	        }
 
-			String korisnik = dijelovi[1];
+	        String korisnik = dijelovi[1];
 
-			String jsonJelovnik = gson.toJson(this.jelovnici);
+	        String jsonJelovnik = gson.toJson(this.jelovnici);
 
-			out.write("OK\n");
-			out.write(jsonJelovnik + "\n");
-			out.flush();
+	        out.write("OK\n");
+	        out.write(jsonJelovnik + "\n");
+	        out.flush();
 
-		} catch (Exception e) {
-			System.out.println("Greška pri obradi komande JELOVNIK: " + e.getMessage());
-			out.write("ERROR 49\n");
-			out.flush();
-		}
+	    } catch (Exception e) {
+	        System.out.println("Greška pri obradi komande JELOVNIK: " + e.getMessage());
+	        out.write("ERROR 49 - Nešto drugo nije u redu\n");
+	        out.flush();
+	    }
 	}
 
 	private void obradiKomanduKartaPica(String komanda, PrintWriter out) {
-		try {
-			String[] dijelovi = komanda.trim().split(" ");
-			if (dijelovi.length != 2) {
-				out.write("ERROR 40\n");
-				out.flush();
-				return;
-			}
+	    try {
+	        String[] dijelovi = komanda.trim().split(" ");
+	        if (dijelovi.length != 2) {
+	            out.write("ERROR 40 - Format komande nije ispravan\n");
+	            out.flush();
+	            return;
+	        }
 
-			String korisnik = dijelovi[1];
+	        String korisnik = dijelovi[1];
 
-			String jsonKartaPica = gson.toJson(this.kartaPica);
+	        String jsonKartaPica = gson.toJson(this.kartaPica);
 
-			out.write("OK\n");
-			out.write(jsonKartaPica + "\n");
-			out.flush();
+	        out.write("OK\n");
+	        out.write(jsonKartaPica + "\n");
+	        out.flush();
 
-		} catch (Exception e) {
-			System.out.println("Greška pri obradi komande KARTAPIĆA: " + e.getMessage());
-			out.write("ERROR 49\n");
-			out.flush();
-		}
+	    } catch (Exception e) {
+	        System.out.println("Greška pri obradi komande KARTAPIĆA: " + e.getMessage());
+	        out.write("ERROR 49 - Nešto drugo nije u redu\n");
+	        out.flush();
+	    }
 	}
 
 	private synchronized void obradiKomanduNarudzba(String komanda, PrintWriter out) {
-		try {
-			String[] dijelovi = komanda.trim().split(" ");
-			if (dijelovi.length != 2) {
-				out.write("ERROR 40\n");
-				out.flush();
-				return;
-			}
+	    try {
+	        String[] dijelovi = komanda.trim().split(" ");
+	        if (dijelovi.length != 2) {
+	            out.write("ERROR 40 - Format komande nije ispravan\n");
+	            out.flush();
+	            return;
+	        }
 
-			String korisnik = dijelovi[1];
+	        String korisnik = dijelovi[1];
 
-			if (otvoreneNarudzbe.containsKey(korisnik) && !otvoreneNarudzbe.get(korisnik).isEmpty()) {
-				out.write("ERROR 44\n");
-				out.flush();
-				return;
-			}
+	        if (otvoreneNarudzbe.containsKey(korisnik) && !otvoreneNarudzbe.get(korisnik).isEmpty()) {
+	            out.write("ERROR 44 - Već postoji otvorena narudžba za korisnika/kupca\n");
+	            out.flush();
+	            return;
+	        }
 
-			otvoreneNarudzbe.put(korisnik, new ArrayList<>());
+	        otvoreneNarudzbe.put(korisnik, new ArrayList<>());
 
-			out.write("OK\n");
-			out.flush();
+	        out.write("OK\n");
+	        out.flush();
 
-		} catch (Exception e) {
-			System.out.println("Greška pri obradi komande NARUDŽBA: " + e.getMessage());
-			out.write("ERROR 49\n");
-			out.flush();
-		}
+	    } catch (Exception e) {
+	        System.out.println("Greška pri obradi komande NARUDŽBA: " + e.getMessage());
+	        out.write("ERROR 49 - Nešto drugo nije u redu\n");
+	        out.flush();
+	    }
 	}
 
 	private synchronized void obradiKomanduJelo(String komanda, PrintWriter out) {
-		try {
-			String[] dijelovi = komanda.trim().split(" ");
-			if (dijelovi.length != 4) {
-				out.write("ERROR 40\n");
-				out.flush();
-				return;
-			}
+	    try {
+	        String[] dijelovi = komanda.trim().split(" ");
+	        if (dijelovi.length != 4) {
+	            out.write("ERROR 40 - Format komande nije ispravan\n");
+	            out.flush();
+	            return;
+	        }
 
-			String korisnik = dijelovi[1];
-			String idJela = dijelovi[2];
-			float kolicina = Float.parseFloat(dijelovi[3]);
+	        String korisnik = dijelovi[1];
+	        String idJela = dijelovi[2];
+	        float kolicina = Float.parseFloat(dijelovi[3]);
 
-			if (!otvoreneNarudzbe.containsKey(korisnik) || otvoreneNarudzbe.get(korisnik) == null) {
-				out.write("ERROR 43\n");
-				out.flush();
-				return;
-			}
+	        if (!otvoreneNarudzbe.containsKey(korisnik) || otvoreneNarudzbe.get(korisnik) == null) {
+	            out.write("ERROR 43 - Ne postoji otvorena narudžba za korisnika/kupca\n");
+	            out.flush();
+	            return;
+	        }
 
-			Jelovnik jelo = null;
-			for (Jelovnik j : jelovnici) {
-				if (j.id().equals(idJela)) {
-					jelo = j;
-					break;
-				}
-			}
+	        Jelovnik jelo = null;
+	        for (Jelovnik j : jelovnici) {
+	            if (j.id().equals(idJela)) {
+	                jelo = j;
+	                break;
+	            }
+	        }
 
-			if (jelo == null) {
-				out.write("ERROR 41\n");
-				out.flush();
-				return;
-			}
+	        if (jelo == null) {
+	            out.write("ERROR 41 - Ne postoji jelo s id u kolekciji jelovnika kod partnera\n");
+	            out.flush();
+	            return;
+	        }
 
-			int idPartnera = Integer.parseInt(this.konfig.dajPostavku("id"));
-			Narudzba stavka = new Narudzba(korisnik, idJela, true, kolicina, jelo.cijena(),
-					System.currentTimeMillis() / 1000);
-			otvoreneNarudzbe.get(korisnik).add(stavka);
+	        int idPartnera = Integer.parseInt(this.konfig.dajPostavku("id"));
+	        Narudzba stavka = new Narudzba(korisnik, idJela, true, kolicina, jelo.cijena(),
+	                System.currentTimeMillis() / 1000);
+	        otvoreneNarudzbe.get(korisnik).add(stavka);
 
-			out.write("OK\n");
-			out.flush();
+	        out.write("OK\n");
+	        out.flush();
 
-		} catch (Exception e) {
-			System.out.println("Greška pri obradi komande JELO: " + e.getMessage());
-			out.write("ERROR 49\n");
-			out.flush();
-		}
+	    } catch (Exception e) {
+	        System.out.println("Greška pri obradi komande JELO: " + e.getMessage());
+	        out.write("ERROR 49 - Nešto drugo nije u redu\n");
+	        out.flush();
+	    }
 	}
 
 	private synchronized void obradiKomanduPice(String komanda, PrintWriter out) {
-		try {
-			String[] dijelovi = komanda.trim().split(" ");
-			if (dijelovi.length != 4) {
-				out.write("ERROR 40\n");
-				out.flush();
-				return;
-			}
+	    try {
+	        String[] dijelovi = komanda.trim().split(" ");
+	        if (dijelovi.length != 4) {
+	            out.write("ERROR 40 - Format komande nije ispravan\n");
+	            out.flush();
+	            return;
+	        }
 
-			String korisnik = dijelovi[1];
-			String idPica = dijelovi[2];
-			float kolicina = Float.parseFloat(dijelovi[3]);
+	        String korisnik = dijelovi[1];
+	        String idPica = dijelovi[2];
+	        float kolicina = Float.parseFloat(dijelovi[3]);
 
-			if (!otvoreneNarudzbe.containsKey(korisnik) || otvoreneNarudzbe.get(korisnik) == null) {
-				out.write("ERROR 43\n");
-				out.flush();
-				return;
-			}
+	        if (!otvoreneNarudzbe.containsKey(korisnik) || otvoreneNarudzbe.get(korisnik) == null) {
+	            out.write("ERROR 43 - Ne postoji otvorena narudžba za korisnika/kupca\n");
+	            out.flush();
+	            return;
+	        }
 
-			KartaPica pice = null;
-			for (KartaPica p : kartaPica) {
-				if (p.id().equals(idPica)) {
-					pice = p;
-					break;
-				}
-			}
+	        KartaPica pice = null;
+	        for (KartaPica p : kartaPica) {
+	            if (p.id().equals(idPica)) {
+	                pice = p;
+	                break;
+	            }
+	        }
 
-			if (pice == null) {
-				out.write("ERROR 42\n");
-				out.flush();
-				return;
-			}
+	        if (pice == null) {
+	            out.write("ERROR 42 - Ne postoji piće s id u kolekciji karte pića kod partnera\n");
+	            out.flush();
+	            return;
+	        }
 
-			int idPartnera = Integer.parseInt(this.konfig.dajPostavku("id"));
-			Narudzba stavka = new Narudzba(korisnik, idPica, false, kolicina, pice.cijena(),
-					System.currentTimeMillis() / 1000);
-			otvoreneNarudzbe.get(korisnik).add(stavka);
+	        int idPartnera = Integer.parseInt(this.konfig.dajPostavku("id"));
+	        Narudzba stavka = new Narudzba(korisnik, idPica, false, kolicina, pice.cijena(),
+	                System.currentTimeMillis() / 1000);
+	        otvoreneNarudzbe.get(korisnik).add(stavka);
 
-			out.write("OK\n");
-			out.flush();
+	        out.write("OK\n");
+	        out.flush();
 
-		} catch (Exception e) {
-			System.out.println("Greška pri obradi komande PIĆE: " + e.getMessage());
-			out.write("ERROR 49\n");
-			out.flush();
-		}
+	    } catch (Exception e) {
+	        System.out.println("Greška pri obradi komande PIĆE: " + e.getMessage());
+	        out.write("ERROR 49 - Nešto drugo nije u redu\n");
+	        out.flush();
+	    }
 	}
 
 	private synchronized void obradiKomanduRacun(String komanda, PrintWriter out) {
 	    try {
-	        // Format: RAČUN korisnik
 	        String[] dijelovi = komanda.trim().split(" ");
 	        if (dijelovi.length != 2) {
 	            out.write("ERROR 40 - Format komande nije ispravan\n");
@@ -570,14 +572,12 @@ public class PosluziteljPartner {
 	        
 	        String korisnik = dijelovi[1];
 	        
-	        // Provjera postoji li otvorena narudžba za korisnika
-	        if (!otvoreneNarudzbe.containsKey(korisnik) || otvoreneNarudzbe.get(korisnik) == null || otvoreneNarudzbe.get(korisnik).isEmpty()) {
+	        if (!otvoreneNarudzbe.containsKey(korisnik) || otvoreneNarudzbe.get(korisnik) == null) {
 	            out.write("ERROR 43 - Ne postoji otvorena narudžba za korisnika/kupca\n");
 	            out.flush();
 	            return;
 	        }
 	        
-	        // Prebacivanje iz otvorenih u plaćene narudžbe
 	        List<Narudzba> narudzba = otvoreneNarudzbe.get(korisnik);
 	        
 	        if (!placeneNarudzbe.containsKey(korisnik)) {
@@ -585,61 +585,51 @@ public class PosluziteljPartner {
 	        }
 	        
 	        placeneNarudzbe.get(korisnik).addAll(narudzba);
+	        
 	        otvoreneNarudzbe.remove(korisnik);
 	        
 	        brojNaplacenihNarudzbi++;
 	        
-	        // Provjera kvote za obračun
+	        System.out.println("Naplaćena narudžba #" + brojNaplacenihNarudzbi + " za korisnika " + korisnik + 
+	                           " sa " + narudzba.size() + " stavki. Kvota: " + this.kvotaNarudzbi);
+	        
 	        if (brojNaplacenihNarudzbi % this.kvotaNarudzbi == 0) {
-	            // Kreiranje obračuna
 	            List<Obracun> obracuni = new ArrayList<>();
 	            
-	            // Grupiranje plaćenih narudžbi po ID-u i vrsti stavke
 	            Map<String, Float> kolicinePoID = new HashMap<>();
+	            Map<String, Float> cijenePoID = new HashMap<>();
+	            Map<String, Boolean> jeLoJelo = new HashMap<>();
 	            
 	            for (List<Narudzba> narudzbe : placeneNarudzbe.values()) {
 	                for (Narudzba n : narudzbe) {
-	                    String kljuc = n.id() + (n.jelo() ? "_jelo" : "_pice");
+	                    String id = n.id();
+	                    boolean jelo = n.jelo();
+	                    String kljuc = id + (jelo ? "_jelo" : "_pice");
+	                    
 	                    kolicinePoID.put(kljuc, kolicinePoID.getOrDefault(kljuc, 0f) + n.kolicina());
+	                    
+	                    cijenePoID.put(kljuc, n.cijena());
+	                    
+	                    jeLoJelo.put(kljuc, jelo);
 	                }
 	            }
 	            
-	            // Kreiranje obračuna za svaku stavku
 	            int idPartnera = Integer.parseInt(this.konfig.dajPostavku("id"));
 	            for (Map.Entry<String, Float> entry : kolicinePoID.entrySet()) {
-	                String[] dijeloviKljuca = entry.getKey().split("_");
+	                String kljuc = entry.getKey();
+	                String[] dijeloviKljuca = kljuc.split("_");
 	                String id = dijeloviKljuca[0];
-	                boolean jelo = dijeloviKljuca[1].equals("jelo");
+	                boolean jelo = jeLoJelo.get(kljuc);
 	                float kolicina = entry.getValue();
-	                
-	                // Pronalaženje cijene
-	                float cijena = 0f;
-	                if (jelo) {
-	                    for (Jelovnik j : jelovnici) {
-	                        if (j.id().equals(id)) {
-	                            cijena = j.cijena();
-	                            break;
-	                        }
-	                    }
-	                } else {
-	                    for (KartaPica p : kartaPica) {
-	                        if (p.id().equals(id)) {
-	                            cijena = p.cijena();
-	                            break;
-	                        }
-	                    }
-	                }
+	                float cijena = cijenePoID.get(kljuc);
 	                
 	                Obracun o = new Obracun(idPartnera, id, jelo, kolicina, cijena, System.currentTimeMillis() / 1000);
 	                obracuni.add(o);
 	            }
 	            
-	            // Slanje obračuna tvrtki
 	            if (posaljiObracun(obracuni)) {
-	                // Čišćenje plaćenih narudžbi nakon uspješnog slanja obračuna
 	                placeneNarudzbe.clear();
 	                
-	                // Vraćanje obračuna kupcu
 	                String jsonObracun = gson.toJson(obracuni);
 	                out.write("OK\n");
 	                out.write(jsonObracun + "\n");
@@ -661,38 +651,37 @@ public class PosluziteljPartner {
 	}
 
 	private boolean posaljiObracun(List<Obracun> obracuni) {
-		try {
-			String jsonObracun = gson.toJson(obracuni);
+	    try {
+	        String jsonObracun = gson.toJson(obracuni);
 
-			String adresa = this.konfig.dajPostavku("adresa");
-			int mreznaVrataRad = Integer.parseInt(this.konfig.dajPostavku("mreznaVrataRad"));
-			int id = Integer.parseInt(this.konfig.dajPostavku("id"));
-			String sigKod = this.konfig.dajPostavku("sigKod");
+	        String adresa = this.konfig.dajPostavku("adresa");
+	        int mreznaVrataRad = Integer.parseInt(this.konfig.dajPostavku("mreznaVrataRad"));
+	        int id = Integer.parseInt(this.konfig.dajPostavku("id"));
+	        String sigKod = this.konfig.dajPostavku("sigKod");
 
-			Socket socket = new Socket(adresa, mreznaVrataRad);
-			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "utf8"));
-			PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "utf8"));
+	        Socket socket = new Socket(adresa, mreznaVrataRad);
+	        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "utf8"));
+	        PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "utf8"));
 
-			String komanda = "OBRAČUN " + id + " " + sigKod + "\n";
-			out.write(komanda);
-			out.write(jsonObracun + "\n");
-			out.flush();
+	        String komanda = "OBRAČUN " + id + " " + sigKod + "\n";
+	        out.write(komanda);
+	        out.write(jsonObracun + "\n");
+	        out.flush();
 
-			String odgovor = in.readLine();
-			if (odgovor != null && odgovor.equals("OK")) {
-				System.out.println("Obračun uspješno poslan.");
-				socket.close();
-				return true;
-			} else {
-				System.out.println("Greška pri slanju obračuna: " + odgovor);
-				socket.close();
-				return false;
-			}
+	        String odgovor = in.readLine();
+	        if (odgovor != null && odgovor.equals("OK")) {
+	            socket.close();
+	            return true;
+	        } else {
+	            System.out.println("Greška pri slanju obračuna: " + odgovor);
+	            socket.close();
+	            return false;
+	        }
 
-		} catch (Exception e) {
-			System.out.println("Greška pri slanju obračuna: " + e.getMessage());
-			return false;
-		}
+	    } catch (Exception e) {
+	        System.out.println("Greška pri slanju obračuna: " + e.getMessage());
+	        return false;
+	    }
 	}
 
 	/**

@@ -98,24 +98,20 @@ public class PosluziteljTvrtka {
         this.kodZaKraj = this.konfig.dajPostavku("kodZaKraj");
         this.pauzaDretve = Integer.parseInt(this.konfig.dajPostavku("pauzaDretve"));
         
-        // Učitavanje podataka
         ucitajPodatke();
         
         var builder = Thread.ofVirtual();
         var factory = builder.factory();
         this.executor = Executors.newThreadPerTaskExecutor(factory);
         
-        // Pokretanje poslužitelja
         Future<?> dretvaZaKraj = this.executor.submit(() -> this.pokreniPosluziteljKraj());
         Future<?> dretvaZaRegistraciju = this.executor.submit(() -> this.pokreniPosluziteljRegistracija());
         Future<?> dretvaZaRad = this.executor.submit(() -> this.pokreniPosluziteljRad());
         
-        // Čekanje dok dretve ne završe ili dok ne dođe zahtjev za kraj
         while (!this.kraj.get()) {
             try {
                 Thread.sleep(this.pauzaDretve);
                 
-                // Provjera je li kraj rada
                 if (this.kraj.get()) {
                     if (!dretvaZaRegistraciju.isDone()) {
                         dretvaZaRegistraciju.cancel(true);
@@ -206,12 +202,10 @@ public class PosluziteljTvrtka {
                 try {
                     var mreznaUticnica = ss.accept();
                     this.executor.submit(() -> {
-                        // Dodajemo trenutnu dretvu u listu aktivnih
                         aktivneDretve.add(Thread.currentThread());
                         try {
                             return this.obradiKraj(mreznaUticnica);
                         } finally {
-                            // Uklanjamo dretvu iz liste aktivnih kad završi
                             aktivneDretve.remove(Thread.currentThread());
                         }
                     });
@@ -250,7 +244,6 @@ public class PosluziteljTvrtka {
                 return Boolean.FALSE;
             }
             
-            // Provjera lokalne adrese
             InetAddress adresaZahtjeva = mreznaUticnica.getInetAddress();
             InetAddress lokalnaAdresa = InetAddress.getLocalHost();
             
@@ -309,19 +302,15 @@ public class PosluziteljTvrtka {
                 return Boolean.FALSE;
             }
             
-            // Obrada komande PARTNER
             if (linija.startsWith("PARTNER ")) {
                 obradiKomanduPartner(linija, out);
             }
-            // Obrada komande OBRIŠI
             else if (linija.startsWith("OBRIŠI ")) {
                 obradiKomanduObrisi(linija, out);
             }
-            // Obrada komande POPIS
             else if (linija.trim().equals("POPIS")) {
                 obradiKomanduPopis(out);
             }
-            // Nepoznata komanda
             else {
                 out.write("ERROR 20 - Format komande nije ispravan\n");
                 out.flush();
@@ -342,10 +331,7 @@ public class PosluziteljTvrtka {
      */
     private void obradiKomanduPartner(String linija, PrintWriter out) {
         try {
-            // Format: PARTNER id "Naziv partnera" vrstaKuhinje adresa mreznaVrata gpsSirina gpsDuzina
-            // Npr: PARTNER 1 "Roštilj Pero" MK localhost 8010 46.29950 16.33001
 
-            // Izvlačenje naziva partnera između navodnika
             int pocetakNaziva = linija.indexOf("\"");
             int krajNaziva = linija.indexOf("\"", pocetakNaziva + 1);
 
@@ -357,7 +343,6 @@ public class PosluziteljTvrtka {
 
             String naziv = linija.substring(pocetakNaziva + 1, krajNaziva);
 
-            // Preostali dio linije nakon zatvaranja navodnika
             String ostatakLinije = linija.substring(krajNaziva + 1).trim();
             String[] parametri = ostatakLinije.split(" ");
 
@@ -367,14 +352,12 @@ public class PosluziteljTvrtka {
                 return;
             }
 
-            // Izdvajanje parametara
             String vrstaKuhinje = parametri[0];
             String adresa = parametri[1];
             int mreznaVrata = Integer.parseInt(parametri[2]);
             float gpsSirina = Float.parseFloat(parametri[3]);
             float gpsDuzina = Float.parseFloat(parametri[4]);
 
-            // Izdvajanje ID-a partnera
             String[] prviDio = linija.substring(0, pocetakNaziva).trim().split(" ");
             if (prviDio.length != 2) {
                 out.write("ERROR 20 - Format komande nije ispravan\n");
@@ -383,7 +366,6 @@ public class PosluziteljTvrtka {
             }
             int id = Integer.parseInt(prviDio[1]);
 
-            // Provjera postoji li već partner s istim ID-om
             for (Partner p : partneri) {
                 if (p.id() == id) {
                     out.write("ERROR 21 - Već postoji partner s id u kolekciji partnera\n");
@@ -392,7 +374,6 @@ public class PosluziteljTvrtka {
                 }
             }
 
-            // Provjera postoji li kuhinja
             boolean kuhinjaPostoji = false;
             for (int i = 1; i <= 9; i++) {
                 String kljucKuhinje = "kuhinja_" + i;
@@ -412,19 +393,15 @@ public class PosluziteljTvrtka {
                 return;
             }
 
-            // Generiranje sigurnosnog koda
             String podatakZaKod = naziv + adresa;
             int hash = podatakZaKod.hashCode();
             String sigurnosniKod = Integer.toHexString(hash);
 
-            // Kreiranje novog partnera
             Partner noviPartner = new Partner(id, naziv, vrstaKuhinje, adresa, mreznaVrata, gpsSirina, gpsDuzina, sigurnosniKod);
             partneri.add(noviPartner);
 
-            // Spremanje u datoteku
             spremiPartnere();
 
-            // Slanje odgovora
             out.write("OK " + sigurnosniKod + "\n");
             out.flush();
 
@@ -440,8 +417,6 @@ public class PosluziteljTvrtka {
      */
     private void obradiKomanduObrisi(String linija, PrintWriter out) {
         try {
-            // Format: OBRIŠI id sigurnosniKod
-            // Npr: OBRIŠI 1 4958583733
             String[] dijelovi = linija.trim().split(" ");
             
             if (dijelovi.length != 3) {
@@ -537,12 +512,10 @@ public class PosluziteljTvrtka {
                 try {
                     Socket mreznaUticnica = ss.accept();
                     this.executor.submit(() -> {
-                        // Dodajemo trenutnu dretvu u listu aktivnih
                         aktivneDretve.add(Thread.currentThread());
                         try {
                             return obradiRad(mreznaUticnica);
                         } finally {
-                            // Uklanjamo dretvu iz liste aktivnih kad završi
                             aktivneDretve.remove(Thread.currentThread());
                         }
                     });
@@ -572,19 +545,15 @@ public class PosluziteljTvrtka {
                 return Boolean.FALSE;
             }
             
-            // Obrada komande JELOVNIK
             if (linija.startsWith("JELOVNIK ")) {
                 obradiKomanduJelovnik(linija, out);
             }
-            // Obrada komande KARTAPIĆA
             else if (linija.startsWith("KARTAPIĆA ")) {
                 obradiKomanduKartaPica(linija, out);
             }
-            // Obrada komande OBRAČUN
             else if (linija.startsWith("OBRAČUN ")) {
                 obradiKomanduObracun(linija, in, out);
             }
-            // Nepoznata komanda
             else {
                 out.write("ERROR 30 - Format komande nije ispravan\n");
                 out.flush();
@@ -605,8 +574,6 @@ public class PosluziteljTvrtka {
      */
     private void obradiKomanduJelovnik(String linija, PrintWriter out) {
         try {
-            // Format: JELOVNIK id sigurnosniKod
-            // Npr: JELOVNIK 1 4958583733
             String[] dijelovi = linija.trim().split(" ");
             
             if (dijelovi.length != 3) {
@@ -632,7 +599,6 @@ public class PosluziteljTvrtka {
                 return;
             }
             
-            // Filtriranje jelovnika prema vrsti kuhinje partnera
             List<Jelovnik> jelovnikPartnera = new ArrayList<>();
             String vrstaKuhinje = partner.vrstaKuhinje();
             
@@ -666,8 +632,6 @@ public class PosluziteljTvrtka {
      */
     private void obradiKomanduKartaPica(String linija, PrintWriter out) {
         try {
-            // Format: KARTAPIĆA id sigurnosniKod
-            // Npr: KARTAPIĆA 1 4958583733
             String[] dijelovi = linija.trim().split(" ");
             
             if (dijelovi.length != 3) {
