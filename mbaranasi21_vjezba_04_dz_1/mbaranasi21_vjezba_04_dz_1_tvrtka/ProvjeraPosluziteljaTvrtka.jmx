@@ -625,15 +625,14 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Neispravna komanda kartaPića" enabled="false">
+        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Neispravna komanda kartaPića">
           <stringProp name="TCPSampler.server">${adresa}</stringProp>
           <boolProp name="TCPSampler.reUseConnection">true</boolProp>
           <stringProp name="TCPSampler.port">${mvRadPartnera}</stringProp>
           <boolProp name="TCPSampler.nodelay">false</boolProp>
           <stringProp name="TCPSampler.timeout"></stringProp>
           <stringProp name="TCPSampler.ctimeout">100</stringProp>
-          <stringProp name="TCPSampler.request">KARTAPIĆA 
-</stringProp>
+          <stringProp name="TCPSampler.request">KARTAPIĆA</stringProp>
           <boolProp name="TCPSampler.closeConnection">true</boolProp>
           <stringProp name="ConfigTestElement.username"></stringProp>
           <stringProp name="ConfigTestElement.password"></stringProp>
@@ -651,8 +650,16 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <WhileController guiclass="WhileControllerGui" testclass="WhileController" testname="While Controller">
-          <stringProp name="WhileController.condition">${__javaScript(${Counter} &lt;= 7)}</stringProp>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="JSR223 Sampler" enabled="false">
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="script">vars.put(&quot;i&quot;, &quot;1&quot;);</stringProp>
+          <stringProp name="scriptLanguage">groovy</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <WhileController guiclass="WhileControllerGui" testclass="WhileController" testname="While Controller" enabled="false">
+          <stringProp name="WhileController.condition">${__javaScript(${i} &lt;= 6)}</stringProp>
         </WhileController>
         <hashTree>
           <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Narudžba">
@@ -681,7 +688,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Jelo 1">
+          <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Jelo 1" enabled="false">
             <stringProp name="TCPSampler.server">${adresa}</stringProp>
             <boolProp name="TCPSampler.reUseConnection">true</boolProp>
             <stringProp name="TCPSampler.port">${mvRadPartnera}</stringProp>
@@ -707,7 +714,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Jelo 2">
+          <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Jelo 2" enabled="false">
             <stringProp name="TCPSampler.server">${adresa}</stringProp>
             <boolProp name="TCPSampler.reUseConnection">true</boolProp>
             <stringProp name="TCPSampler.port">${mvRadPartnera}</stringProp>
@@ -733,7 +740,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Jelo 3">
+          <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Jelo 3" enabled="false">
             <stringProp name="TCPSampler.server">${adresa}</stringProp>
             <boolProp name="TCPSampler.reUseConnection">true</boolProp>
             <stringProp name="TCPSampler.port">${mvRadPartnera}</stringProp>
@@ -759,7 +766,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Jelo 4">
+          <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Jelo 4" enabled="false">
             <stringProp name="TCPSampler.server">${adresa}</stringProp>
             <boolProp name="TCPSampler.reUseConnection">true</boolProp>
             <stringProp name="TCPSampler.port">${mvRadPartnera}</stringProp>
@@ -785,7 +792,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Jelo 5">
+          <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Jelo 5" enabled="false">
             <stringProp name="TCPSampler.server">${adresa}</stringProp>
             <boolProp name="TCPSampler.reUseConnection">true</boolProp>
             <stringProp name="TCPSampler.port">${mvRadPartnera}</stringProp>
@@ -811,7 +818,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Jelo 6">
+          <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Jelo 6" enabled="false">
             <stringProp name="TCPSampler.server">${adresa}</stringProp>
             <boolProp name="TCPSampler.reUseConnection">true</boolProp>
             <stringProp name="TCPSampler.port">${mvRadPartnera}</stringProp>
@@ -863,14 +870,15 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="Counter">
-            <stringProp name="CounterConfig.start">1</stringProp>
-            <stringProp name="CounterConfig.end">10</stringProp>
-            <stringProp name="CounterConfig.incr">1</stringProp>
-            <stringProp name="CounterConfig.name"></stringProp>
-            <stringProp name="CounterConfig.format"></stringProp>
-            <boolProp name="CounterConfig.per_user">false</boolProp>
-          </CounterConfig>
+          <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="JSR223 Sampler">
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="script">int i = Integer.parseInt(vars.get(&quot;i&quot;));
+i++;
+vars.put(&quot;i&quot;, String.valueOf(i));</stringProp>
+            <stringProp name="scriptLanguage">groovy</stringProp>
+          </JSR223Sampler>
           <hashTree/>
         </hashTree>
       </hashTree>

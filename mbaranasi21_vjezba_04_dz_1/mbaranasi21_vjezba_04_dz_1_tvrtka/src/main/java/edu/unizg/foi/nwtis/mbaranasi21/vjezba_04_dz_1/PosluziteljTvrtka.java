@@ -236,6 +236,13 @@ public class PosluziteljTvrtka {
                 return Boolean.FALSE;
             }
             
+            if (!linija.startsWith("KRAJ ")) {
+                out.write("ERROR 10 - Format komande nije ispravan (nedostaje razmak nakon KRAJ)\n");
+                out.flush();
+                zatvoriVezu(mreznaUticnica);
+                return Boolean.FALSE;
+            }
+            
             String[] dijelovi = linija.trim().split(" ");
             if (dijelovi.length != 2 || !dijelovi[0].equals("KRAJ") || !dijelovi[1].equals(this.kodZaKraj)) {
                 out.write("ERROR 10 - Format komande nije ispravan ili nije ispravan kod za kraj\n");
@@ -300,6 +307,24 @@ public class PosluziteljTvrtka {
                 out.flush();
                 zatvoriVezu(mreznaUticnica);
                 return Boolean.FALSE;
+            }
+            
+            if (linija.trim().isEmpty()) {
+                out.write("ERROR 20 - Format komande nije ispravan (prazna komanda)\n");
+                out.flush();
+                zatvoriVezu(mreznaUticnica);
+                return Boolean.FALSE;
+            }
+            
+            String komanda = linija.split(" ", 2)[0];
+            
+            if (komanda.equals("PARTNER") || komanda.equals("OBRIŠI")) {
+                if (!linija.startsWith(komanda + " ")) {
+                    out.write("ERROR 20 - Format komande nije ispravan (nedostaje razmak nakon naziva komande)\n");
+                    out.flush();
+                    zatvoriVezu(mreznaUticnica);
+                    return Boolean.FALSE;
+                }
             }
             
             if (linija.startsWith("PARTNER ")) {
@@ -545,6 +570,24 @@ public class PosluziteljTvrtka {
                 return Boolean.FALSE;
             }
             
+            if (linija.trim().isEmpty()) {
+                out.write("ERROR 30 - Format komande nije ispravan (prazna komanda)\n");
+                out.flush();
+                zatvoriVezu(mreznaUticnica);
+                return Boolean.FALSE;
+            }
+            
+            String komanda = linija.split(" ", 2)[0];
+            
+            if (komanda.equals("JELOVNIK") || komanda.equals("KARTAPIĆA") || komanda.equals("OBRAČUN")) {
+                if (!linija.startsWith(komanda + " ")) {
+                    out.write("ERROR 30 - Format komande nije ispravan (nedostaje razmak nakon naziva komande)\n");
+                    out.flush();
+                    zatvoriVezu(mreznaUticnica);
+                    return Boolean.FALSE;
+                }
+            }
+            
             if (linija.startsWith("JELOVNIK ")) {
                 obradiKomanduJelovnik(linija, out);
             }
@@ -719,8 +762,8 @@ public class PosluziteljTvrtka {
             try {
                 List<Obracun> noviObracuni = gson.fromJson(jsonObracun.toString(), new TypeToken<List<Obracun>>(){}.getType());
                 
-                if (noviObracuni == null || noviObracuni.isEmpty()) {
-                    out.write("ERROR 35 - Neispravan obračun: podaci su prazni\n");
+                if (noviObracuni == null) {
+                    out.write("ERROR 35 - Neispravan obračun: neispravan JSON format\n");
                     out.flush();
                     return;
                 }
@@ -759,8 +802,8 @@ public class PosluziteljTvrtka {
                         return;
                     }
                     
-                    if (o.kolicina() < 1) {
-                        out.write("ERROR 35 - Neispravan obračun: količina mora biti barem 1\n");
+                    if (o.kolicina() < 0) {
+                        out.write("ERROR 35 - Neispravan obračun: količina ne može biti negativna\n");
                         out.flush();
                         return;
                     }

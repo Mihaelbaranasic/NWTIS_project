@@ -189,15 +189,34 @@ public class PosluziteljPartner {
 	            zatvoriVezu(socket);
 	            return;
 	        }
+	        	        
+	        if (komanda.trim().length() == 0) {
+	            out.write("ERROR 40 - Format komande nije ispravan (prazna komanda)\n");
+	            out.flush();
+	            zatvoriVezu(socket);
+	            return;
+	        }
 	        
 	        String[] dijelovi = komanda.split(" ", 2);
 	        String nazivKomande = dijelovi[0];
 	        
 	        if (!nazivKomande.equals(nazivKomande.toUpperCase())) {
-	            out.write("ERROR 40 - Format komande nije ispravan (komanda mora biti velikim slovima)\n");
+	            out.write("ERROR 40 - Format komande nije ispravan\n");
 	            out.flush();
 	            zatvoriVezu(socket);
 	            return;
+	        }
+	        
+	        if (nazivKomande.equals("JELOVNIK") || nazivKomande.equals("KARTAPIĆA") || 
+	            nazivKomande.equals("NARUDŽBA") || nazivKomande.equals("JELO") || 
+	            nazivKomande.equals("PIĆE") || nazivKomande.equals("RAČUN")) {
+	            
+	            if (dijelovi.length < 2 || dijelovi[1].trim().isEmpty()) {
+	                out.write("ERROR 40 - Format komande nije ispravan (nedostaje razmak ili argumenti)\n");
+	                out.flush();
+	                zatvoriVezu(socket);
+	                return;
+	            }
 	        }
 	        
 	        if (komanda.startsWith("JELOVNIK ")) {
@@ -213,7 +232,7 @@ public class PosluziteljPartner {
 	        } else if (komanda.startsWith("RAČUN ")) {
 	            obradiKomanduRacun(komanda, out);
 	        } else {
-	            out.write("ERROR 49 - Nepoznata komanda: " + komanda + "\n");
+	            out.write("ERROR 49 - Nešto drugo nije u redu\n");
 	            out.flush();
 	        }
 	        
@@ -406,8 +425,7 @@ public class PosluziteljPartner {
 	        out.flush();
 
 	    } catch (Exception e) {
-	        System.out.println("Greška pri obradi komande JELOVNIK: " + e.getMessage());
-	        out.write("ERROR 49 - Nešto drugo nije u redu\n");
+	        out.write("ERROR 49 - " + e.getMessage() + "\n");
 	        out.flush();
 	    }
 	}
@@ -430,8 +448,7 @@ public class PosluziteljPartner {
 	        out.flush();
 
 	    } catch (Exception e) {
-	        System.out.println("Greška pri obradi komande KARTAPIĆA: " + e.getMessage());
-	        out.write("ERROR 49 - Nešto drugo nije u redu\n");
+	        out.write("ERROR 49 - " + e.getMessage() + "\n");
 	        out.flush();
 	    }
 	}
@@ -459,8 +476,7 @@ public class PosluziteljPartner {
 	        out.flush();
 
 	    } catch (Exception e) {
-	        System.out.println("Greška pri obradi komande NARUDŽBA: " + e.getMessage());
-	        out.write("ERROR 49 - Nešto drugo nije u redu\n");
+	        out.write("ERROR 49 - " + e.getMessage() + "\n");
 	        out.flush();
 	    }
 	}
@@ -507,8 +523,7 @@ public class PosluziteljPartner {
 	        out.flush();
 
 	    } catch (Exception e) {
-	        System.out.println("Greška pri obradi komande JELO: " + e.getMessage());
-	        out.write("ERROR 49 - Nešto drugo nije u redu\n");
+	        out.write("ERROR 49 - " + e.getMessage() + "\n");
 	        out.flush();
 	    }
 	}
@@ -555,8 +570,7 @@ public class PosluziteljPartner {
 	        out.flush();
 
 	    } catch (Exception e) {
-	        System.out.println("Greška pri obradi komande PIĆE: " + e.getMessage());
-	        out.write("ERROR 49 - Nešto drugo nije u redu\n");
+	        out.write("ERROR 49 - " + e.getMessage() + "\n");
 	        out.flush();
 	    }
 	}
@@ -589,9 +603,6 @@ public class PosluziteljPartner {
 	        otvoreneNarudzbe.remove(korisnik);
 	        
 	        brojNaplacenihNarudzbi++;
-	        
-	        System.out.println("Naplaćena narudžba #" + brojNaplacenihNarudzbi + " za korisnika " + korisnik + 
-	                           " sa " + narudzba.size() + " stavki. Kvota: " + this.kvotaNarudzbi);
 	        
 	        if (brojNaplacenihNarudzbi % this.kvotaNarudzbi == 0) {
 	            List<Obracun> obracuni = new ArrayList<>();
@@ -644,8 +655,7 @@ public class PosluziteljPartner {
 	        }
 	        
 	    } catch (Exception e) {
-	        System.out.println("Greška pri obradi komande RAČUN: " + e.getMessage());
-	        out.write("ERROR 49 - Nešto drugo nije u redu\n");
+	        out.write("ERROR 49 - " + e.getMessage() + "\n");
 	        out.flush();
 	    }
 	}
@@ -673,7 +683,6 @@ public class PosluziteljPartner {
 	            socket.close();
 	            return true;
 	        } else {
-	            System.out.println("Greška pri slanju obračuna: " + odgovor);
 	            socket.close();
 	            return false;
 	        }

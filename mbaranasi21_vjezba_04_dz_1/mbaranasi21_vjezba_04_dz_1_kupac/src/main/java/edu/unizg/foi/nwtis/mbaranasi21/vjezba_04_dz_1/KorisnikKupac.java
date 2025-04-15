@@ -115,7 +115,7 @@ public class KorisnikKupac {
           if (odgovor != null && odgovor.equals("OK") && 
               (komanda.startsWith("JELOVNIK") || komanda.startsWith("KARTAPIĆA") || 
                komanda.startsWith("RAČUN") || komanda.startsWith("POPIS"))) {
-              
+              System.out.println(odgovor);
               StringBuilder jsonBuilder = new StringBuilder();
               String red;
               while ((red = in.readLine()) != null) {
