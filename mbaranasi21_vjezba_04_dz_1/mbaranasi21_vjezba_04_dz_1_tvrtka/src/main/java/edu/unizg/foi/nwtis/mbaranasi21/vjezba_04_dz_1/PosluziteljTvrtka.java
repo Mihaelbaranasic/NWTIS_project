@@ -40,7 +40,7 @@ import edu.unizg.foi.nwtis.vjezba_04_dz_1.podaci.PartnerPopis;
 
 public class PosluziteljTvrtka {
     /** Konfiguracijski podaci */
-    private Konfiguracija konfig;
+    protected Konfiguracija konfig;
     /** Pokretač dretvi */
     private ExecutorService executor = null;
     /** Pauza dretve. */
