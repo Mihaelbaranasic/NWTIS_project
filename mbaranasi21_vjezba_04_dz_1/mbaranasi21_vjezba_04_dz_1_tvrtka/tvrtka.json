@@ -8,5 +8,15 @@
     "gpsSirina": 46.30838,
     "gpsDuzina": 16.34782,
     "sigurnosniKod": "e57a5998"
+  },
+  {
+    "id": 1,
+    "naziv": "FOLT 1 - Varaždin, Pavlinska 9",
+    "vrstaKuhinje": "MK",
+    "adresa": "localhost",
+    "mreznaVrata": 8010,
+    "gpsSirina": 46.30803,
+    "gpsDuzina": 16.34009,
+    "sigurnosniKod": "da53e5e7"
   }
 ]

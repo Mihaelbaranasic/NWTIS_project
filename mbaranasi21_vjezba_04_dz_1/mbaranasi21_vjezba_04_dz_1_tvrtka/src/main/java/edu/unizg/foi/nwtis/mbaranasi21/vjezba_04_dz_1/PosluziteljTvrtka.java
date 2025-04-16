@@ -42,28 +42,43 @@ import edu.unizg.foi.nwtis.vjezba_04_dz_1.podaci.PartnerPopis;
  * Poslužitelj tvrtke koji upravlja partnerima, jelovnicima i kartom pića.
  */
 public class PosluziteljTvrtka {
-  /** Konfiguracijski podaci */
+  
+  /** Konfiguracijski podaci. */
   protected Konfiguracija konfig;
-  /** Pokretač dretvi */
+  
+  /** Pokretač dretvi. */
   private ExecutorService executor = null;
   /** Pauza dretve. */
   private int pauzaDretve = 1000;
-  /** Kod za kraj rada */
+  
+  /** Kod za kraj rada. */
   private String kodZaKraj = "";
-  /** Zastavica za kraj rada */
+  
+  /** Zastavica za kraj rada. */
   private AtomicBoolean kraj = new AtomicBoolean(false);
-  /** Lista partnera */
+  
+  /** Lista partnera. */
   private List<Partner> partneri = new ArrayList<>();
-  /** Kolekcija jelovnika */
+  
+  /** Kolekcija jelovnika. */
   private List<Jelovnik> jelovnici = new ArrayList<>();
-  /** Kolekcija karte pića */
+  
+  /** Kolekcija karte pića. */
   private List<KartaPica> kartaPica = new ArrayList<>();
-  /** Kolekcija obračuna */
+  
+  /** Kolekcija obračuna. */
   private List<Obracun> obracuni = new ArrayList<>();
-  /** Gson objekt za rad s JSON-om */
+  
+  /** Gson objekt za rad s JSON-om. */
   private Gson gson = new GsonBuilder().setPrettyPrinting().create();
+  
+  /** Broj prekinutih dretvi. */
   private AtomicInteger brojPrekinutihDretvi = new AtomicInteger(0);
+  
+  /** Broj zatvorenih veza. */
   private AtomicInteger brojZatvorenihVeza = new AtomicInteger(0);
+  
+  /** Aktivne dretve. */
   private List<Thread> aktivneDretve = Collections.synchronizedList(new ArrayList<>());
 
   /**
@@ -178,7 +193,7 @@ public class PosluziteljTvrtka {
   }
 
   /**
-   * Učitava podatke iz datoteka: partnere, jelovnike i kartu pića
+   * Učitava podatke iz datoteka: partnere, jelovnike i kartu pića.
    */
   private void ucitajPodatke() {
     try {
