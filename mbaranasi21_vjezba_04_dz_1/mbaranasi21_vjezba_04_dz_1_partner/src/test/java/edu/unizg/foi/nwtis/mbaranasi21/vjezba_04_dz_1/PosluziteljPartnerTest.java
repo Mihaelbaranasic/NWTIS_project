@@ -1,20 +1,31 @@
 package edu.unizg.foi.nwtis.mbaranasi21.vjezba_04_dz_1;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+
 import edu.unizg.foi.nwtis.konfiguracije.Konfiguracija;
 import edu.unizg.foi.nwtis.konfiguracije.KonfiguracijaApstraktna;
 import edu.unizg.foi.nwtis.konfiguracije.NeispravnaKonfiguracija;
+import edu.unizg.foi.nwtis.vjezba_04_dz_1.podaci.Jelovnik;
+import edu.unizg.foi.nwtis.vjezba_04_dz_1.podaci.KartaPica;
+
 
 class PosluziteljPartnerTest {
 
@@ -84,6 +95,54 @@ class PosluziteljPartnerTest {
       } catch (NeispravnaKonfiguracija | IOException e) {
           fail(e.getMessage());
       }
+  }
+  
+  @Test
+  @Order(2)
+  void testPronadiJelo() throws Exception {
+      List<Jelovnik> jelovnici = new ArrayList<>();
+      Jelovnik testJelo = new Jelovnik("ITA_1", "Pizza Margherita", 8.0f);
+      jelovnici.add(testJelo);
+      jelovnici.add(new Jelovnik("ITA_2", "Pasta Carbonara", 7.5f));
+      
+      java.lang.reflect.Field field = PosluziteljPartner.class.getDeclaredField("jelovnici");
+      field.setAccessible(true);
+      field.set(posluziteljPartner, jelovnici);
+      
+      java.lang.reflect.Method method = PosluziteljPartner.class.getDeclaredMethod("pronadiJelo", String.class);
+      method.setAccessible(true);
+      
+      Jelovnik pronadjenoJelo = (Jelovnik) method.invoke(posluziteljPartner, "ITA_1");
+      assertNotNull(pronadjenoJelo);
+      assertEquals(testJelo.id(), pronadjenoJelo.id());
+      assertEquals(testJelo.naziv(), pronadjenoJelo.naziv());
+      
+      Jelovnik nepostojeceJelo = (Jelovnik) method.invoke(posluziteljPartner, "ITA_999");
+      assertNull(nepostojeceJelo);
+  }
+  
+  @Test
+  @Order(3)
+  void testPronadiPice() throws Exception {
+      List<KartaPica> kartaPica = new ArrayList<>();
+      KartaPica testPice = new KartaPica("P_1", "Coca-Cola", 2.0f, 2.0f);
+      kartaPica.add(testPice);
+      kartaPica.add(new KartaPica("P_2", "Voda", 1.5f, 5.0f));
+      
+      java.lang.reflect.Field field = PosluziteljPartner.class.getDeclaredField("kartaPica");
+      field.setAccessible(true);
+      field.set(posluziteljPartner, kartaPica);
+      
+      java.lang.reflect.Method method = PosluziteljPartner.class.getDeclaredMethod("pronadiPice", String.class);
+      method.setAccessible(true);
+      
+      KartaPica pronadjenoPice = (KartaPica) method.invoke(posluziteljPartner, "P_1");
+      assertNotNull(pronadjenoPice);
+      assertEquals(testPice.id(), pronadjenoPice.id());
+      assertEquals(testPice.naziv(), pronadjenoPice.naziv());
+      
+      KartaPica nepostojecePice = (KartaPica) method.invoke(posluziteljPartner, "P_999");
+      assertNull(nepostojecePice);
   }
 
 }
