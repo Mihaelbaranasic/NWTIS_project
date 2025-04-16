@@ -2,29 +2,35 @@ package edu.unizg.foi.nwtis.mbaranasi21.vjezba_04_dz_1;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-
 import edu.unizg.foi.nwtis.konfiguracije.Konfiguracija;
 import edu.unizg.foi.nwtis.konfiguracije.KonfiguracijaApstraktna;
 import edu.unizg.foi.nwtis.konfiguracije.NeispravnaKonfiguracija;
 import edu.unizg.foi.nwtis.vjezba_04_dz_1.podaci.Jelovnik;
 import edu.unizg.foi.nwtis.vjezba_04_dz_1.podaci.KartaPica;
+import edu.unizg.foi.nwtis.vjezba_04_dz_1.podaci.Narudzba;
+
 
 
 class PosluziteljPartnerTest {
@@ -65,13 +71,13 @@ class PosluziteljPartnerTest {
           konfig.spremiPostavku(this.getClass().getName(), this.getClass().getName());
           konfig.spremiKonfiguraciju();
           
-          java.lang.reflect.Method method = PosluziteljPartner.class.getDeclaredMethod("ucitajKonfiguraciju", String.class);
+          Method method = PosluziteljPartner.class.getDeclaredMethod("ucitajKonfiguraciju", String.class);
           method.setAccessible(true);
           boolean result = (boolean) method.invoke(posluziteljPartner, nazivDatoteke);
           
           assertTrue(result, "Problem kod učitavanja datoteke.");
           
-          java.lang.reflect.Field field = PosluziteljPartner.class.getDeclaredField("konfig");
+          Field field = PosluziteljPartner.class.getDeclaredField("konfig");
           field.setAccessible(true);
           Konfiguracija ucitanaKonfig = (Konfiguracija) field.get(posluziteljPartner);
           
@@ -105,11 +111,11 @@ class PosluziteljPartnerTest {
       jelovnici.add(testJelo);
       jelovnici.add(new Jelovnik("ITA_2", "Pasta Carbonara", 7.5f));
       
-      java.lang.reflect.Field field = PosluziteljPartner.class.getDeclaredField("jelovnici");
+      Field field = PosluziteljPartner.class.getDeclaredField("jelovnici");
       field.setAccessible(true);
       field.set(posluziteljPartner, jelovnici);
       
-      java.lang.reflect.Method method = PosluziteljPartner.class.getDeclaredMethod("pronadiJelo", String.class);
+      Method method = PosluziteljPartner.class.getDeclaredMethod("pronadiJelo", String.class);
       method.setAccessible(true);
       
       Jelovnik pronadjenoJelo = (Jelovnik) method.invoke(posluziteljPartner, "ITA_1");
@@ -129,11 +135,11 @@ class PosluziteljPartnerTest {
       kartaPica.add(testPice);
       kartaPica.add(new KartaPica("P_2", "Voda", 1.5f, 5.0f));
       
-      java.lang.reflect.Field field = PosluziteljPartner.class.getDeclaredField("kartaPica");
+      Field field = PosluziteljPartner.class.getDeclaredField("kartaPica");
       field.setAccessible(true);
       field.set(posluziteljPartner, kartaPica);
       
-      java.lang.reflect.Method method = PosluziteljPartner.class.getDeclaredMethod("pronadiPice", String.class);
+      Method method = PosluziteljPartner.class.getDeclaredMethod("pronadiPice", String.class);
       method.setAccessible(true);
       
       KartaPica pronadjenoPice = (KartaPica) method.invoke(posluziteljPartner, "P_1");
@@ -143,6 +149,70 @@ class PosluziteljPartnerTest {
       
       KartaPica nepostojecePice = (KartaPica) method.invoke(posluziteljPartner, "P_999");
       assertNull(nepostojecePice);
+  }
+  
+  @Test
+  @Order(4)
+  void testProvejiPostojiNarudzba() throws Exception {
+      Map<String, List<Narudzba>> otvoreneNarudzbe = new ConcurrentHashMap<>();
+      List<Narudzba> narudzbe = new ArrayList<>();
+      narudzbe.add(new Narudzba("korisnik1", "ITA_1", true, 1.0f, 8.0f, System.currentTimeMillis()));
+      otvoreneNarudzbe.put("korisnik1", narudzbe);
+      
+      Field field = PosluziteljPartner.class.getDeclaredField("otvoreneNarudzbe");
+      field.setAccessible(true);
+      field.set(posluziteljPartner, otvoreneNarudzbe);
+      
+      StringWriter stringWriter = new StringWriter();
+      PrintWriter out = new PrintWriter(stringWriter);
+      
+      Method method = PosluziteljPartner.class.getDeclaredMethod("provjeriPostojiNarudzba", String.class, PrintWriter.class);
+      method.setAccessible(true);
+      
+      boolean postojiNarudzba = (boolean) method.invoke(posluziteljPartner, "korisnik1", out);
+      assertTrue(postojiNarudzba);
+      
+      boolean nePostojiNarudzba = (boolean) method.invoke(posluziteljPartner, "nePostojeciKorisnik", out);
+      assertFalse(nePostojiNarudzba);
+      assertTrue(stringWriter.toString().contains("Ne postoji otvorena narudžba za korisnika/kupca"));
+  }
+  
+  @Test
+  @Order(5)
+  void testDodajStavkuNarudzbe() throws Exception {
+      Map<String, List<Narudzba>> otvoreneNarudzbe = new ConcurrentHashMap<>();
+      otvoreneNarudzbe.put("korisnik1", new ArrayList<>());
+      
+      Field field = PosluziteljPartner.class.getDeclaredField("otvoreneNarudzbe");
+      field.setAccessible(true);
+      field.set(posluziteljPartner, otvoreneNarudzbe);
+      
+      String nazivDatoteke = this.getClass().getName() + "_id.txt";
+      Konfiguracija konfig = KonfiguracijaApstraktna.kreirajKonfiguraciju(nazivDatoteke);
+      konfig.spremiPostavku("id", "1");
+      konfig.spremiKonfiguraciju();
+      
+      Method ucitajMethod = PosluziteljPartner.class.getDeclaredMethod("ucitajKonfiguraciju", String.class);
+      ucitajMethod.setAccessible(true);
+      ucitajMethod.invoke(posluziteljPartner, nazivDatoteke);
+      
+      Method method = PosluziteljPartner.class.getDeclaredMethod(
+              "dodajStavkuNarudzbe", String.class, String.class, boolean.class, float.class, float.class);
+      method.setAccessible(true);
+      
+      method.invoke(posluziteljPartner, "korisnik1", "ITA_1", true, 1.0f, 8.0f);
+      
+      List<Narudzba> narudzbe = otvoreneNarudzbe.get("korisnik1");
+      assertEquals(1, narudzbe.size());
+      
+      Narudzba dodanaStavka = narudzbe.get(0);
+      assertEquals("korisnik1", dodanaStavka.korisnik());
+      assertEquals("ITA_1", dodanaStavka.id());
+      assertTrue(dodanaStavka.jelo());
+      assertEquals(1.0f, dodanaStavka.kolicina());
+      assertEquals(8.0f, dodanaStavka.cijena());
+      
+      Files.delete(Path.of(nazivDatoteke));
   }
 
 }
