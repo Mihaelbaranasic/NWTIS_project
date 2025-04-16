@@ -874,41 +874,42 @@ public class PosluziteljPartner {
      * @return lista stavki obračuna
      */
     private List<Obracun> kreirajObracun() {
-        List<Obracun> obracuni = new ArrayList<>();
-        
-        Map<String, Float> kolicinePoID = new HashMap<>();
-        Map<String, Float> cijenePoID = new HashMap<>();
-        Map<String, Boolean> jeLoJelo = new HashMap<>();
-        
-        for (List<Narudzba> narudzbe : placeneNarudzbe.values()) {
-            for (Narudzba n : narudzbe) {
-                String id = n.id();
-                boolean jelo = n.jelo();
-                String kljuc = id + (jelo ? "_jelo" : "_pice");
-                
-                kolicinePoID.put(kljuc, kolicinePoID.getOrDefault(kljuc, 0f) + n.kolicina());
-                cijenePoID.put(kljuc, n.cijena());
-                jeLoJelo.put(kljuc, jelo);
-            }
-        }
-        
-        int idPartnera = Integer.parseInt(this.konfig.dajPostavku("id"));
-        
-        for (Map.Entry<String, Float> entry : kolicinePoID.entrySet()) {
-            String kljuc = entry.getKey();
-            String[] dijeloviKljuca = kljuc.split("_");
-            String id = dijeloviKljuca[0];
-            boolean jelo = jeLoJelo.get(kljuc);
-            float kolicina = entry.getValue();
-            float cijena = cijenePoID.get(kljuc);
-            
-            Obracun o = new Obracun(idPartnera, id, jelo, kolicina, cijena, 
-                    System.currentTimeMillis());
-            obracuni.add(o);
-        }
-        
-        return obracuni;
-    }
+      List<Obracun> obracuni = new ArrayList<>();
+      
+      Map<String, Float> kolicinePoID = new HashMap<>();
+      Map<String, Float> cijenePoID = new HashMap<>();
+      Map<String, Boolean> jeLiJelo = new HashMap<>();
+      
+      for (List<Narudzba> narudzbe : placeneNarudzbe.values()) {
+          for (Narudzba n : narudzbe) {
+              String id = n.id();
+              boolean jelo = n.jelo();
+              // Promijenjen separator u "##" kako bi se izbjeglo konflikovanje s ID-om
+              String kljuc = id + (jelo ? "##jelo" : "##pice");
+              
+              kolicinePoID.put(kljuc, kolicinePoID.getOrDefault(kljuc, 0f) + n.kolicina());
+              cijenePoID.put(kljuc, n.cijena());
+              jeLiJelo.put(kljuc, jelo);
+          }
+      }
+      
+      int idPartnera = Integer.parseInt(this.konfig.dajPostavku("id"));
+      
+      for (Map.Entry<String, Float> entry : kolicinePoID.entrySet()) {
+          String kljuc = entry.getKey();
+          String[] dijeloviKljuca = kljuc.split("##");
+          String id = dijeloviKljuca[0];
+          boolean jelo = jeLiJelo.get(kljuc);
+          float kolicina = entry.getValue();
+          float cijena = cijenePoID.get(kljuc);
+          
+          Obracun o = new Obracun(idPartnera, id, jelo, kolicina, cijena, 
+                  System.currentTimeMillis());
+          obracuni.add(o);
+      }
+      
+      return obracuni;
+  }
 
     /**
      * Šalje obračun poslužitelju tvrtke.
