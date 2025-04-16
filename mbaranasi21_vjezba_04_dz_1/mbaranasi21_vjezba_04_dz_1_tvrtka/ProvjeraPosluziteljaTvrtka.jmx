@@ -575,7 +575,7 @@
         </elementProp>
       </ThreadGroup>
       <hashTree>
-        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Ispravna komanda jelovnik">
+        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Ispravna komanda jelovnik" enabled="false">
           <stringProp name="TCPSampler.server">${adresa}</stringProp>
           <boolProp name="TCPSampler.reUseConnection">true</boolProp>
           <stringProp name="TCPSampler.port">${mvRadPartnera}</stringProp>
@@ -601,7 +601,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Neočekivana komanda">
+        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Neočekivana komanda" enabled="false">
           <stringProp name="TCPSampler.server">${adresa}</stringProp>
           <boolProp name="TCPSampler.reUseConnection">true</boolProp>
           <stringProp name="TCPSampler.port">${mvRadPartnera}</stringProp>
@@ -627,7 +627,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Neispravna komanda kartaPića" enabled="true">
+        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Neispravna komanda kartaPića" enabled="false">
           <stringProp name="TCPSampler.server">${adresa}</stringProp>
           <boolProp name="TCPSampler.reUseConnection">true</boolProp>
           <stringProp name="TCPSampler.port">${mvRadPartnera}</stringProp>
@@ -653,7 +653,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="JSR223 Sampler" enabled="false">
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="JSR223 Sampler" enabled="true">
           <stringProp name="cacheKey">true</stringProp>
           <stringProp name="filename"></stringProp>
           <stringProp name="parameters"></stringProp>
@@ -661,7 +661,7 @@
           <stringProp name="scriptLanguage">groovy</stringProp>
         </JSR223Sampler>
         <hashTree/>
-        <WhileController guiclass="WhileControllerGui" testclass="WhileController" testname="While Controller" enabled="false">
+        <WhileController guiclass="WhileControllerGui" testclass="WhileController" testname="While Controller">
           <stringProp name="WhileController.condition">${__javaScript(${i} &lt;= 6)}</stringProp>
         </WhileController>
         <hashTree>
@@ -691,7 +691,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Jelo 1" enabled="false">
+          <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Jelo 1" enabled="true">
             <stringProp name="TCPSampler.server">${adresa}</stringProp>
             <boolProp name="TCPSampler.reUseConnection">true</boolProp>
             <stringProp name="TCPSampler.port">${mvRadPartnera}</stringProp>
@@ -717,7 +717,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Jelo 2" enabled="false">
+          <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Jelo 2" enabled="true">
             <stringProp name="TCPSampler.server">${adresa}</stringProp>
             <boolProp name="TCPSampler.reUseConnection">true</boolProp>
             <stringProp name="TCPSampler.port">${mvRadPartnera}</stringProp>
@@ -743,7 +743,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Jelo 3" enabled="false">
+          <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Jelo 3" enabled="true">
             <stringProp name="TCPSampler.server">${adresa}</stringProp>
             <boolProp name="TCPSampler.reUseConnection">true</boolProp>
             <stringProp name="TCPSampler.port">${mvRadPartnera}</stringProp>
@@ -769,7 +769,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Jelo 4" enabled="false">
+          <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Jelo 4" enabled="true">
             <stringProp name="TCPSampler.server">${adresa}</stringProp>
             <boolProp name="TCPSampler.reUseConnection">true</boolProp>
             <stringProp name="TCPSampler.port">${mvRadPartnera}</stringProp>
@@ -795,7 +795,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Jelo 5" enabled="false">
+          <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Jelo 5" enabled="true">
             <stringProp name="TCPSampler.server">${adresa}</stringProp>
             <boolProp name="TCPSampler.reUseConnection">true</boolProp>
             <stringProp name="TCPSampler.port">${mvRadPartnera}</stringProp>
@@ -821,7 +821,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Jelo 6" enabled="false">
+          <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Jelo 6">
             <stringProp name="TCPSampler.server">${adresa}</stringProp>
             <boolProp name="TCPSampler.reUseConnection">true</boolProp>
             <stringProp name="TCPSampler.port">${mvRadPartnera}</stringProp>
