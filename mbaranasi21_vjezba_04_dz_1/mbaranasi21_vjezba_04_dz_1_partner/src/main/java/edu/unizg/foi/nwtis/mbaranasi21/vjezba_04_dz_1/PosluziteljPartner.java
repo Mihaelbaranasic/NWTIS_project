@@ -494,7 +494,7 @@ public class PosluziteljPartner {
 
 	        int idPartnera = Integer.parseInt(this.konfig.dajPostavku("id"));
 	        Narudzba stavka = new Narudzba(korisnik, idJela, true, kolicina, jelo.cijena(),
-	                System.currentTimeMillis() / 1000);
+	                System.currentTimeMillis());
 	        otvoreneNarudzbe.get(korisnik).add(stavka);
 
 	        out.write("OK\n");
@@ -541,7 +541,7 @@ public class PosluziteljPartner {
 
 	        int idPartnera = Integer.parseInt(this.konfig.dajPostavku("id"));
 	        Narudzba stavka = new Narudzba(korisnik, idPica, false, kolicina, pice.cijena(),
-	                System.currentTimeMillis() / 1000);
+	                System.currentTimeMillis());
 	        otvoreneNarudzbe.get(korisnik).add(stavka);
 
 	        out.write("OK\n");
@@ -612,7 +612,7 @@ public class PosluziteljPartner {
 	                float kolicina = entry.getValue();
 	                float cijena = cijenePoID.get(kljuc);
 	                
-	                Obracun o = new Obracun(idPartnera, id, jelo, kolicina, cijena, System.currentTimeMillis() / 1000);
+	                Obracun o = new Obracun(idPartnera, id, jelo, kolicina, cijena, System.currentTimeMillis());
 	                obracuni.add(o);
 	            }
 	            

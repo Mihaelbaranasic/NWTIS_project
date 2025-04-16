@@ -5,6 +5,8 @@
       <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
         <collectionProp name="Arguments.arguments"/>
       </elementProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
     </TestPlan>
     <hashTree>
       <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="User Parameters">
@@ -38,7 +40,7 @@
         </elementProp>
       </ThreadGroup>
       <hashTree>
-        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Ispravna komanda dodaj partnera 1" enabled="false">
+        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Ispravna komanda dodaj partnera 1" enabled="true">
           <stringProp name="TCPSampler.server">${adresa}</stringProp>
           <boolProp name="TCPSampler.reUseConnection">true</boolProp>
           <stringProp name="TCPSampler.port">${mvRegistracija}</stringProp>
@@ -64,7 +66,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Ispravna komanda dodaj partnera 2" enabled="false">
+        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Ispravna komanda dodaj partnera 2" enabled="true">
           <stringProp name="TCPSampler.server">${adresa}</stringProp>
           <boolProp name="TCPSampler.reUseConnection">true</boolProp>
           <stringProp name="TCPSampler.port">${mvRegistracija}</stringProp>
@@ -90,7 +92,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Neispravna komanda dodaj partnera" enabled="false">
+        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Neispravna komanda dodaj partnera" enabled="true">
           <stringProp name="TCPSampler.server">${adresa}</stringProp>
           <boolProp name="TCPSampler.reUseConnection">true</boolProp>
           <stringProp name="TCPSampler.port">${mvRegistracija}</stringProp>
@@ -116,7 +118,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Ispravna komanda obriši partnera 1" enabled="true">
+        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Ispravna komanda obriši partnera 1">
           <stringProp name="TCPSampler.server">${adresa}</stringProp>
           <boolProp name="TCPSampler.reUseConnection">true</boolProp>
           <stringProp name="TCPSampler.port">${mvRegistracija}</stringProp>
@@ -142,7 +144,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Ispravna komanda popis  partnera" enabled="false">
+        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Ispravna komanda popis  partnera">
           <stringProp name="TCPSampler.server">${adresa}</stringProp>
           <boolProp name="TCPSampler.reUseConnection">true</boolProp>
           <stringProp name="TCPSampler.port">${mvRegistracija}</stringProp>
@@ -232,7 +234,7 @@
         </elementProp>
       </ThreadGroup>
       <hashTree>
-        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Ispravna komanda jelovnik 1" enabled="false">
+        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Ispravna komanda jelovnik 1" enabled="true">
           <stringProp name="TCPSampler.server">${adresa}</stringProp>
           <boolProp name="TCPSampler.reUseConnection">true</boolProp>
           <stringProp name="TCPSampler.port">${mvPartneri}</stringProp>
@@ -258,7 +260,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Ispravna komanda jelovnik 2" enabled="false">
+        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Ispravna komanda jelovnik 2">
           <stringProp name="TCPSampler.server">${adresa}</stringProp>
           <boolProp name="TCPSampler.reUseConnection">true</boolProp>
           <stringProp name="TCPSampler.port">${mvPartneri}</stringProp>
@@ -284,7 +286,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Ispravna komanda karta pica 1" enabled="false">
+        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Ispravna komanda karta pica 1" enabled="true">
           <stringProp name="TCPSampler.server">${adresa}</stringProp>
           <boolProp name="TCPSampler.reUseConnection">true</boolProp>
           <stringProp name="TCPSampler.port">${mvPartneri}</stringProp>
@@ -310,7 +312,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Ispravna komanda karta pica 2">
+        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Ispravna komanda karta pica 2" enabled="true">
           <stringProp name="TCPSampler.server">${adresa}</stringProp>
           <boolProp name="TCPSampler.reUseConnection">true</boolProp>
           <stringProp name="TCPSampler.port">${mvPartneri}</stringProp>
@@ -336,7 +338,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Neispravna komanda jelovnik 1" enabled="false">
+        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Neispravna komanda jelovnik 1" enabled="true">
           <stringProp name="TCPSampler.server">${adresa}</stringProp>
           <boolProp name="TCPSampler.reUseConnection">true</boolProp>
           <stringProp name="TCPSampler.port">${mvPartneri}</stringProp>
@@ -362,7 +364,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Neispravna komanda jelovnik 2">
+        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Neispravna komanda jelovnik 2" enabled="true">
           <stringProp name="TCPSampler.server">${adresa}</stringProp>
           <boolProp name="TCPSampler.reUseConnection">true</boolProp>
           <stringProp name="TCPSampler.port">${mvPartneri}</stringProp>
@@ -388,7 +390,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Neispravna komanda jelovnik 3" enabled="false">
+        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Neispravna komanda jelovnik 3" enabled="true">
           <stringProp name="TCPSampler.server">${adresa}</stringProp>
           <boolProp name="TCPSampler.reUseConnection">true</boolProp>
           <stringProp name="TCPSampler.port">${mvPartneri}</stringProp>
@@ -414,7 +416,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Ispravna komanda obračun" enabled="false">
+        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Ispravna komanda obračun" enabled="true">
           <stringProp name="TCPSampler.server">${adresa}</stringProp>
           <boolProp name="TCPSampler.reUseConnection">true</boolProp>
           <stringProp name="TCPSampler.port">${mvPartneri}</stringProp>
@@ -444,7 +446,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Obračun bez JSON dijela" enabled="false">
+        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Obračun bez JSON dijela" enabled="true">
           <stringProp name="TCPSampler.server">${adresa}</stringProp>
           <boolProp name="TCPSampler.reUseConnection">true</boolProp>
           <stringProp name="TCPSampler.port">${mvPartneri}</stringProp>
@@ -472,7 +474,7 @@
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Grupa dretvi za kraj" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Grupa dretvi za kraj">
         <intProp name="ThreadGroup.num_threads">1</intProp>
         <intProp name="ThreadGroup.ramp_time">2</intProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
@@ -535,8 +537,8 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Ispravna komanda KRAJ" enabled="true">
-          <stringProp name="TCPSampler.server">192.168.2.5</stringProp>
+        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Ispravna komanda KRAJ">
+          <stringProp name="TCPSampler.server">${adresa}</stringProp>
           <boolProp name="TCPSampler.reUseConnection">true</boolProp>
           <stringProp name="TCPSampler.port">${mvKraj}</stringProp>
           <boolProp name="TCPSampler.nodelay">false</boolProp>
@@ -562,7 +564,7 @@
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Grupa dretvi za PosluziteljPartner">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Grupa dretvi za PosluziteljPartner" enabled="false">
         <intProp name="ThreadGroup.num_threads">1</intProp>
         <intProp name="ThreadGroup.ramp_time">7</intProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
@@ -587,7 +589,7 @@
           <stringProp name="ConfigTestElement.password"></stringProp>
         </TCPSampler>
         <hashTree>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="2524">OK</stringProp>
             </collectionProp>
@@ -613,7 +615,7 @@
           <stringProp name="ConfigTestElement.password"></stringProp>
         </TCPSampler>
         <hashTree>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="-2116256835">ERROR 49</stringProp>
             </collectionProp>
@@ -625,7 +627,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Neispravna komanda kartaPića">
+        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Neispravna komanda kartaPića" enabled="true">
           <stringProp name="TCPSampler.server">${adresa}</stringProp>
           <boolProp name="TCPSampler.reUseConnection">true</boolProp>
           <stringProp name="TCPSampler.port">${mvRadPartnera}</stringProp>
@@ -639,7 +641,7 @@
           <stringProp name="ConfigTestElement.password"></stringProp>
         </TCPSampler>
         <hashTree>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="-2116256844">ERROR 40</stringProp>
             </collectionProp>
@@ -663,7 +665,7 @@
           <stringProp name="WhileController.condition">${__javaScript(${i} &lt;= 6)}</stringProp>
         </WhileController>
         <hashTree>
-          <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Narudžba">
+          <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Narudžba" enabled="true">
             <stringProp name="TCPSampler.server">${adresa}</stringProp>
             <boolProp name="TCPSampler.reUseConnection">true</boolProp>
             <stringProp name="TCPSampler.port">${mvRadPartnera}</stringProp>
@@ -677,7 +679,7 @@
             <stringProp name="ConfigTestElement.password"></stringProp>
           </TCPSampler>
           <hashTree>
-            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
               <collectionProp name="Asserion.test_strings">
                 <stringProp name="2524">OK</stringProp>
               </collectionProp>
@@ -703,7 +705,7 @@
             <stringProp name="ConfigTestElement.password"></stringProp>
           </TCPSampler>
           <hashTree>
-            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
               <collectionProp name="Asserion.test_strings">
                 <stringProp name="2524">OK</stringProp>
               </collectionProp>
@@ -729,7 +731,7 @@
             <stringProp name="ConfigTestElement.password"></stringProp>
           </TCPSampler>
           <hashTree>
-            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
               <collectionProp name="Asserion.test_strings">
                 <stringProp name="2524">OK</stringProp>
               </collectionProp>
@@ -755,7 +757,7 @@
             <stringProp name="ConfigTestElement.password"></stringProp>
           </TCPSampler>
           <hashTree>
-            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
               <collectionProp name="Asserion.test_strings">
                 <stringProp name="2524">OK</stringProp>
               </collectionProp>
@@ -781,7 +783,7 @@
             <stringProp name="ConfigTestElement.password"></stringProp>
           </TCPSampler>
           <hashTree>
-            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
               <collectionProp name="Asserion.test_strings">
                 <stringProp name="2524">OK</stringProp>
               </collectionProp>
@@ -807,7 +809,7 @@
             <stringProp name="ConfigTestElement.password"></stringProp>
           </TCPSampler>
           <hashTree>
-            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
               <collectionProp name="Asserion.test_strings">
                 <stringProp name="2524">OK</stringProp>
               </collectionProp>
@@ -845,7 +847,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Račun">
+          <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Račun" enabled="true">
             <stringProp name="TCPSampler.server">${adresa}</stringProp>
             <boolProp name="TCPSampler.reUseConnection">true</boolProp>
             <stringProp name="TCPSampler.port">${mvRadPartnera}</stringProp>
@@ -859,7 +861,7 @@
             <stringProp name="ConfigTestElement.password"></stringProp>
           </TCPSampler>
           <hashTree>
-            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
               <collectionProp name="Asserion.test_strings">
                 <stringProp name="2524">OK</stringProp>
               </collectionProp>
@@ -871,7 +873,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="JSR223 Sampler">
+          <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="JSR223 Sampler" enabled="true">
             <stringProp name="cacheKey">true</stringProp>
             <stringProp name="filename"></stringProp>
             <stringProp name="parameters"></stringProp>
