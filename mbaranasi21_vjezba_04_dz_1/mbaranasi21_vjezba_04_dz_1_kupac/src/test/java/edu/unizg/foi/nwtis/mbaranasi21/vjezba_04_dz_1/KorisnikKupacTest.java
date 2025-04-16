@@ -1,10 +1,13 @@
 package edu.unizg.foi.nwtis.mbaranasi21.vjezba_04_dz_1;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import java.io.ByteArrayOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
@@ -90,6 +93,35 @@ class KorisnikKupacTest {
       } catch (NeispravnaKonfiguracija | IOException e) {
           fail(e.getMessage());
       }
+  }
+  
+  @Test
+  @Order(2)
+  void testMain() {
+      ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+      PrintStream originalOut = System.out;
+      System.setOut(new PrintStream(outContent));
+      
+      KorisnikKupac.main(new String[]{"config.txt"});
+      
+      assertEquals("Broj argumenata nije 2. Očekivano: datoteka_konfiguracije.txt datoteka_podataka.csv", 
+              outContent.toString().trim());
+      
+      System.setOut(originalOut);
+  }
+  
+  @Test
+  @Order(3)
+  void testObradiLiniju() throws Exception {
+      String linija = "korisnik1;localhost;12345;100;JELOVNIK korisnik1";
+      
+      Method method = KorisnikKupac.class.getDeclaredMethod("obradiLiniju", String.class);
+      method.setAccessible(true);
+      
+      method.invoke(korisnikKupac, linija);
+      
+      String neispravnaLinija = "korisnik1;localhost;12345";
+      method.invoke(korisnikKupac, neispravnaLinija);
   }
 
 }
