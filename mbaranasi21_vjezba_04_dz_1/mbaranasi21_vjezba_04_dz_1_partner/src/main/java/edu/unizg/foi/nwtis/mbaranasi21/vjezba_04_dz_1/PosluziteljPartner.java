@@ -72,7 +72,6 @@ public class PosluziteljPartner {
 		}
 		var program = new PosluziteljPartner();
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-	        System.out.println("Program se prekida (Ctrl+C). Zatvaranje resursa...");
 	        program.kraj = true;
 	        
 	        for (Thread dretva : program.aktivneDretve) {
@@ -88,8 +87,6 @@ public class PosluziteljPartner {
 	            Thread.currentThread().interrupt();
 	        }
 	        
-	        System.out.println("Ukupno zatvoreno veza: " + program.brojZatvorenihVeza.get());
-	        System.out.println("Ukupno prekinuto dretvi: " + program.brojPrekinutihDretvi.get());
 	    }));
 		var nazivDatoteke = args[0];
 		if (!program.ucitajKonfiguraciju(nazivDatoteke)) {
@@ -115,17 +112,14 @@ public class PosluziteljPartner {
 			return;
 		}
 
-		System.out.println("Nevažeća opcija: " + linija);
 	}
 
 	private void pokreniPosluzitelj() {
 	    if (!this.konfig.postojiPostavka("sigKod")) {
-	        System.out.println("Partner nije registriran. Prvo registrirajte partnera.");
 	        return;
 	    }
 
 	    if (!preuzmiJelovnik() || !preuzmiKartuPica()) {
-	        System.out.println("Nije moguće preuzeti jelovnik ili kartu pića. Prekidam rad.");
 	        return;
 	    }
 
@@ -143,7 +137,6 @@ public class PosluziteljPartner {
 	        int pauzaDretve = Integer.parseInt(this.konfig.dajPostavku("pauzaDretve"));
 
 	        try (ServerSocket ss = new ServerSocket(mreznaVrata, brojCekaca)) {
-	            System.out.println("Poslužitelj partner pokrenut na portu " + mreznaVrata);
 
 	            while (!this.kraj) {
 	                try {
@@ -158,7 +151,6 @@ public class PosluziteljPartner {
 	                    });
 	                } catch (IOException e) {
 	                    if (!this.kraj) {
-	                        System.out.println("Greška pri prihvaćanju veze: " + e.getMessage());
 	                    }
 	                }
 
@@ -171,7 +163,6 @@ public class PosluziteljPartner {
 	        }
 
 	    } catch (IOException e) {
-	        System.out.println("Greška pri pokretanju poslužitelja: " + e.getMessage());
 	    } finally {
 	        if (this.executor != null) {
 	            this.executor.shutdown();
@@ -239,7 +230,6 @@ public class PosluziteljPartner {
 	        zatvoriVezu(socket);
 	        
 	    } catch (Exception e) {
-	        System.out.println("Greška pri obradi zahtjeva kupca: " + e.getMessage());
 	        zatvoriVezu(socket);
 	    }
 	}
@@ -258,17 +248,14 @@ public class PosluziteljPartner {
 	        var linija = in.readLine();
 	        mreznaUticnica.shutdownInput();
 	        if (linija.equals("OK")) {
-	            System.out.println("Uspješan kraj poslužitelja.");
 	        }
 	        zatvoriVezu(mreznaUticnica);
 	    } catch (IOException e) {
-	        System.out.println("Greška pri slanju zahtjeva za kraj: " + e.getMessage());
 	    }
 	}
 
 	private void registrirajPartnera() {
 	    if (this.konfig.postojiPostavka("sigKod") && !this.konfig.dajPostavku("sigKod").isEmpty()) {
-	        System.out.println("Partner je već registriran. Sigurnosni kod: " + this.konfig.dajPostavku("sigKod"));
 	        return;
 	    }
 	    
@@ -306,16 +293,13 @@ public class PosluziteljPartner {
 	                this.konfig.spremiPostavku("sigKod", sigKod);
 	                this.konfig.spremiKonfiguraciju();
 
-	                System.out.println("Partner uspješno registriran. Sigurnosni kod: " + sigKod);
 	            }
 	        } else {
-	            System.out.println("Greška pri registraciji partnera: " + odgovor);
 	        }
 
 	        zatvoriVezu(mreznaUticnica);
 
 	    } catch (Exception e) {
-	        System.out.println("Greška pri registraciji partnera: " + e.getMessage());
 	    }
 	}
 
@@ -347,17 +331,14 @@ public class PosluziteljPartner {
 	            this.jelovnici = gson.fromJson(json, new TypeToken<List<Jelovnik>>() {
 	            }.getType());
 
-	            System.out.println("Jelovnik uspješno preuzet. Broj jela: " + this.jelovnici.size());
 	            zatvoriVezu(socket);
 	            return true;
 	        } else {
-	            System.out.println("Greška pri dohvatu jelovnika: " + odgovorStatus);
 	            zatvoriVezu(socket);
 	            return false;
 	        }
 
 	    } catch (Exception e) {
-	        System.out.println("Greška pri preuzimanju jelovnika: " + e.getMessage());
 	        zatvoriVezu(socket);
 	        return false;
 	    }
@@ -391,17 +372,14 @@ public class PosluziteljPartner {
 	            this.kartaPica = gson.fromJson(json, new TypeToken<List<KartaPica>>() {
 	            }.getType());
 
-	            System.out.println("Karta pića uspješno preuzeta. Broj pića: " + this.kartaPica.size());
 	            zatvoriVezu(socket);
 	            return true;
 	        } else {
-	            System.out.println("Greška pri dohvatu karte pića: " + odgovorStatus);
 	            zatvoriVezu(socket);
 	            return false;
 	        }
 
 	    } catch (Exception e) {
-	        System.out.println("Greška pri preuzimanju karte pića: " + e.getMessage());
 	        zatvoriVezu(socket);
 	        return false;
 	    }
@@ -688,7 +666,6 @@ public class PosluziteljPartner {
 	        }
 
 	    } catch (Exception e) {
-	        System.out.println("Greška pri slanju obračuna: " + e.getMessage());
 	        return false;
 	    }
 	}

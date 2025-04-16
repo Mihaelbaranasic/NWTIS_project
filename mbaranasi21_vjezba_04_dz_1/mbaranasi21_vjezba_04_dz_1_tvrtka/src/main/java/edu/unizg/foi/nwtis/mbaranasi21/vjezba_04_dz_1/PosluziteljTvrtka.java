@@ -91,7 +91,6 @@ public class PosluziteljTvrtka {
         }
         
         if (!this.konfig.dajPostavku("datotekaPartnera").endsWith(".json")) {
-            System.out.println("Datoteka partnera mora imati .json ekstenziju");
             return;
         }
         
@@ -125,7 +124,6 @@ public class PosluziteljTvrtka {
             }
         }
         
-        System.out.println("Poslužitelj tvrtka završava s radom.");
     }
 
     /**
@@ -153,7 +151,6 @@ public class PosluziteljTvrtka {
                             this.jelovnici.addAll(jelovniciKuhinje);
                             reader.close();
                         } catch (IOException e) {
-                            System.out.println("Nije moguće učitati jelovnik za kuhinju: " + kljucKuhinje);
                         }
                     }
                 }
@@ -182,15 +179,12 @@ public class PosluziteljTvrtka {
                 if (postojeceKuhinje.contains(p.vrstaKuhinje())) {
                     validniPartneri.add(p);
                 } else {
-                    System.out.println("Partner " + p.naziv() + " (ID: " + p.id() + ") ima nepostojeću kuhinju: " + p.vrstaKuhinje());
                 }
             }
             
             partneri = validniPartneri;
             
-            System.out.println("Podaci uspješno učitani.");
         } catch (IOException e) {
-            System.out.println("Greška pri učitavanju podataka: " + e.getMessage());
         }
     }
     
@@ -211,13 +205,11 @@ public class PosluziteljTvrtka {
                     });
                 } catch (IOException e) {
                     if (!this.kraj.get()) {
-                        System.out.println("Greška u poslužitelju za kraj: " + e.getMessage());
                     }
                 }
             }
             ss.close();
         } catch (IOException e) {
-            System.out.println("Greška pri pokretanju poslužitelja za kraj: " + e.getMessage());
         }
     }
 
@@ -267,7 +259,6 @@ public class PosluziteljTvrtka {
             
             zatvoriVezu(mreznaUticnica);
         } catch (Exception e) {
-            System.out.println("Greška pri obradi zahtjeva za kraj: " + e.getMessage());
             zatvoriVezu(mreznaUticnica);
             return Boolean.FALSE;
         }
@@ -287,7 +278,6 @@ public class PosluziteljTvrtka {
                 this.executor.submit(() -> obradiRegistraciju(mreznaUticnica));
             }
         } catch (IOException e) {
-            System.out.println("Greška u poslužitelju za registraciju: " + e.getMessage());
         }
     }
     
@@ -343,7 +333,6 @@ public class PosluziteljTvrtka {
             
             zatvoriVezu(mreznaUticnica);
         } catch (Exception e) {
-            System.out.println("Greška pri obradi zahtjeva za registraciju: " + e.getMessage());
             zatvoriVezu(mreznaUticnica);
             return Boolean.FALSE;
         }
@@ -431,7 +420,6 @@ public class PosluziteljTvrtka {
             out.flush();
 
         } catch (Exception e) {
-            System.out.println("Greška pri obradi komande PARTNER: " + e.getMessage());
             out.write("ERROR 29 - Nešto drugo nije u redu\n");
             out.flush();
         }
@@ -480,7 +468,6 @@ public class PosluziteljTvrtka {
             out.flush();
             
         } catch (Exception e) {
-            System.out.println("Greška pri obradi komande OBRIŠI: " + e.getMessage());
             out.write("ERROR 29 - Došlo je do greške pri obradi komande\n");
             out.flush();
         }
@@ -504,7 +491,6 @@ public class PosluziteljTvrtka {
             out.flush();
             
         } catch (Exception e) {
-            System.out.println("Greška pri obradi komande POPIS: " + e.getMessage());
             out.write("ERROR 29 - Došlo je do greške pri obradi komande\n");
             out.flush();
         }
@@ -521,7 +507,6 @@ public class PosluziteljTvrtka {
             gson.toJson(partneri, writer);
             writer.close();
         } catch (IOException e) {
-            System.out.println("Greška pri spremanju partnera: " + e.getMessage());
         }
     }
     
@@ -546,12 +531,10 @@ public class PosluziteljTvrtka {
                     });
                 } catch (IOException e) {
                     if (!this.kraj.get()) {
-                        System.out.println("Greška u poslužitelju za rad s partnerima: " + e.getMessage());
                     }
                 }
             }
         } catch (IOException e) {
-            System.out.println("Greška pri pokretanju poslužitelja za rad s partnerima: " + e.getMessage());
         }
     }
     
@@ -604,7 +587,6 @@ public class PosluziteljTvrtka {
             
             zatvoriVezu(mreznaUticnica);
         } catch (Exception e) {
-            System.out.println("Greška pri obradi zahtjeva za rad s partnerima: " + e.getMessage());
             zatvoriVezu(mreznaUticnica);
             return Boolean.FALSE;
         }
@@ -664,7 +646,6 @@ public class PosluziteljTvrtka {
             out.flush();
             
         } catch (Exception e) {
-            System.out.println("Greška pri obradi komande JELOVNIK: " + e.getMessage());
             out.write("ERROR 39 - Došlo je do greške pri obradi komande\n");
             out.flush();
         }
@@ -713,7 +694,6 @@ public class PosluziteljTvrtka {
             out.flush();
             
         } catch (Exception e) {
-            System.out.println("Greška pri obradi komande KARTAPIĆA: " + e.getMessage());
             out.write("ERROR 39 - Greška pri obradi komande\n");
             out.flush();
         }
@@ -819,7 +799,6 @@ public class PosluziteljTvrtka {
                         obracuni = postojeciObracuni;
                     }
                 } catch (IOException e) {
-                    System.out.println("Nije moguće učitati postojeće obračune: " + e.getMessage());
                 }
 
                 if (noviObracuni != null) {
@@ -835,13 +814,11 @@ public class PosluziteljTvrtka {
                 out.flush();
 
             } catch (Exception e) {
-                System.out.println("Greška pri obradi JSON obračuna: " + e.getMessage());
                 out.write("ERROR 35 - Neispravan obračun: pogreška pri parsiranju JSON-a\n");
                 out.flush();
             }
 
         } catch (Exception e) {
-            System.out.println("Greška pri obradi komande OBRAČUN: " + e.getMessage());
             out.write("ERROR 39 - Nešto drugo nije u redu\n");
             out.flush();
         }
@@ -873,7 +850,6 @@ public class PosluziteljTvrtka {
                 mreznaUticnica.close();
                 brojZatvorenihVeza.incrementAndGet();
             } catch (IOException e) {
-                System.out.println("Greška pri zatvaranju veze: " + e.getMessage());
             }
         }
     }

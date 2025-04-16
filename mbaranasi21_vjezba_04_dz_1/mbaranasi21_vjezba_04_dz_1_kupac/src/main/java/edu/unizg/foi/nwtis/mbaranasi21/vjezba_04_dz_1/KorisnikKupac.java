@@ -39,7 +39,6 @@ public class KorisnikKupac {
      */
     private void pokreni(String nazivDatoteke, String datotekaPodataka) {
         if (!ucitajKonfiguraciju(nazivDatoteke)) {
-            System.out.println("Greška pri učitavanju konfiguracije.");
             return;
         }
         
@@ -51,7 +50,6 @@ public class KorisnikKupac {
                 try {
                     String[] dijelovi = linija.split(";");
                     if (dijelovi.length != 5) {
-                        System.out.println("Nevažeći format linije: " + linija);
                         continue;
                     }
                     
@@ -66,7 +64,6 @@ public class KorisnikKupac {
                     posaljiKomandu(adresa, mreznaVrata, komanda);
                     
                 } catch (Exception e) {
-                    System.out.println("Greška pri obradi linije: " + linija);
                     e.printStackTrace();
                 }
             }
@@ -74,7 +71,6 @@ public class KorisnikKupac {
             reader.close();
             
         } catch (IOException e) {
-            System.out.println("Greška pri čitanju datoteke s komandama: " + e.getMessage());
         }
     }
     
@@ -115,7 +111,6 @@ public class KorisnikKupac {
           if (odgovor != null && odgovor.equals("OK") && 
               (komanda.startsWith("JELOVNIK") || komanda.startsWith("KARTAPIĆA") || 
                komanda.startsWith("RAČUN") || komanda.startsWith("POPIS"))) {
-              System.out.println(odgovor);
               StringBuilder jsonBuilder = new StringBuilder();
               String red;
               while ((red = in.readLine()) != null) {
