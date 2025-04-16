@@ -123,5 +123,43 @@ class KorisnikKupacTest {
       String neispravnaLinija = "korisnik1;localhost;12345";
       method.invoke(korisnikKupac, neispravnaLinija);
   }
+  
+  @Test
+  @Order(4)
+  void testObradiDatotekuPodataka() throws Exception {
+      String nazivDatoteke = this.getClass().getName() + ".txt";
+      Konfiguracija konfig = KonfiguracijaApstraktna.kreirajKonfiguraciju(nazivDatoteke);
+      konfig.spremiKonfiguraciju();
+      
+      Method ucitajMethod = KorisnikKupac.class.getDeclaredMethod("ucitajKonfiguraciju", String.class);
+      ucitajMethod.setAccessible(true);
+      ucitajMethod.invoke(korisnikKupac, nazivDatoteke);
+      
+      Method method = KorisnikKupac.class.getDeclaredMethod("obradiDatotekuPodataka", String.class);
+      method.setAccessible(true);
+      
+      method.invoke(korisnikKupac, testDataFile);
+      
+      method.invoke(korisnikKupac, "nepostojeca_datoteka.csv");
+      
+      Files.delete(Path.of(nazivDatoteke));
+  }
+  
+  @Test
+  @Order(5)
+  void testPokreni() throws Exception {
+      String nazivDatoteke = this.getClass().getName() + ".txt";
+      Konfiguracija konfig = KonfiguracijaApstraktna.kreirajKonfiguraciju(nazivDatoteke);
+      konfig.spremiKonfiguraciju();
+      
+      Method method = KorisnikKupac.class.getDeclaredMethod("pokreni", String.class, String.class);
+      method.setAccessible(true);
+      
+      method.invoke(korisnikKupac, nazivDatoteke, testDataFile);
+      
+      method.invoke(korisnikKupac, "nepostojeca_konfiguracija.txt", testDataFile);
+      
+      Files.delete(Path.of(nazivDatoteke));
+  }
 
 }
