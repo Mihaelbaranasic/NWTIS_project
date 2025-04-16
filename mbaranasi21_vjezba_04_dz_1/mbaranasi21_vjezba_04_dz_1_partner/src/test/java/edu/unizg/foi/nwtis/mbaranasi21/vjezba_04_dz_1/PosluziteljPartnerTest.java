@@ -246,60 +246,61 @@ class PosluziteljPartnerTest {
   @Test
   @Order(7)
   void testKreirajObracun() throws Exception {
-      Map<String, List<Narudzba>> placeneNarudzbe = new ConcurrentHashMap<>();
-      List<Narudzba> narudzbe1 = new ArrayList<>();
-      narudzbe1.add(new Narudzba("korisnik1", "ITA_1", true, 1.0f, 8.0f, System.currentTimeMillis()));
-      narudzbe1.add(new Narudzba("korisnik1", "P_1", false, 2.0f, 4.0f, System.currentTimeMillis()));
+    Map<String, List<Narudzba>> placeneNarudzbe = new ConcurrentHashMap<>();
+    List<Narudzba> narudzbe1 = new ArrayList<>();
+    narudzbe1.add(new Narudzba("korisnik1", "ITA_1", true, 1.0f, 8.0f, System.currentTimeMillis()));
+    narudzbe1.add(new Narudzba("korisnik1", "P_1", false, 2.0f, 4.0f, System.currentTimeMillis()));
 
-      List<Narudzba> narudzbe2 = new ArrayList<>();
-      narudzbe2.add(new Narudzba("korisnik2", "ITA_1", true, 3.0f, 8.0f, System.currentTimeMillis()));
+    List<Narudzba> narudzbe2 = new ArrayList<>();
+    narudzbe2.add(new Narudzba("korisnik2", "ITA_1", true, 3.0f, 8.0f, System.currentTimeMillis()));
 
-      placeneNarudzbe.put("korisnik1", narudzbe1);
-      placeneNarudzbe.put("korisnik2", narudzbe2);
+    placeneNarudzbe.put("korisnik1", narudzbe1);
+    placeneNarudzbe.put("korisnik2", narudzbe2);
 
-      Field field = PosluziteljPartner.class.getDeclaredField("placeneNarudzbe");
-      field.setAccessible(true);
-      field.set(posluziteljPartner, placeneNarudzbe);
+    Field field = PosluziteljPartner.class.getDeclaredField("placeneNarudzbe");
+    field.setAccessible(true);
+    field.set(posluziteljPartner, placeneNarudzbe);
 
-      String nazivDatoteke = this.getClass().getName() + "_id.txt";
-      Konfiguracija konfig = KonfiguracijaApstraktna.kreirajKonfiguraciju(nazivDatoteke);
-      konfig.spremiPostavku("id", "1");
-      konfig.spremiKonfiguraciju();
+    String nazivDatoteke = this.getClass().getName() + "_id.txt";
+    Konfiguracija konfig = KonfiguracijaApstraktna.kreirajKonfiguraciju(nazivDatoteke);
+    konfig.spremiPostavku("id", "1");
+    konfig.spremiKonfiguraciju();
 
-      Method ucitajMethod = PosluziteljPartner.class.getDeclaredMethod("ucitajKonfiguraciju", String.class);
-      ucitajMethod.setAccessible(true);
-      ucitajMethod.invoke(posluziteljPartner, nazivDatoteke);
+    Method ucitajMethod =
+        PosluziteljPartner.class.getDeclaredMethod("ucitajKonfiguraciju", String.class);
+    ucitajMethod.setAccessible(true);
+    ucitajMethod.invoke(posluziteljPartner, nazivDatoteke);
 
-      Method method = PosluziteljPartner.class.getDeclaredMethod("kreirajObracun");
-      method.setAccessible(true);
+    Method method = PosluziteljPartner.class.getDeclaredMethod("kreirajObracun");
+    method.setAccessible(true);
 
-      List<?> obracuni = (List<?>) method.invoke(posluziteljPartner);
+    List<?> obracuni = (List<?>) method.invoke(posluziteljPartner);
 
-      assertEquals(2, obracuni.size(), "Broj stavki u obračunu nije ispravan");
+    assertEquals(2, obracuni.size(), "Broj stavki u obračunu nije ispravan");
 
-      float ukupnoJelo = 0.0f;
-      float ukupnoPice = 0.0f;
+    float ukupnoJelo = 0.0f;
+    float ukupnoPice = 0.0f;
 
-      for (Object o : obracuni) {
-          Method mId = o.getClass().getMethod("id");
-          Method mJelo = o.getClass().getMethod("jelo");
-          Method mKolicina = o.getClass().getMethod("kolicina");
+    for (Object o : obracuni) {
+      Method mId = o.getClass().getMethod("id");
+      Method mJelo = o.getClass().getMethod("jelo");
+      Method mKolicina = o.getClass().getMethod("kolicina");
 
-          String id = (String) mId.invoke(o);
-          boolean jelo = (boolean) mJelo.invoke(o);
-          float kolicina = (float) mKolicina.invoke(o);
+      String id = (String) mId.invoke(o);
+      boolean jelo = (boolean) mJelo.invoke(o);
+      float kolicina = (float) mKolicina.invoke(o);
 
-          if (id.equals("ITA_1") && jelo) {
-              ukupnoJelo += kolicina;
-          } else if (id.equals("P_1") && !jelo) {
-              ukupnoPice += kolicina;
-          }
+      if (id.equals("ITA_1") && jelo) {
+        ukupnoJelo += kolicina;
+      } else if (id.equals("P_1") && !jelo) {
+        ukupnoPice += kolicina;
       }
+    }
 
-      assertEquals(4.0f, ukupnoJelo, 0.001f, "Ukupna količina jela ITA_1 nije ispravna");
-      assertEquals(2.0f, ukupnoPice, 0.001f, "Ukupna količina pića P_1 nije ispravna");
+    assertEquals(4.0f, ukupnoJelo, 0.001f, "Ukupna količina jela ITA_1 nije ispravna");
+    assertEquals(2.0f, ukupnoPice, 0.001f, "Ukupna količina pića P_1 nije ispravna");
 
-      Files.delete(Path.of(nazivDatoteke));
+    Files.delete(Path.of(nazivDatoteke));
   }
 
   @Test
