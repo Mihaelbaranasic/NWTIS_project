@@ -374,7 +374,7 @@ public class PosluziteljTvrtka {
     }
 
     if (!linija.startsWith("KRAJ ")) {
-      out.write("ERROR 10 - Format komande nije ispravan (nedostaje razmak nakon KRAJ)\n");
+      out.write("ERROR 10 - Format komande nije ispravan\n");
       out.flush();
       return false;
     }
@@ -382,7 +382,7 @@ public class PosluziteljTvrtka {
     String[] dijelovi = linija.trim().split(" ");
     if (dijelovi.length != 2 || !dijelovi[0].equals("KRAJ")
         || !dijelovi[1].equals(this.kodZaKraj)) {
-      out.write("ERROR 10 - Format komande nije ispravan ili nije ispravan kod za kraj\n");
+      out.write("ERROR 10 - Format komande nije ispravan\n");
       out.flush();
       return false;
     }
@@ -486,7 +486,7 @@ public class PosluziteljTvrtka {
     }
 
     if (linija.trim().isEmpty()) {
-      out.write("ERROR 20 - Format komande nije ispravan (prazna komanda)\n");
+      out.write("ERROR 20 - Format komande nije ispravan\n");
       out.flush();
       return false;
     }
@@ -496,7 +496,7 @@ public class PosluziteljTvrtka {
     if (komanda.equals("PARTNER") || komanda.equals("OBRIŠI")) {
       if (!linija.startsWith(komanda + " ")) {
         out.write(
-            "ERROR 20 - Format komande nije ispravan (nedostaje razmak nakon naziva komande)\n");
+            "ERROR 20 - Format komande nije ispravan\n");
         out.flush();
         return false;
       }
@@ -549,7 +549,7 @@ public class PosluziteljTvrtka {
       kreirajIDodajPartnera(id, naziv, vrstaKuhinje, parametri, out);
 
     } catch (Exception e) {
-      out.write("ERROR 29 - Nešto drugo nije u redu\n");
+      out.write("ERROR 29 - Došlo je do pogreške prilikom registracije partnera\n");
       out.flush();
     }
   }
@@ -836,7 +836,7 @@ public class PosluziteljTvrtka {
     }
 
     if (linija.trim().isEmpty()) {
-      out.write("ERROR 30 - Format komande nije ispravan (prazna komanda)\n");
+      out.write("ERROR 30 - Format komande nije ispravan\n");
       out.flush();
       return false;
     }
@@ -846,7 +846,7 @@ public class PosluziteljTvrtka {
     if (komanda.equals("JELOVNIK") || komanda.equals("KARTAPIĆA") || komanda.equals("OBRAČUN")) {
       if (!linija.startsWith(komanda + " ")) {
         out.write(
-            "ERROR 30 - Format komande nije ispravan (nedostaje razmak nakon naziva komande)\n");
+            "ERROR 30 - Format komande nije ispravan\n");
         out.flush();
         return false;
       }
@@ -1040,7 +1040,7 @@ public class PosluziteljTvrtka {
       out.flush();
 
     } catch (Exception e) {
-      out.write("ERROR 39 - Nešto drugo nije u redu\n");
+      out.write("ERROR 39 - Greška pri obradi komande\n");
       out.flush();
     }
   }

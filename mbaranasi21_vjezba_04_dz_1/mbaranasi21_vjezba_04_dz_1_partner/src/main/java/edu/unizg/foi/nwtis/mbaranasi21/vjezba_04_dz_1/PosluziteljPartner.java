@@ -251,7 +251,7 @@ public class PosluziteljPartner {
     }
 
     if (komanda.trim().length() == 0) {
-      out.write("ERROR 40 - Format komande nije ispravan (prazna komanda)\n");
+      out.write("ERROR 40 - Format komande nije ispravan\n");
       out.flush();
       return false;
     }
@@ -270,7 +270,7 @@ public class PosluziteljPartner {
         || nazivKomande.equals("PIĆE") || nazivKomande.equals("RAČUN")) {
 
       if (dijelovi.length < 2 || dijelovi[1].trim().isEmpty()) {
-        out.write("ERROR 40 - Format komande nije ispravan (nedostaje razmak ili argumenti)\n");
+        out.write("ERROR 40 - Format komande nije ispravan\n");
         out.flush();
         return false;
       }
@@ -285,7 +285,7 @@ public class PosluziteljPartner {
    * @param out izlazni tok
    */
   private void zatvoriVezu(PrintWriter out) {
-    out.write("ERROR 49 - Nešto drugo nije u redu\n");
+    out.write("ERROR 49 - Došlo je do pogreške\n");
     out.flush();
   }
 
@@ -582,7 +582,7 @@ public class PosluziteljPartner {
       out.flush();
 
     } catch (Exception e) {
-      out.write("ERROR 49 - " + e.getMessage() + "\n");
+      out.write("ERROR 49 - Došlo je do pogreške pri obradi komande\n");
       out.flush();
     }
   }
@@ -609,7 +609,7 @@ public class PosluziteljPartner {
       out.flush();
 
     } catch (Exception e) {
-      out.write("ERROR 49 - " + e.getMessage() + "\n");
+      out.write("ERROR 49 - Došlo je do pogreške pri obradi komande\n");
       out.flush();
     }
   }
@@ -684,7 +684,7 @@ public class PosluziteljPartner {
       out.flush();
 
     } catch (Exception e) {
-      out.write("ERROR 49 - " + e.getMessage() + "\n");
+      out.write("ERROR 49 - Došlo je do pogreške pri obradi komande\n");
       out.flush();
     }
   }
@@ -773,7 +773,7 @@ public class PosluziteljPartner {
       out.flush();
 
     } catch (Exception e) {
-      out.write("ERROR 49 - " + e.getMessage() + "\n");
+      out.write("ERROR 49 - Došlo je do pogreške pri obradi komande\n");
       out.flush();
     }
   }
@@ -829,7 +829,7 @@ public class PosluziteljPartner {
       }
 
     } catch (Exception e) {
-      out.write("ERROR 49 - " + e.getMessage() + "\n");
+      out.write("ERROR 49 - Došlo je do pogreške pri obradi komande\n");
       out.flush();
     }
   }
@@ -885,7 +885,6 @@ public class PosluziteljPartner {
       for (Narudzba n : narudzbe) {
         String id = n.id();
         boolean jelo = n.jelo();
-        // Promijenjen separator u "##" kako bi se izbjeglo konflikovanje s ID-om
         String kljuc = id + (jelo ? "##jelo" : "##pice");
 
         kolicinePoID.put(kljuc, kolicinePoID.getOrDefault(kljuc, 0f) + n.kolicina());
