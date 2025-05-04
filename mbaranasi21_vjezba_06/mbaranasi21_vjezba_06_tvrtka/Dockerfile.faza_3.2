@@ -1,0 +1,18 @@
+FROM eclipse-temurin:23-jre AS builder
+
+RUN  apt-get update && \
+	apt-get install -y wget unzip && \
+	wget -O /tmp/jmeter.zip https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.6.3.zip && \
+	unzip -o /tmp/jmeter.zip "**/*"  -d /tmp/jmeter 
+	
+FROM eclipse-temurin:23-jre
+
+RUN mkdir -p /opt/jmeter  
+
+COPY --from=builder /tmp/jmeter /opt/jmeter
+	
+COPY ./ProvjeraPosluziteljaTvrtka.jmx/ /usr/app/
+
+WORKDIR /usr/app
+
+CMD ["/opt/jmeter/apache-jmeter-5.6.3/bin/jmeter", "-n", "-t", "ProvjeraPosluziteljaTvrtka.jmx", "-l", "podaci/rezultati.csv"]

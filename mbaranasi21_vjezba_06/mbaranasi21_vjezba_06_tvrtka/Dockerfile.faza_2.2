@@ -1,0 +1,14 @@
+FROM eclipse-temurin:23-jre
+
+COPY ./target/mbaranasi21_vjezba_06_tvrtka-1.1.0-jar-with-dependencies.jar /usr/app/
+COPY ./NWTiS_04_tvrtka.txt /usr/app/
+COPY ./kartaPica.json /usr/app/
+COPY ./kuhinja_1.json /usr/app/
+COPY ./kuhinja_2.json /usr/app/
+COPY ./kuhinja_3.json /usr/app/
+
+WORKDIR /usr/app
+
+EXPOSE 8000
+
+CMD ["java", "-jar", "mbaranasi21_vjezba_06_tvrtka-1.1.0-jar-with-dependencies.jar", "NWTiS_04_tvrtka.txt"]

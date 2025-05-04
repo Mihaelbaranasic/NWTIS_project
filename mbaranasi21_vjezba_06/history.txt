@@ -1,0 +1,160 @@
+    1  cd dkermek/
+    2  ls -al
+    3  git add .
+    4  git commit -m "Rad na 1. vježbi - prekinut zbog nestanka struje"
+    5  git config user.mail "dkermek@foi.hr"
+    6  git config user.name "Dragutin Kermek"
+    7  git commit -m "Rad na 1. vježbi - prekinut zbog nestanka struje"
+    8  git config user.email "dkermek@foi.hr"
+    9  git commit -m "Rad na 1. vježbi - prekinut zbog nestanka struje"
+   10  git push
+   11  exit
+   12  mvn clean install
+   13  clea
+   14  clean
+   15  clear
+   16  mvn clean javadoc:javadoc
+   17  mvn clean package
+   18  mvn clean install
+   19  java -jar target/dkermek_vjezba_02_2-1.0.0.jar L NWTiS_1.txt
+   20  java -jar target/dkermek_vjezba_02_2-1.0.0.jar edu.unizg.foi.nwtis.dkermek.Vjezba_02_2 L NWTiS_1.txt
+   21  java -cp target/dkermek_vjezba_02_2-1.0.0.jar edu.unizg.foi.nwtis.dkermek.Vjezba_02_2 L NWTiS_1.txt
+   22  mvn clean install
+   23  java -jar target/dkermek_vjezba_02_2-1.0.0.jar edu.unizg.foi.nwtis.dkermek.Vjezba_02_2 L NWTiS_1.txt
+   24  ls -al
+   25  mvn clean javadoc:javadoc
+   26  ls -al
+   27  ls -al target/
+   28  ls -al target/reports/
+   29  ls -al target/reports/apidocs/
+   30  lynx
+   31  lynx target/reports/apidocs/index.html 
+   32  java -jar target/dkermek_vjezba_02_2-1.0.0.jar edu.unizg.foi.nwtis.dkermek.Vjezba_02_2 P NWTiS_1.txt ime
+   33  mvn clean install
+   34  java -jar target/dkermek_vjezba_02_2-1.0.0.jar edu.unizg.foi.nwtis.dkermek.Vjezba_02_2 P NWTiS_1.txt ime
+   35  java -jar target/dkermek_vjezba_02_2-1.0.0.jar edu.unizg.foi.nwtis.dkermek.Vjezba_02_2 S NWTiS_1.txt ime Dragutin
+   36  java -jar target/dkermek_vjezba_02_2-1.0.0.jar S NWTiS_1.txt ime Dragutin
+   37  java -jar target/dkermek_vjezba_02_2-1.0.0.jar L NWTiS_1.txt
+   38  ls -al
+   39  less NWTiS_1.txt 
+   40  java -jar target/dkermek_vjezba_02_2-1.0.0.jar P NWTiS_1.txt ime
+   41  java -jar target/dkermek_vjezba_02_2-1.0.0.jar S NWTiS_1.txt ime Dragutin
+   42  java -jar target/dkermek_vjezba_02_2-1.0.0.jar P NWTiS_1.txt ime
+   43  java -jar target/dkermek_vjezba_02_2-1.0.0.jar L NWTiS_1.txt
+   44  less NWTiS_1.txt 
+   45  java -jar target/dkermek_vjezba_02_2-1.0.0.jar S NWTiS_1.txt prezime Kermek
+   46  java -jar target/dkermek_vjezba_02_2-1.0.0.jar L NWTiS_1.txt
+   47  java -jar target/dkermek_vjezba_02_2-1.0.0.jar S NWTiS_1.txt grad Varaždin
+   48  java -jar target/dkermek_vjezba_02_2-1.0.0.jar S NWTiS_1.txt olegij NWTiS
+   49  java -jar target/dkermek_vjezba_02_2-1.0.0.jar L NWTiS_1.txt
+   50  java -jar target/dkermek_vjezba_02_2-1.0.0.jar S NWTiS_1.txt kolegij NWTiS
+   51  java -jar target/dkermek_vjezba_02_2-1.0.0.jar L NWTiS_1.txt
+   52  java -jar target/dkermek_vjezba_02_2-1.0.0.jar K NWTiS_1.txt NWTiS_1.xml
+   53  less NWTiS_1.xml 
+   54  java -jar target/dkermek_vjezba_02_2-1.0.0.jar K NWTiS_1.txt NWTiS_1.json
+   55  less NWTiS_1.json 
+   56  java -jar target/dkermek_vjezba_02_2-1.0.0.jar K NWTiS_1.txt NWTiS_1.bin
+   57  less NWTiS_1.bin
+   58  java -jar target/dkermek_vjezba_02_2-1.0.0.jar L NWTiS_1.xml
+   59  java -jar target/dkermek_vjezba_02_2-1.0.0.jar L NWTiS_1.bin
+   60  java -jar target/dkermek_vjezba_02_2-1.0.0.jar L NWTiS_1.json
+   61  java -jar target/dkermek_vjezba_02_2-1.0.0.jar L NWTiS_1.pero
+   62  mvn clean package
+   63  java -jar target/dkermek_vjezba_02_2-1.0.0.jar D NWTiS_1.txt olegij
+   64  java -jar target/dkermek_vjezba_02_2-1.0.0.jar L NWTiS_1.txt 
+   65  mvn clean package
+   66  java -jar target/dkermek_vjezba_02_2-1.0.0.jar D NWTiS_1.txt olegij
+   67  java -jar target/dkermek_vjezba_02_2-1.0.0.jar L NWTiS_1.txt 
+   68  mvn clean package
+   69  java -jar target/dkermek_vjezba_02_2-1.0.0.jar E NWTiS_1.txt 
+   70  java -jar target/dkermek_vjezba_02_2-1.0.0.jar L NWTiS_1.txt 
+   71  mvn clean package
+   72  java -jar target/dkermek_vjezba_03-1.0.0-jar-with-dependencies.jar NWTiS_03.txt . java class
+   73  mvn clean package
+   74  java -jar target/dkermek_vjezba_03-1.0.0-jar-with-dependencies.jar NWTiS_03.txt . java class
+   75  mvn clean package
+   76  java -jar target/dkermek_vjezba_03-1.0.0-jar-with-dependencies.jar NWTiS_03.txt . java class
+   77  mvn clean package
+   78  java -jar target/dkermek_vjezba_03-1.0.0-jar-with-dependencies.jar NWTiS_03.txt . java class
+   79  jps
+   80  kill -9 2498
+   81  mvn clean package
+   82  java -jar target/dkermek_vjezba_03-1.0.0-jar-with-dependencies.jar NWTiS_03.txt . java class
+   83  mvn clean install
+   84  cd dkermek_vjezba_04_dz_1_podaci/
+   85  mvn clean install
+   86  cd ..
+   87  cd dkermek_vjezba_04_dz_1_tvrtka/
+   88  clear
+   89  mvn clean package
+   90  java -jar target/dkermek_vjezba_04_dz_1_tvrtka-1.0.0-jar-with-dependencies.jar 
+   91  ls -al
+   92  java -jar target/dkermek_vjezba_04_dz_1_tvrtka-1.0.0-jar-with-dependencies.jar NWTiS_04_tvrtka.txt 
+   93  mvn clean package
+   94  java -jar target/dkermek_vjezba_04_dz_1_tvrtka-1.0.0-jar-with-dependencies.jar NWTiS_04_tvrtka.txt 
+   95  mvn clean package
+   96  java -jar target/dkermek_vjezba_04_dz_1_tvrtka-1.0.0-jar-with-dependencies.jar NWTiS_04_tvrtka.txt 
+   97  lsof -i:8000
+   98  jps
+   99  ips
+  100  jps
+  101  ./sveZaustavi.sh 
+  102  jps
+  103  ./zaustaviJVMProces.sh tvrtka
+  104  exitž
+  105  exit
+  106  mvn clean package
+  107  java -jar target/dkermek_vjezba_04_dz_1_tvrtka-1.0.0-jar-with-dependencies.jar NWTiS_04_tvrtka.txt 
+  108  cleanž
+  109  clear
+  110  mvn clean test
+  111  mvn clean test -Dtest="PosluziteljTvrtkaTest"
+  112  mvn clean test -Dtest="PosluziteljTvrtkaTest#testUcitajKonfiguraciju"
+  113  mvn clean package -Dmaven.test.skip=true
+  114  mvn clean package
+  115  java -jar target/dkermek_vjezba_04_dz_1_tvrtka-1.0.0-jar-with-dependencies.jar NWTiS_04_tvrtka.txt 
+  116  exit
+  117  mvn clean package
+  118  exit
+  119  mvn clean package
+  120  java -jar target/dkermek_vjezba_04_dz_1_partner-1.0.0-jar-with-dependencies.jar NWTiS_04_partner_1.txt 
+  121  java -jar target/dkermek_vjezba_04_dz_1_partner-1.0.0-jar-with-dependencies.jar NWTiS_04_partner_1.txt KRAJ
+  122  mvn clean package
+  123  java -jar target/dkermek_vjezba_04_dz_1_partner-1.0.0-jar-with-dependencies.jar NWTiS_04_partner_1.txt KRAJ
+  124  mvn clean package
+  125  java -jar target/dkermek_vjezba_04_dz_1_partner-1.0.0-jar-with-dependencies.jar NWTiS_04_partner_1.txt KRAJNIJE
+  126  mvn clean package
+  127  java -jar target/dkermek_vjezba_04_dz_1_partner-1.0.0-jar-with-dependencies.jar NWTiS_04_partner_1.txt KRAJNIJE
+  128  mvn clean package
+  129  java -jar target/dkermek_vjezba_04_dz_1_partner-1.0.0-jar-with-dependencies.jar NWTiS_04_partner_1.txt KRAJNIJE
+  130  exit
+  131  mvn clean package
+  132  java -jar target/dkermek_vjezba_05_app-1.0.0-jar-with-dependencies.jar NWTiS_05.1.txt dkermek 123456
+  133  mvn clean package
+  134  java -jar target/dkermek_vjezba_05_app-1.0.0-jar-with-dependencies.jar NWTiS_05.1.txt dkermek 123456
+  135  mvn clean package
+  136  ls -al target/maven-jlink/default
+  137  target/maven-jlink/default/bin/java --list-modules
+  138  du --max-depth=0 -c -h target/maven-jlink/default
+  139  du --max-depth=0 -c -h /usr/lib/jvm/jdk-23.0.2
+  140  target/maven-jlink/default/bin/java -m dkermek_vjezba_05_app/edu.unizg.foi.nwtis.dkermek.vjezba_05.IzvrsiteljZadatka NWTiS_05.1.txt dkermek lozinka
+  141  exit
+  142  mvn clean install
+  143  exit
+  144  mvn clean install
+  145  exit
+  146  mvn clean install
+  147  docker stop PosluziteljTvrtka
+  148  docker rm PosluziteljTvrtka
+  149  docker run -it -d -p 8000:8000 --name=PosluziteljTvrtka posluzitelj_tvrtka:faza_1
+  150  docker exec -it PosluziteljTvrtka /bin/bash
+  151  docker stop PosluziteljTvrtka
+  152  docker rm PosluziteljTvrtka
+  153  docker build -f Dockerfile.faza_2.1 -t posluzitelj_tvrtka:faza_2 .
+  154  docker exec -it PosluziteljTvrtka /bin/bash
+  155  docker stop PosluziteljTvrtka
+  156  docker rm PosluziteljTvrtka
+  157  docker stop PosluziteljTvrtka
+  158  docker rm PosluziteljTvrtka
+  159  history 
+  160  history > history.txt

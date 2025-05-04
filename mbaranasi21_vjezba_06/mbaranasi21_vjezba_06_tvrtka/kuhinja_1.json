@@ -1,0 +1,52 @@
+[
+	{
+		"id": "MK1",
+		"naziv": "Bakalar na mediteranski",
+		"cijena": 10
+	},
+	{
+		"id": "MK2",
+		"naziv": "Orada s roštilja",
+		"cijena": 10
+	},
+	{
+		"id": "MK3",
+		"naziv": "Skuše u marinadi",
+		"cijena": 8
+	},
+	{
+		"id": "MK4",
+		"naziv": "Punjene lignje",
+		"cijena": 12
+	},
+	{
+		"id": "MK5",
+		"naziv": "Kuhana škarpina",
+		"cijena": 8
+	},
+	{
+		"id": "MK6",
+		"naziv": "Lignje s pršutom",
+		"cijena": 12
+	},
+	{
+		"id": "MK7",
+		"naziv": "Škampi na domaći način",
+		"cijena": 15
+	},
+	{
+		"id": "MK8",
+		"naziv": "Školjkaši na buzaru",
+		"cijena": 7
+	},
+	{
+		"id": "MK9",
+		"naziv": "Brudet od bijele ribe",
+		"cijena": 6
+	},
+	{
+		"id": "MK10",
+		"naziv": "Hobotnica na gulaš",
+		"cijena": 14
+	}
+]

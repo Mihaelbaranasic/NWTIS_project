@@ -1,0 +1,52 @@
+[
+	{
+		"id": "VK1",
+		"naziv": "Tikvice u tankom tijestu",
+		"cijena": 5
+	},
+	{
+		"id": "VK2",
+		"naziv": "Lazanje s tikvicama i sirom",
+		"cijena": 6
+	},
+	{
+		"id": "VK3",
+		"naziv": "Cous-cous s povrćem",
+		"cijena": 5
+	},
+	{
+		"id": "VK4",
+		"naziv": "Pljeskavice od prosa",
+		"cijena": 7
+	},
+	{
+		"id": "VK5",
+		"naziv": "Fini gulaš od gljiva",
+		"cijena": 6
+	},
+	{
+		"id": "VK6",
+		"naziv": "Složenac od tikvica s prosom",
+		"cijena": 7
+	},
+	{
+		"id": "VK7",
+		"naziv": "Rezanci s brokulom",
+		"cijena": 6
+	},
+	{
+		"id": "VK8",
+		"naziv": "Palačinke s blitvom i sirom",
+		"cijena": 5
+	},
+	{
+		"id": "VK9",
+		"naziv": "Omlet sa špinatom i gorgonzolom",
+		"cijena": 6
+	},
+	{
+		"id": "VK10",
+		"naziv": "Odresci od soje u umaku od gljiva",
+		"cijena": 7
+	}
+]

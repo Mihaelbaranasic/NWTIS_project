@@ -1,0 +1,5 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1745828847723,24,Neispravna komanda KRAJ 1,500,java.net.ConnectException: Connection refused,Grupa dretvi za kraj 1-1,,false,Response was null,0,0,1,1,null,0,0,24
+1745828847750,1,Neispravna komanda KRAJ 2,500,java.net.ConnectException: Connection refused,Grupa dretvi za kraj 1-1,,false,Response was null,0,0,1,1,null,0,0,1
+1745829319533,15,Neispravna komanda KRAJ 1,200,OK,Grupa dretvi za kraj 1-1,text,true,,9,0,1,1,null,15,0,10
+1745829319563,2,Neispravna komanda KRAJ 2,200,OK,Grupa dretvi za kraj 1-1,text,true,,9,0,1,1,null,2,0,1

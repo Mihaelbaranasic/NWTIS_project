@@ -18,8 +18,8 @@
           <stringProp name="-1875535259">mvRadPartnera</stringProp>
         </collectionProp>
         <collectionProp name="UserParameters.thread_values">
-          <collectionProp name="226785852">
-            <stringProp name="-1093267570">172.17.0.2</stringProp>
+          <collectionProp name="-1717666732">
+            <stringProp name="-1204607085">localhost</stringProp>
             <stringProp name="1715960">8000</stringProp>
             <stringProp name="1715961">8001</stringProp>
             <stringProp name="1715962">8002</stringProp>
@@ -118,7 +118,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Ispravna komanda obriši partnera 1" enabled="true">
+        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Ispravna komanda obriši partnera 1">
           <stringProp name="TCPSampler.server">${adresa}</stringProp>
           <boolProp name="TCPSampler.reUseConnection">true</boolProp>
           <stringProp name="TCPSampler.port">${mvRegistracija}</stringProp>
@@ -144,7 +144,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Ispravna komanda popis  partnera" enabled="true">
+        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Ispravna komanda popis  partnera">
           <stringProp name="TCPSampler.server">${adresa}</stringProp>
           <boolProp name="TCPSampler.reUseConnection">true</boolProp>
           <stringProp name="TCPSampler.port">${mvRegistracija}</stringProp>
@@ -260,7 +260,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Ispravna komanda jelovnik 2" enabled="true">
+        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Ispravna komanda jelovnik 2">
           <stringProp name="TCPSampler.server">${adresa}</stringProp>
           <boolProp name="TCPSampler.reUseConnection">true</boolProp>
           <stringProp name="TCPSampler.port">${mvPartneri}</stringProp>
@@ -474,7 +474,7 @@
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Grupa dretvi za kraj">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Grupa dretvi za kraj" enabled="false">
         <intProp name="ThreadGroup.num_threads">1</intProp>
         <intProp name="ThreadGroup.ramp_time">2</intProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
@@ -485,7 +485,7 @@
         </elementProp>
       </ThreadGroup>
       <hashTree>
-        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Neispravna komanda KRAJ 1" enabled="true">
+        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Neispravna komanda KRAJ 1" enabled="false">
           <stringProp name="TCPSampler.server">${adresa}</stringProp>
           <boolProp name="TCPSampler.reUseConnection">true</boolProp>
           <stringProp name="TCPSampler.port">${mvKraj}</stringProp>
@@ -511,7 +511,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Neispravna komanda KRAJ 2">
+        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Neispravna komanda KRAJ 2" enabled="false">
           <stringProp name="TCPSampler.server">${adresa}</stringProp>
           <boolProp name="TCPSampler.reUseConnection">true</boolProp>
           <stringProp name="TCPSampler.port">${mvKraj}</stringProp>
@@ -537,7 +537,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Ispravna komanda KRAJ" enabled="false">
+        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Ispravna komanda KRAJ">
           <stringProp name="TCPSampler.server">${adresa}</stringProp>
           <boolProp name="TCPSampler.reUseConnection">true</boolProp>
           <stringProp name="TCPSampler.port">${mvKraj}</stringProp>
@@ -564,7 +564,7 @@
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Grupa dretvi za PosluziteljPartner" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Grupa dretvi za PosluziteljPartner">
         <intProp name="ThreadGroup.num_threads">1</intProp>
         <intProp name="ThreadGroup.ramp_time">7</intProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
@@ -661,7 +661,7 @@
           <stringProp name="scriptLanguage">groovy</stringProp>
         </JSR223Sampler>
         <hashTree/>
-        <WhileController guiclass="WhileControllerGui" testclass="WhileController" testname="While Controller" enabled="true">
+        <WhileController guiclass="WhileControllerGui" testclass="WhileController" testname="While Controller">
           <stringProp name="WhileController.condition">${__javaScript(${i} &lt;= 6)}</stringProp>
         </WhileController>
         <hashTree>
@@ -821,7 +821,7 @@
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Jelo 6" enabled="true">
+          <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Jelo 6">
             <stringProp name="TCPSampler.server">${adresa}</stringProp>
             <boolProp name="TCPSampler.reUseConnection">true</boolProp>
             <stringProp name="TCPSampler.port">${mvRadPartnera}</stringProp>
@@ -922,7 +922,7 @@ vars.put(&quot;i&quot;, String.valueOf(i));</stringProp>
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ResultCollector guiclass="TableVisualizer" testclass="ResultCollector" testname="View Results in Table" enabled="true">
+      <ResultCollector guiclass="TableVisualizer" testclass="ResultCollector" testname="View Results in Table">
         <boolProp name="ResultCollector.error_logging">false</boolProp>
         <objProp>
           <name>saveConfig</name>
