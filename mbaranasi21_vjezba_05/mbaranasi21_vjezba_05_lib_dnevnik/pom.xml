@@ -9,16 +9,12 @@
 	</parent>
 	<artifactId>mbaranasi21_vjezba_05_lib_dnevnik</artifactId>
 	<name>mbaranasi21_vjezba_05_lib_dnevnik</name>
+
 	<dependencies>
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>2.12.1</version>
-		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-csv</artifactId>
-			<version>1.10.0</version>
+			<version>1.14.0</version>
 		</dependency>
 	</dependencies>
 </project>

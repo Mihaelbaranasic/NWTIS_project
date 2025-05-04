@@ -1,0 +1,7 @@
+#NWTiS 2024.
+#Thu Mar 07 10:23:41 CET 2024
+klasaDnevnika=edu.unizg.foi.nwtis.dkermek.vjezba_05.dnevnik.BazaPodatakaDnevnik
+korisnickoImeBazaPodataka=nwtis_1
+lozinkaBazaPodataka=nwtis#1
+urlBazaPodataka=jdbc:h2:tcp://localhost/nwtis
+upravljacBazaPodataka=org.h2.Driver

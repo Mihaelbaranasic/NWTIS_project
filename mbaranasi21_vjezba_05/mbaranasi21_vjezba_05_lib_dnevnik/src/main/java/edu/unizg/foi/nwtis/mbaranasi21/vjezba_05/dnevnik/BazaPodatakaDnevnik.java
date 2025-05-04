@@ -104,10 +104,4 @@ public class BazaPodatakaDnevnik implements ServisDnevnikRada {
   public boolean koristiBazuPodataka() {
     return true;
   }
-
-  @Override
-  public boolean trebaPodatkeBazaPodataka() {
-    // TODO Auto-generated method stub
-    return false;
-  }
 }

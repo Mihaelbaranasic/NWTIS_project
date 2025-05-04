@@ -3,7 +3,7 @@ package edu.unizg.foi.nwtis.mbaranasi21.vjezba_05.dnevnik;
 import java.util.List;
 import edu.unizg.foi.nwtis.mbaranasi21.vjezba_05.dnevnik.podaci.DnevnikRada;
 
-public interface ServisDnevnikRada {  
+public interface ServisDnevnikRada {
   boolean pripremiResurs() throws Exception;
 
   boolean otpustiResurs() throws Exception;
@@ -13,5 +13,7 @@ public interface ServisDnevnikRada {
   List<DnevnikRada> dohvatiDnevnik(long vrijemeOd, long vrijemeDo, String korisnickoIme)
       throws Exception;
 
-  boolean trebaPodatkeBazaPodataka();
+  boolean koristiBazuPodataka();
+
+  boolean koristiDatoteku();
 }

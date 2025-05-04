@@ -79,8 +79,12 @@ public class CsvDatotekaDnevnik implements ServisDnevnikRada {
   }
 
   @Override
-  public boolean trebaPodatkeBazaPodataka() {
-    // TODO Auto-generated method stub
+  public boolean koristiDatoteku() {
+    return true;
+  }
+
+  @Override
+  public boolean koristiBazuPodataka() {
     return false;
   }
 

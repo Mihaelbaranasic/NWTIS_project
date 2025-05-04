@@ -29,24 +29,22 @@ public final class KonfiguracijaXml extends KonfiguracijaApstraktna {
    */
   @Override
   public void spremiKonfiguraciju(String datotekaNaziv) throws NeispravnaKonfiguracija {
-      var datoteka = Path.of(datotekaNaziv);
-      var tip = Konfiguracija.dajTipKonfiguracije(datotekaNaziv);
-      if (tip == null || tip.compareTo(KonfiguracijaXml.TIP) != 0) {
-          throw new NeispravnaKonfiguracija(
-              "Datoteka: " + datotekaNaziv + " nema tip: " + KonfiguracijaXml.TIP);
-      } else if (Files.exists(datoteka)
-          && (!Files.isRegularFile(datoteka) || !Files.isWritable(datoteka))) {
-          throw new NeispravnaKonfiguracija(
-              "Datoteka: " + datotekaNaziv + " ne postoji/nije datoteka/ne može se u nju pisati");
-      }
-      try {
-          try (var os = Files.newOutputStream(datoteka)) {
-              this.postavke.storeToXML(os, KonfiguracijaApstraktna.verzija, "UTF-8");
-          }
-      } catch (IOException ex) {
-          throw new NeispravnaKonfiguracija(
-              "Problem kod spremanja u datoteku: '" + nazivDatoteke + "'.");
-      }
+    var datoteka = Path.of(datotekaNaziv);
+    var tip = Konfiguracija.dajTipKonfiguracije(datotekaNaziv);
+    if (tip == null || tip.compareTo(KonfiguracijaXml.TIP) != 0) {
+      throw new NeispravnaKonfiguracija(
+          "Datoteka: " + datotekaNaziv + " nema tip: " + KonfiguracijaXml.TIP);
+    } else if (Files.exists(datoteka)
+        && (!Files.isRegularFile(datoteka) || !Files.isWritable(datoteka))) {
+      throw new NeispravnaKonfiguracija(
+          "Datoteka: " + datotekaNaziv + " ne postoji/nije datoteka/ne može se u nju pisati");
+    }
+    try {
+      this.postavke.storeToXML(Files.newOutputStream(datoteka), KonfiguracijaApstraktna.verzija);
+    } catch (IOException ex) {
+      throw new NeispravnaKonfiguracija(
+          "Problem kod spremanja u datoteku: '" + nazivDatoteke + "'.");
+    }
   }
 
   /**
@@ -56,23 +54,21 @@ public final class KonfiguracijaXml extends KonfiguracijaApstraktna {
    */
   @Override
   public void ucitajKonfiguraciju() throws NeispravnaKonfiguracija {
-      var datoteka = Path.of(this.nazivDatoteke);
-      var tip = Konfiguracija.dajTipKonfiguracije(this.nazivDatoteke);
-      if (tip == null || tip.compareTo(KonfiguracijaXml.TIP) != 0) {
-          throw new NeispravnaKonfiguracija(
-              "Datoteka: " + this.nazivDatoteke + " nema tip: " + KonfiguracijaXml.TIP);
-      } else if (!Files.exists(datoteka) || !Files.isRegularFile(datoteka)
-          || !Files.isReadable(datoteka)) {
-          throw new NeispravnaKonfiguracija(
-              "Datoteka: " + this.nazivDatoteke + " nije ispravnog tipa/ne postoji/ne može se učitati");
-      }
-      try {
-          try (var is = Files.newInputStream(datoteka)) {
-              this.postavke.loadFromXML(is);
-          }
-      } catch (IOException ex) {
-          throw new NeispravnaKonfiguracija(
-              "Problem kod učitavanja datoteke: '" + this.nazivDatoteke + "'.");
-      }
+    var datoteka = Path.of(this.nazivDatoteke);
+    var tip = Konfiguracija.dajTipKonfiguracije(this.nazivDatoteke);
+    if (tip == null || tip.compareTo(KonfiguracijaXml.TIP) != 0) {
+      throw new NeispravnaKonfiguracija(
+          "Datoteka: " + this.nazivDatoteke + " nema tip: " + KonfiguracijaXml.TIP);
+    } else if (!Files.exists(datoteka) || !Files.isRegularFile(datoteka)
+        || !Files.isReadable(datoteka)) {
+      throw new NeispravnaKonfiguracija(
+          "Datoteka: " + this.nazivDatoteke + " nije ispravnog tipa/ne postoji/ne može se učitati");
+    }
+    try {
+      this.postavke.loadFromXML(Files.newInputStream(datoteka));
+    } catch (IOException ex) {
+      throw new NeispravnaKonfiguracija(
+          "Problem kod učitavanja datoteke: '" + this.nazivDatoteke + "'.");
+    }
   }
 }
