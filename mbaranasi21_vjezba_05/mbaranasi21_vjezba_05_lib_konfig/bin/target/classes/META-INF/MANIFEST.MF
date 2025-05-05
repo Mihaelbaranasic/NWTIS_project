@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Build-Jdk-Spec: 21
+Class-Path: lib/gson-2.12.1.jar lib/error_prone_annotations-2.36.0.jar
+Created-By: Maven Integration for Eclipse
+
