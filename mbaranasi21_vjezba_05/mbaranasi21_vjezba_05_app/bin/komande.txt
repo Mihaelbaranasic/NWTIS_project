@@ -1,0 +1,1 @@
+target/maven-jlink/default/bin/java -m dkermek_vjezba_05_app/edu.unizg.foi.nwtis.dkermek.vjezba_05.IzvrsiteljZadatka NWTiS_05.1.txt dkermek lozinka
