@@ -651,8 +651,14 @@ public class PosluziteljTvrtka {
     int hash = podatakZaKod.hashCode();
     String sigurnosniKod = Integer.toHexString(hash);
 
-    Partner noviPartner = new Partner(id, naziv, vrstaKuhinje, adresa, mreznaVrata, gpsSirina,
-        gpsDuzina, sigurnosniKod);
+    String adminKod = "admin123";
+
+    Partner noviPartner = new Partner(
+        id, naziv, vrstaKuhinje, adresa,
+        mreznaVrata, mreznaVrata,
+        gpsSirina, gpsDuzina,
+        sigurnosniKod, adminKod
+    );
     partneri.add(noviPartner);
 
     spremiPartnere();

@@ -1,0 +1,103 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>edu.unizg.foi.nwtis.mbaranasi21</groupId>
+		<artifactId>mbaranasi21_vjezba_07_dz_2</artifactId>
+		<version>1.0.0</version>
+	</parent>
+	<artifactId>mbaranasi21_vjezba_07_dz_2_servisi</artifactId>
+	<name>mbaranasi21_vjezba_07_dz_2_servisi</name>
+	<packaging>war</packaging>
+
+	<properties>
+		<jakartaee-api.version>10.0.0</jakartaee-api.version>
+		<payara.version>6.2025.4</payara.version>
+		<microprofile.version>6.1</microprofile.version>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>fish.payara.api</groupId>
+				<artifactId>payara-bom</artifactId>
+				<version>${payara.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<dependencies>
+		<dependency>
+			<groupId>jakarta.platform</groupId>
+			<artifactId>jakarta.jakartaee-core-api</artifactId>
+			<version>${jakartaee-api.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.microprofile</groupId>
+			<artifactId>microprofile</artifactId>
+			<scope>provided</scope>
+			<type>pom</type>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.microprofile.metrics</groupId>
+			<artifactId>microprofile-metrics-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>fish.payara.api</groupId>
+			<artifactId>payara-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hsqldb</groupId>
+			<artifactId>hsqldb</artifactId>
+			<version>2.7.4</version>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>2.3.232</version>
+		</dependency>
+		<dependency>
+			<groupId>edu.unizg.foi.nwtis.mbaranasi21</groupId>
+			<artifactId>mbaranasi21_vjezba_07_dz_2_lib_podaci</artifactId>
+			<version>1.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>edu.unizg.foi.nwtis.mbaranasi21</groupId>
+			<artifactId>mbaranasi21_vjezba_07_dz_2_lib_rest</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>3.4.0</version>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<repositories>
+		<repository>
+			<id>payara-nexus-artifacts</id>
+			<url>https://nexus.dev.payara.fish/repository/payara-artifacts</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
+</project>

@@ -1,0 +1,88 @@
+{
+	"folders": {},
+	"connections": {
+		"hsqldb_server-196c324984f-6b674ce31788285e": {
+			"provider": "generic",
+			"driver": "hsqldb_server",
+			"name": "HSQLDB - nwtis_1 - nwtis_1",
+			"save-password": true,
+			"configuration": {
+				"host": "20.24.5.30",
+				"port": "9001",
+				"database": "nwtis_1",
+				"url": "jdbc:hsqldb:hsql://20.24.5.30:9001/nwtis_1",
+				"configurationType": "MANUAL",
+				"type": "dev",
+				"closeIdleConnection": true,
+				"auth-model": "native"
+			}
+		},
+		"hsqldb_server-196c324996e-213657368a92c371": {
+			"provider": "generic",
+			"driver": "hsqldb_server",
+			"name": "HSQLDB - nwtis_1 - SA",
+			"save-password": true,
+			"configuration": {
+				"host": "20.24.5.30",
+				"port": "9001",
+				"database": "nwtis_1",
+				"url": "jdbc:hsqldb:hsql://20.24.5.30:9001/nwtis_1",
+				"configurationType": "MANUAL",
+				"type": "dev",
+				"closeIdleConnection": true,
+				"properties": {
+					"default_schema": "false"
+				},
+				"auth-model": "native"
+			}
+		},
+		"h2_server-196c3740b7d-91ba676678b1dbc": {
+			"provider": "h2",
+			"driver": "h2_server",
+			"name": "H2 - nwtis_1 - SA",
+			"save-password": true,
+			"configuration": {
+				"host": "20.24.5.31",
+				"port": "9092",
+				"database": "nwtis_1",
+				"url": "jdbc:h2:tcp://20.24.5.31:9092/nwtis_1",
+				"configurationType": "MANUAL",
+				"type": "dev",
+				"closeIdleConnection": true,
+				"auth-model": "native"
+			}
+		},
+		"h2_server-196c37531dd-2f0e9970357286f9": {
+			"provider": "h2",
+			"driver": "h2_server",
+			"name": "H2 - nwtis_1 - nwtis_1",
+			"save-password": true,
+			"configuration": {
+				"host": "20.24.5.31",
+				"port": "9092",
+				"database": "nwtis_1",
+				"url": "jdbc:h2:tcp://20.24.5.31:9092/nwtis_1",
+				"configurationType": "MANUAL",
+				"type": "dev",
+				"closeIdleConnection": true,
+				"auth-model": "native"
+			}
+		}
+	},
+	"connection-types": {
+		"dev": {
+			"name": "Development",
+			"color": "255,255,255",
+			"description": "Regular development database",
+			"auto-commit": true,
+			"confirm-execute": false,
+			"confirm-data-change": false,
+			"smart-commit": false,
+			"smart-commit-recover": true,
+			"auto-close-transactions": true,
+			"close-transactions-period": 1800,
+			"auto-close-connections": true,
+			"close-connections-period": 14400
+		}
+	}
+}

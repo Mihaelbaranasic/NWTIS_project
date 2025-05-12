@@ -1,0 +1,23 @@
+FROM amd64/eclipse-temurin:23 AS builder
+
+ENV H2_VERSION=2.3.232 
+
+RUN  apt-get update && \
+	apt-get install -y wget unzip && \
+	wget -O /tmp/h2.zip https://github.com/h2database/h2database/releases/download/version-2.3.232/h2-2024-08-11.zip && \
+	unzip -o -j /tmp/h2.zip "**/h2-${H2_VERSION}.jar" -d /tmp/h2
+
+FROM amd64/eclipse-temurin:23
+
+RUN mkdir -p /opt/h2 && \
+    mkdir -p /docker-entrypoint-initdb.d 
+
+EXPOSE 9092
+WORKDIR /opt/java/openjdk/bin
+
+COPY --from=builder /tmp/h2 /opt/h2
+COPY ./docker-entrypoint.h2.sh /docker-entrypoint.sh
+RUN chmod -R 777 /docker-entrypoint.sh
+    
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["h2"]
