@@ -6,4 +6,11 @@
     <version>1.0.0</version>
   </parent>
   <artifactId>mbaranasi21_vjezba_07_dz_2_lib_rest</artifactId>
+  <dependencies>
+		<dependency>
+			<groupId>edu.unizg.foi.nwtis.mbaranasi21</groupId>
+			<artifactId>mbaranasi21_vjezba_07_dz_2_lib_podaci</artifactId>
+			<version>1.2.0</version>
+		</dependency>
+	</dependencies>
 </project>

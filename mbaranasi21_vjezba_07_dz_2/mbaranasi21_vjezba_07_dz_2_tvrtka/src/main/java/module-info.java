@@ -1,4 +1,4 @@
-module mbaranasi21_vjezba_06_tvrtka {
+module mbaranasi21_vjezba_07_dz_2_tvrtka {
 	exports edu.unizg.foi.nwtis.mbaranasi21.vjezba_07_dz_2;
 
 	requires com.google.gson;

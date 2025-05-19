@@ -1,0 +1,52 @@
+[
+	{
+		"id": "KK1",
+		"naziv": "Riblji paprikaš",
+		"cijena": 6
+	},
+	{
+		"id": "KK2",
+		"naziv": "Teletina s graškom",
+		"cijena": 8
+	},
+	{
+		"id": "KK3",
+		"naziv": "Domaće kobasice s kupusom",
+		"cijena": 5
+	},
+	{
+		"id": "KK4",
+		"naziv": "Podravski pladanj",
+		"cijena": 10
+	},
+	{
+		"id": "KK5",
+		"naziv": "Rolada od carskog mesa",
+		"cijena": 8
+	},
+	{
+		"id": "KK6",
+		"naziv": "Pljeskavica",
+		"cijena": 7
+	},
+	{
+		"id": "KK7",
+		"naziv": "Štrukli",
+		"cijena": 6
+	},
+	{
+		"id": "KK8",
+		"naziv": "Martinjska guska s hajdinom kašom",
+		"cijena": 12
+	},
+	{
+		"id": "KK9",
+		"naziv": "Kukuruzna zlevanka s bučinim uljem",
+		"cijena": 3
+	},
+	{
+		"id": "KK10",
+		"naziv": "Gorički kotlet",
+		"cijena": 9
+	}
+]
