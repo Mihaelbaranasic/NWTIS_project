@@ -628,39 +628,38 @@ public class PosluziteljTvrtka {
    * Obrađuje komandu OSVJEŽI.
    */
   private Boolean obradiKomanduOsvjezi(String linija, PrintWriter out, Socket mreznaUticnica) {
-    String[] dijelovi = linija.trim().split(" ");
-    
-    if (dijelovi.length != 2 || !dijelovi[1].equals(this.kodZaAdminTvrtke)) {
-      out.write("ERROR 12 - Pogrešan kodZaAdminTvrtke\n");
-      out.flush();
-      zatvoriVezu(mreznaUticnica);
-      return Boolean.FALSE;
-    }
+	  String[] dijelovi = linija.trim().split(" ");
+	  
+	  if (dijelovi.length != 2 || !dijelovi[1].equals(this.kodZaAdminTvrtke)) {
+	    out.write("ERROR 12 - Pogrešan kodZaAdminTvrtke\n");
+	    out.flush();
+	    zatvoriVezu(mreznaUticnica);
+	    return Boolean.FALSE;
+	  }
 
-    if (pauzaPartneri.get()) {
-      out.write("ERROR 15 - Poslužitelj za partnere u pauzi\n");
-      out.flush();
-      zatvoriVezu(mreznaUticnica);
-      return Boolean.FALSE;
-    }
+	  if (pauzaPartneri.get()) {
+	    out.write("ERROR 15 - Poslužitelj za partnere u pauzi\n");
+	    out.flush();
+	    zatvoriVezu(mreznaUticnica);
+	    return Boolean.FALSE;
+	  }
 
-    // Ponovno učitaj kartu pića i jelovnike
-    try {
-      ucitajJelovnike();
-      ucitajKartuPica();
-      
-      out.write("OK\n");
-      out.flush();
-      zatvoriVezu(mreznaUticnica);
-      return Boolean.TRUE;
-      
-    } catch (IOException e) {
-      out.write("ERROR 17 - RESTful zahtjev nije uspješan\n");
-      out.flush();
-      zatvoriVezu(mreznaUticnica);
-      return Boolean.FALSE;
-    }
-  }
+	  try {
+	    ucitajJelovnike();
+	    ucitajKartuPica();
+	    
+	    out.write("OK\n");
+	    out.flush();
+	    zatvoriVezu(mreznaUticnica);
+	    return Boolean.TRUE;
+	    
+	  } catch (IOException e) {
+	    out.write("ERROR 17 - RESTful zahtjev nije uspješan\n");
+	    out.flush();
+	    zatvoriVezu(mreznaUticnica);
+	    return Boolean.FALSE;
+	  }
+	}
 
   /**
    * Šalje komandu KRAJ svim aktivnim partnerima.
@@ -800,15 +799,15 @@ public class PosluziteljTvrtka {
           new PrintWriter(new OutputStreamWriter(mreznaUticnica.getOutputStream(), "utf8"));
 
       String linija = in.readLine();
-      mreznaUticnica.shutdownInput();
-
-      // Provjeri je li registracija u pauzi
+      
       if (pauzaRegistracija.get()) {
         out.write("ERROR 24 - Poslužitelj za registraciju partnera u pauzi\n");
         out.flush();
         zatvoriVezu(mreznaUticnica);
         return Boolean.FALSE;
       }
+      
+      mreznaUticnica.shutdownInput();
 
       if (!provjeriKomandaRegistracija(linija, out)) {
         zatvoriVezu(mreznaUticnica);
@@ -1167,26 +1166,25 @@ public class PosluziteljTvrtka {
    * @return Boolean.TRUE ako je obrada uspješna, inače Boolean.FALSE
    */
   private Boolean obradiRad(Socket mreznaUticnica) {
-    try {
-      BufferedReader in =
-          new BufferedReader(new InputStreamReader(mreznaUticnica.getInputStream(), "utf8"));
-      PrintWriter out =
-          new PrintWriter(new OutputStreamWriter(mreznaUticnica.getOutputStream(), "utf8"));
+	  try {
+	    BufferedReader in =
+	        new BufferedReader(new InputStreamReader(mreznaUticnica.getInputStream(), "utf8"));
+	    PrintWriter out =
+	        new PrintWriter(new OutputStreamWriter(mreznaUticnica.getOutputStream(), "utf8"));
 
-      String linija = in.readLine();
+	    String linija = in.readLine();
 
-      // Provjeri je li rad s partnerima u pauzi
-      if (pauzaPartneri.get()) {
-        out.write("ERROR 36 - Poslužitelj za partnere u pauzi\n");
-        out.flush();
-        zatvoriVezu(mreznaUticnica);
-        return Boolean.FALSE;
-      }
+	    if (pauzaPartneri.get()) {
+	      out.write("ERROR 36 - Poslužitelj za partnere u pauzi\n");
+	      out.flush();
+	      zatvoriVezu(mreznaUticnica);
+	      return Boolean.FALSE;
+	    }
 
-      if (!provjeriKomandaRad(linija, out)) {
-        zatvoriVezu(mreznaUticnica);
-        return Boolean.FALSE;
-      }
+	    if (!provjeriKomandaRad(linija, out)) {
+	      zatvoriVezu(mreznaUticnica);
+	      return Boolean.FALSE;
+	    }
 
       obradiKomanduRad(linija, in, out);
 
