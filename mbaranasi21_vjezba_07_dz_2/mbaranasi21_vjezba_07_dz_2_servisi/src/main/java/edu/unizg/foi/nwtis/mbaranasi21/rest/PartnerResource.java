@@ -324,6 +324,153 @@ public class PartnerResource {
       return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
   }
+  
+  /**
+   * Kreiranje nove narudžbe.
+   */
+  @Path("narudzba")
+  @POST
+  @Operation(summary = "Kreiranje nove narudžbe")
+  @APIResponses(value = {@APIResponse(responseCode = "201", description = "Uspješno kreiran resurs"),
+      @APIResponse(responseCode = "401", description = "Neautorizirani pristup"),
+      @APIResponse(responseCode = "409", description = "Već postoji resurs ili druga pogreška"),
+      @APIResponse(responseCode = "500", description = "Interna pogreška")})
+  @Counted(name = "brojZahtjeva_postNarudzbaPartner", description = "Koliko puta je pozvana operacija servisa")
+  @Timed(name = "trajanjeMetode_postNarudzbaPartner", description = "Vrijeme trajanja metode")
+  public Response postNarudzbaPartner(@HeaderParam("korisnik") String korisnik, 
+                                     @HeaderParam("lozinka") String lozinka) {
+    if (!provjeriAutentikaciju(korisnik, lozinka)) {
+      return Response.status(Response.Status.UNAUTHORIZED).build();
+    }
+
+    var status = posaljiKomandu(mreznaVrataRadPartner, "NARUDŽBA " + korisnik);
+    if (status != null && status.startsWith("OK")) {
+      return Response.status(Response.Status.CREATED).build();
+    } else if (status != null && status.startsWith("ERROR")) {
+      return Response.status(Response.Status.CONFLICT).build();
+    } else {
+      return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+    }
+  }
+
+  /**
+   * Dodavanje jela u narudžbu.
+   */
+  @Path("jelo")
+  @POST
+  @Consumes({MediaType.APPLICATION_JSON})
+  @Operation(summary = "Dodavanje jela u narudžbu")
+  @APIResponses(value = {@APIResponse(responseCode = "201", description = "Uspješno kreiran resurs"),
+      @APIResponse(responseCode = "401", description = "Neautorizirani pristup"),
+      @APIResponse(responseCode = "409", description = "Već postoji resurs ili druga pogreška"),
+      @APIResponse(responseCode = "500", description = "Interna pogreška")})
+  @Counted(name = "brojZahtjeva_postJeloPartner", description = "Koliko puta je pozvana operacija servisa")
+  @Timed(name = "trajanjeMetode_postJeloPartner", description = "Vrijeme trajanja metode")
+  public Response postJeloPartner(@HeaderParam("korisnik") String korisnik, 
+                                 @HeaderParam("lozinka") String lozinka,
+                                 Narudzba narudzba) {
+    if (!provjeriAutentikaciju(korisnik, lozinka)) {
+      return Response.status(Response.Status.UNAUTHORIZED).build();
+    }
+
+    var status = posaljiKomandu(mreznaVrataRadPartner, 
+        "JELO " + korisnik + " " + narudzba.id() + " " + narudzba.kolicina());
+    
+    if (status != null && status.startsWith("OK")) {
+      return Response.status(Response.Status.CREATED).build();
+    } else if (status != null && status.startsWith("ERROR")) {
+      return Response.status(Response.Status.CONFLICT).build();
+    } else {
+      return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+    }
+  }
+
+  /**
+   * Dodavanje pića u narudžbu.
+   */
+  @Path("pice")
+  @POST
+  @Consumes({MediaType.APPLICATION_JSON})
+  @Operation(summary = "Dodavanje pića u narudžbu")
+  @APIResponses(value = {@APIResponse(responseCode = "201", description = "Uspješno kreiran resurs"),
+      @APIResponse(responseCode = "401", description = "Neautorizirani pristup"),
+      @APIResponse(responseCode = "409", description = "Već postoji resurs ili druga pogreška"),
+      @APIResponse(responseCode = "500", description = "Interna pogreška")})
+  @Counted(name = "brojZahtjeva_postPicePartner", description = "Koliko puta je pozvana operacija servisa")
+  @Timed(name = "trajanjeMetode_postPicePartner", description = "Vrijeme trajanja metode")
+  public Response postPicePartner(@HeaderParam("korisnik") String korisnik, 
+                                 @HeaderParam("lozinka") String lozinka,
+                                 Narudzba narudzba) {
+    if (!provjeriAutentikaciju(korisnik, lozinka)) {
+      return Response.status(Response.Status.UNAUTHORIZED).build();
+    }
+
+    var status = posaljiKomandu(mreznaVrataRadPartner, 
+        "PIĆE " + korisnik + " " + narudzba.id() + " " + narudzba.kolicina());
+    
+    if (status != null && status.startsWith("OK")) {
+      return Response.status(Response.Status.CREATED).build();
+    } else if (status != null && status.startsWith("ERROR")) {
+      return Response.status(Response.Status.CONFLICT).build();
+    } else {
+      return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+    }
+  }
+
+  /**
+   * Zahtjev za račun.
+   */
+  @Path("racun")
+  @POST
+  @Operation(summary = "Zahtjev za račun")
+  @APIResponses(value = {@APIResponse(responseCode = "201", description = "Uspješno kreiran resurs"),
+      @APIResponse(responseCode = "401", description = "Neautorizirani pristup"),
+      @APIResponse(responseCode = "409", description = "Već postoji resurs ili druga pogreška"),
+      @APIResponse(responseCode = "500", description = "Interna pogreška")})
+  @Counted(name = "brojZahtjeva_postRacunPartner", description = "Koliko puta je pozvana operacija servisa")
+  @Timed(name = "trajanjeMetode_postRacunPartner", description = "Vrijeme trajanja metode")
+  public Response postRacunPartner(@HeaderParam("korisnik") String korisnik, 
+                                  @HeaderParam("lozinka") String lozinka) {
+    if (!provjeriAutentikaciju(korisnik, lozinka)) {
+      return Response.status(Response.Status.UNAUTHORIZED).build();
+    }
+
+    var status = posaljiViseLinija(mreznaVrataRadPartner, "RAČUN " + korisnik);
+    if (status != null && status.startsWith("OK")) {
+      return Response.status(Response.Status.CREATED).build();
+    } else if (status != null && status.startsWith("ERROR")) {
+      return Response.status(Response.Status.CONFLICT).build();
+    } else {
+      return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+    }
+  }
+
+  /**
+   * Dodavanje novog korisnika.
+   */
+  @Path("korisnik")
+  @POST
+  @Consumes({MediaType.APPLICATION_JSON})
+  @Operation(summary = "Dodavanje novog korisnika")
+  @APIResponses(value = {@APIResponse(responseCode = "201", description = "Uspješno kreiran resurs"),
+      @APIResponse(responseCode = "409", description = "Već postoji resurs ili druga pogreška"),
+      @APIResponse(responseCode = "500", description = "Interna pogreška")})
+  @Counted(name = "brojZahtjeva_postKorisnikPartner", description = "Koliko puta je pozvana operacija servisa")
+  @Timed(name = "trajanjeMetode_postKorisnikPartner", description = "Vrijeme trajanja metode")
+  public Response postKorisnikPartner(Korisnik korisnik) {
+    try (var vezaBP = this.restConfiguration.dajVezu()) {
+      var korisnikDAO = new KorisnikDAO(vezaBP);
+      var status = korisnikDAO.dodaj(korisnik);
+      
+      if (status) {
+        return Response.status(Response.Status.CREATED).build();
+      } else {
+        return Response.status(Response.Status.CONFLICT).build();
+      }
+    } catch (Exception e) {
+      return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+    }
+  }
 
   /**
    * Šalje komandu na poslužitelj partner.
