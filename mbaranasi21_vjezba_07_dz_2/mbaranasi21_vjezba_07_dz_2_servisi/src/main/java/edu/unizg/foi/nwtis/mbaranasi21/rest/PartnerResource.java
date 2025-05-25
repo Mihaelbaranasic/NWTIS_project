@@ -175,6 +175,155 @@ public class PartnerResource {
     }
   }
   
+  /**
+   * Dohvat jelovnika partnera.
+   */
+  @Path("jelovnik")
+  @GET
+  @Produces({MediaType.APPLICATION_JSON})
+  @Operation(summary = "Dohvat jelovnika partnera")
+  @APIResponses(value = {@APIResponse(responseCode = "200", description = "Uspješna operacija"),
+      @APIResponse(responseCode = "401", description = "Neautorizirani pristup"),
+      @APIResponse(responseCode = "500", description = "Interna pogreška")})
+  @Counted(name = "brojZahtjeva_getJelovnikPartner", description = "Koliko puta je pozvana operacija servisa")
+  @Timed(name = "trajanjeMetode_getJelovnikPartner", description = "Vrijeme trajanja metode")
+  public Response getJelovnikPartner(@HeaderParam("korisnik") String korisnik, 
+                                    @HeaderParam("lozinka") String lozinka) {
+    if (!provjeriAutentikaciju(korisnik, lozinka)) {
+      return Response.status(Response.Status.UNAUTHORIZED).build();
+    }
+
+    var jelovnik = dohvatiJelovnikSPartnera(korisnik);
+    if (jelovnik != null) {
+      return Response.ok(jelovnik).status(Response.Status.OK).build();
+    } else {
+      return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+    }
+  }
+
+  /**
+   * Dohvat karte pića partnera.
+   */
+  @Path("kartapica")
+  @GET
+  @Produces({MediaType.APPLICATION_JSON})
+  @Operation(summary = "Dohvat karte pića partnera")
+  @APIResponses(value = {@APIResponse(responseCode = "200", description = "Uspješna operacija"),
+      @APIResponse(responseCode = "401", description = "Neautorizirani pristup"),
+      @APIResponse(responseCode = "500", description = "Interna pogreška")})
+  @Counted(name = "brojZahtjeva_getKartaPicaPartner", description = "Koliko puta je pozvana operacija servisa")
+  @Timed(name = "trajanjeMetode_getKartaPicaPartner", description = "Vrijeme trajanja metode")
+  public Response getKartaPicaPartner(@HeaderParam("korisnik") String korisnik, 
+                                     @HeaderParam("lozinka") String lozinka) {
+    if (!provjeriAutentikaciju(korisnik, lozinka)) {
+      return Response.status(Response.Status.UNAUTHORIZED).build();
+    }
+
+    var kartaPica = dohvatiKartuPicaSPartnera(korisnik);
+    if (kartaPica != null) {
+      return Response.ok(kartaPica).status(Response.Status.OK).build();
+    } else {
+      return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+    }
+  }
+
+  /**
+   * Dohvat stavki otvorene narudžbe.
+   */
+  @Path("narudzba")
+  @GET
+  @Produces({MediaType.APPLICATION_JSON})
+  @Operation(summary = "Dohvat stavki otvorene narudžbe")
+  @APIResponses(value = {@APIResponse(responseCode = "200", description = "Uspješna operacija"),
+      @APIResponse(responseCode = "401", description = "Neautorizirani pristup"),
+      @APIResponse(responseCode = "500", description = "Interna pogreška")})
+  @Counted(name = "brojZahtjeva_getNarudzbaPartner", description = "Koliko puta je pozvana operacija servisa")
+  @Timed(name = "trajanjeMetode_getNarudzbaPartner", description = "Vrijeme trajanja metode")
+  public Response getNarudzbaPartner(@HeaderParam("korisnik") String korisnik, 
+                                    @HeaderParam("lozinka") String lozinka) {
+    if (!provjeriAutentikaciju(korisnik, lozinka)) {
+      return Response.status(Response.Status.UNAUTHORIZED).build();
+    }
+
+    var narudzba = dohvatiStanjeNarudzbe(korisnik);
+    if (narudzba != null) {
+      return Response.ok(narudzba).status(Response.Status.OK).build();
+    } else {
+      return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+    }
+  }
+
+  /**
+   * Dohvat svih korisnika.
+   */
+  @Path("korisnik")
+  @GET
+  @Produces({MediaType.APPLICATION_JSON})
+  @Operation(summary = "Dohvat svih korisnika")
+  @APIResponses(value = {@APIResponse(responseCode = "200", description = "Uspješna operacija"),
+      @APIResponse(responseCode = "500", description = "Interna pogreška")})
+  @Counted(name = "brojZahtjeva_getKorisniciPartner", description = "Koliko puta je pozvana operacija servisa")
+  @Timed(name = "trajanjeMetode_getKorisniciPartner", description = "Vrijeme trajanja metode")
+  public Response getKorisniciPartner() {
+    try (var vezaBP = this.restConfiguration.dajVezu()) {
+      var korisnikDAO = new KorisnikDAO(vezaBP);
+      var korisnici = korisnikDAO.dohvatiSve();
+      
+      if (korisnici == null) {
+        korisnici = new ArrayList<>();
+      }
+      
+      return Response.ok(korisnici).status(Response.Status.OK).build();
+    } catch (Exception e) {
+      return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+    }
+  }
+
+  /**
+   * Dohvat određenog korisnika.
+   */
+  @Path("korisnik/{id}")
+  @GET
+  @Produces({MediaType.APPLICATION_JSON})
+  @Operation(summary = "Dohvat određenog korisnika")
+  @APIResponses(value = {@APIResponse(responseCode = "200", description = "Uspješna operacija"),
+      @APIResponse(responseCode = "404", description = "Ne postoji resurs"),
+      @APIResponse(responseCode = "500", description = "Interna pogreška")})
+  @Counted(name = "brojZahtjeva_getKorisnikPartner", description = "Koliko puta je pozvana operacija servisa")
+  @Timed(name = "trajanjeMetode_getKorisnikPartner", description = "Vrijeme trajanja metode")
+  public Response getKorisnikPartner(@PathParam("id") String korisnickoIme) {
+    try (var vezaBP = this.restConfiguration.dajVezu()) {
+      var korisnikDAO = new KorisnikDAO(vezaBP);
+      var korisnik = korisnikDAO.dohvati(korisnickoIme, null, false);
+      
+      if (korisnik != null) {
+        return Response.ok(korisnik).status(Response.Status.OK).build();
+      } else {
+        return Response.status(Response.Status.NOT_FOUND).build();
+      }
+    } catch (Exception e) {
+      return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+    }
+  }
+
+  /**
+   * Spavanje dretve.
+   */
+  @Path("spava")
+  @GET
+  @Operation(summary = "Spavanje dretve")
+  @APIResponses(value = {@APIResponse(responseCode = "200", description = "Uspješna operacija"),
+      @APIResponse(responseCode = "500", description = "Interna pogreška")})
+  @Counted(name = "brojZahtjeva_getSpavanjePartner", description = "Koliko puta je pozvana operacija servisa")
+  @Timed(name = "trajanjeMetode_getSpavanjePartner", description = "Vrijeme trajanja metode")
+  public Response getSpavanjePartner(@QueryParam("vrijeme") int trajanje) {
+    var status = posaljiKomandu(mreznaVrataKrajPartner, "SPAVA " + this.kodZaAdminPartnera + " " + trajanje);
+    if (status != null && status.startsWith("OK")) {
+      return Response.status(Response.Status.OK).build();
+    } else {
+      return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+    }
+  }
 
   /**
    * Šalje komandu na poslužitelj partner.
@@ -198,4 +347,156 @@ public class PartnerResource {
     return null;
   }
 
+  /**
+   * Šalje komandu i čita više linija odgovora.
+   */
+  private String posaljiViseLinija(String mreznaVrata, String komanda) {
+    try {
+      var mreznaUticnica = new Socket(this.partnerAdresa, Integer.parseInt(mreznaVrata));
+      BufferedReader in =
+          new BufferedReader(new InputStreamReader(mreznaUticnica.getInputStream(), "utf8"));
+      PrintWriter out =
+          new PrintWriter(new OutputStreamWriter(mreznaUticnica.getOutputStream(), "utf8"));
+      
+      out.write(komanda + "\n");
+      out.flush();
+      mreznaUticnica.shutdownOutput();
+      
+      StringBuilder odgovor = new StringBuilder();
+      String linija;
+      while ((linija = in.readLine()) != null) {
+        odgovor.append(linija).append("\n");
+      }
+      
+      mreznaUticnica.close();
+      return odgovor.toString().trim();
+    } catch (IOException e) {
+    }
+    return null;
+  }
+
+  /**
+   * Provjerava autentikaciju korisnika.
+   */
+  private boolean provjeriAutentikaciju(String korisnik, String lozinka) {
+    if (korisnik == null || lozinka == null) {
+      return false;
+    }
+
+    try (var vezaBP = this.restConfiguration.dajVezu()) {
+      var korisnikDAO = new KorisnikDAO(vezaBP);
+      var korisnikObj = korisnikDAO.dohvati(korisnik, lozinka, true);
+      return korisnikObj != null;
+    } catch (Exception e) {
+      return false;
+    }
+  }
+
+  /**
+   * Dohvaća jelovnik s partnera.
+   */
+  private List<Jelovnik> dohvatiJelovnikSPartnera(String korisnik) {
+    try {
+      var mreznaUticnica = new Socket(this.partnerAdresa, Integer.parseInt(this.mreznaVrataRadPartner));
+      BufferedReader in =
+          new BufferedReader(new InputStreamReader(mreznaUticnica.getInputStream(), "utf8"));
+      PrintWriter out =
+          new PrintWriter(new OutputStreamWriter(mreznaUticnica.getOutputStream(), "utf8"));
+      
+      out.write("JELOVNIK " + korisnik + "\n");
+      out.flush();
+      mreznaUticnica.shutdownOutput();
+      
+      String statusLinija = in.readLine();
+      if (statusLinija != null && statusLinija.startsWith("OK")) {
+        StringBuilder jsonBuilder = new StringBuilder();
+        String linija;
+        while ((linija = in.readLine()) != null) {
+          jsonBuilder.append(linija);
+        }
+        
+        String jsonJelovnik = jsonBuilder.toString();
+        List<Jelovnik> jelovnik = gson.fromJson(jsonJelovnik, new TypeToken<List<Jelovnik>>() {}.getType());
+        
+        mreznaUticnica.close();
+        return jelovnik;
+      }
+      
+      mreznaUticnica.close();
+    } catch (IOException e) {
+    }
+    return null;
+  }
+
+  /**
+   * Dohvaća kartu pića s partnera.
+   */
+  private List<KartaPica> dohvatiKartuPicaSPartnera(String korisnik) {
+    try {
+      var mreznaUticnica = new Socket(this.partnerAdresa, Integer.parseInt(this.mreznaVrataRadPartner));
+      BufferedReader in =
+          new BufferedReader(new InputStreamReader(mreznaUticnica.getInputStream(), "utf8"));
+      PrintWriter out =
+          new PrintWriter(new OutputStreamWriter(mreznaUticnica.getOutputStream(), "utf8"));
+      
+      out.write("KARTAPIĆA " + korisnik + "\n");
+      out.flush();
+      mreznaUticnica.shutdownOutput();
+      
+      String statusLinija = in.readLine();
+      if (statusLinija != null && statusLinija.startsWith("OK")) {
+        StringBuilder jsonBuilder = new StringBuilder();
+        String linija;
+        while ((linija = in.readLine()) != null) {
+          jsonBuilder.append(linija);
+        }
+        
+        String jsonKartaPica = jsonBuilder.toString();
+        List<KartaPica> kartaPica = gson.fromJson(jsonKartaPica, new TypeToken<List<KartaPica>>() {}.getType());
+        
+        mreznaUticnica.close();
+        return kartaPica;
+      }
+      
+      mreznaUticnica.close();
+    } catch (IOException e) {
+    }
+    return null;
+  }
+
+  /**
+   * Dohvaća stanje narudžbe s partnera.
+   */
+  private List<Narudzba> dohvatiStanjeNarudzbe(String korisnik) {
+    try {
+      var mreznaUticnica = new Socket(this.partnerAdresa, Integer.parseInt(this.mreznaVrataRadPartner));
+      BufferedReader in =
+          new BufferedReader(new InputStreamReader(mreznaUticnica.getInputStream(), "utf8"));
+      PrintWriter out =
+          new PrintWriter(new OutputStreamWriter(mreznaUticnica.getOutputStream(), "utf8"));
+      
+      out.write("STANJE " + korisnik + "\n");
+      out.flush();
+      mreznaUticnica.shutdownOutput();
+      
+      String statusLinija = in.readLine();
+      if (statusLinija != null && statusLinija.startsWith("OK")) {
+        StringBuilder jsonBuilder = new StringBuilder();
+        String linija;
+        while ((linija = in.readLine()) != null) {
+          jsonBuilder.append(linija);
+        }
+        
+        String jsonNarudzba = jsonBuilder.toString();
+        List<Narudzba> narudzba = gson.fromJson(jsonNarudzba, new TypeToken<List<Narudzba>>() {}.getType());
+        
+        mreznaUticnica.close();
+        return narudzba;
+      }
+      
+      mreznaUticnica.close();
+    } catch (IOException e) {
+    }
+    return null;
+  }
 }
