@@ -4,6 +4,4 @@ COPY target/mbaranasi21_vjezba_07_dz_2_servisi-1.0.0.war /opt/payara/deployments
 
 EXPOSE 8080
 
-ENV PAYARA_MICRO_HOST=servis_mbaranasi21
-
 ENTRYPOINT ["java", "-jar", "/opt/payara/payara-micro.jar", "--deploy", "/opt/payara/deployments/app.war", "--contextroot", ""]

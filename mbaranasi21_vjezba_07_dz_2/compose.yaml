@@ -1,0 +1,50 @@
+services:
+  mbaranasi21_tvrtka:
+    build: ./mbaranasi21_vjezba_07_dz_2_tvrtka
+    container_name: mbaranasi21_tvrtka
+    networks:
+      mreza_mbaranasi21:
+        ipv4_address: 20.24.5.2
+    volumes:
+      - svezak_mbaranasi21:/usr/app/podaci
+    ports:
+      - "8000:8000"
+      - "8001:8001" 
+      - "8002:8002"
+    depends_on:
+      - mbaranasi21_servisi
+
+  mbaranasi21_partner:
+    build: ./mbaranasi21_vjezba_07_dz_2_partner
+    container_name: mbaranasi21_partner
+    networks:
+      mreza_mbaranasi21:
+        ipv4_address: 20.24.5.3
+    volumes:
+      - svezak_mbaranasi21:/usr/app/podaci
+    ports:
+      - "8010:8010"
+      - "8011:8011"
+    depends_on:
+      - mbaranasi21_tvrtka
+    restart: unless-stopped
+    command: ["/bin/sh", "-c", "while true; do /usr/app/bin/java -m mbaranasi21_vjezba_07_dz_2_partner/edu.unizg.foi.nwtis.mbaranasi21.vjezba_07_dz_2.PosluziteljPartner NWTiS_04_partner_1.txt PARTNER; sleep 5; done"]
+    
+      
+
+  mbaranasi21_servisi:
+    build: ./mbaranasi21_vjezba_07_dz_2_servisi
+    container_name: mbaranasi21_servisi
+    networks:
+      mreza_mbaranasi21:
+        ipv4_address: 20.24.5.20
+    ports:
+      - "8080:8080"
+
+networks:
+  mreza_mbaranasi21:
+    external: true
+
+volumes:
+  svezak_mbaranasi21:
+    external: true
