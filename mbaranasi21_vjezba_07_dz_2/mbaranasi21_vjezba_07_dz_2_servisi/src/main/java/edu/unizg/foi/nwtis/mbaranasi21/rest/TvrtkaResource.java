@@ -73,13 +73,20 @@ public class TvrtkaResource {
   @Counted(name = "brojZahtjeva_eadPosluziteljStatus",
       description = "Koliko puta je pozvana operacija servisa")
   @Timed(name = "trajanjeMetode_eadPosluziteljStatus", description = "Vrijeme trajanja metode")
-  public Response headPosluziteljStatus(@PathParam("id") int id) {
+    public Response headPosluziteljStatus(@PathParam("id") int id) {
     var status = posaljiKomandu("STATUS " + this.kodZaAdminTvrtke + " " + id);
-    if (status != null) {
-      return Response.status(Response.Status.OK).build();
-    } else {
-      return Response.status(Response.Status.CONFLICT).build();
+    if (status != null && status.startsWith("OK")) {
+      String[] dijelovi = status.split(" ");
+      if (dijelovi.length == 2) {
+        int statusVrijednost = Integer.parseInt(dijelovi[1]);
+        if (statusVrijednost == 1) {
+          return Response.status(Response.Status.OK).build(); // aktivni rad
+        } else {
+          return Response.status(Response.Status.CONFLICT).build(); // pauza
+        }
+      }
     }
+    return Response.status(Response.Status.CONFLICT).build(); // ERROR ili nema odgovora
   }
 
   @Path("pauza/{id}")
