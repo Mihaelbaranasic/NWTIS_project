@@ -1459,7 +1459,6 @@ public class PosluziteljTvrtka {
 
       azurirajIspremiObracune(noviObracuni);
 
-      // Pošalji POST zahtjev na REST servis
       if (!posaljiRestObracun(jsonObracun)) {
         out.write("ERROR 37 - RESTful zahtjev nije uspješan\n");
         out.flush();

@@ -655,24 +655,24 @@ public class TvrtkaResource {
    * Šalje obračun na poslužitelj tvrtka.
    */
   private String posaljiObracunNaPosluzitelj(int partnerId, String sigurnosniKod, String jsonObracuni) {
-    try {
-      var mreznaUticnica = new Socket(this.tvrtkaAdresa, Integer.parseInt(this.mreznaVrataRad));
-      BufferedReader in =
-          new BufferedReader(new InputStreamReader(mreznaUticnica.getInputStream(), "utf8"));
-      PrintWriter out =
-          new PrintWriter(new OutputStreamWriter(mreznaUticnica.getOutputStream(), "utf8"));
-      
-      out.write("OBRAČUNWS " + partnerId + " " + sigurnosniKod + "\n");
-      out.write(jsonObracuni + "\n");
-      out.flush();
-      mreznaUticnica.shutdownOutput();
-      
-      String statusLinija = in.readLine();
-      mreznaUticnica.close();
-      return statusLinija;
-      
-    } catch (IOException e) {
-    }
-    return null;
-  }
+	  try {
+	    var mreznaUticnica = new Socket(this.tvrtkaAdresa, Integer.parseInt(this.mreznaVrataRad));
+	    BufferedReader in =
+	        new BufferedReader(new InputStreamReader(mreznaUticnica.getInputStream(), "utf8"));
+	    PrintWriter out =
+	        new PrintWriter(new OutputStreamWriter(mreznaUticnica.getOutputStream(), "utf8"));
+	    
+	    out.write("OBRAČUNWS " + partnerId + " " + sigurnosniKod + "\n");
+	    out.write(jsonObracuni + "\n");
+	    out.flush();
+	    mreznaUticnica.shutdownOutput();
+	    
+	    String statusLinija = in.readLine();
+	    mreznaUticnica.close();
+	    return statusLinija;
+	    
+	  } catch (IOException e) {
+	  }
+	  return null;
+	}
 }
