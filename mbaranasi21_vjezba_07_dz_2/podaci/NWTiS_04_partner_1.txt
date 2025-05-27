@@ -14,4 +14,3 @@ mreznaVrataRad=8002
 mreznaVrataRegistracija=8001
 naziv=FOLT 1 - Varaždin, Pavlinska 9
 pauzaDretve=100
-sigKod=da53e5e7

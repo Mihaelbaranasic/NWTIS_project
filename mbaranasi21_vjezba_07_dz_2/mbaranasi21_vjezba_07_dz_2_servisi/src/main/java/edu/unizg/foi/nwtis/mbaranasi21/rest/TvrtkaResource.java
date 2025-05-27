@@ -8,6 +8,8 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.metrics.annotation.Counted;
@@ -66,7 +68,6 @@ public class TvrtkaResource {
 
   private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-  // ==================== HEAD metode ====================
 
   @HEAD
   @Operation(summary = "Provjera statusa poslužitelja tvrtka")
@@ -85,93 +86,61 @@ public class TvrtkaResource {
 
   @Path("status/{id}")
   @HEAD
-  @Operation(summary = "Provjera statusa dijela poslužitelja tvrtka")
-  @APIResponses(value = {@APIResponse(responseCode = "200", description = "Uspješna operacija"),
-      @APIResponse(responseCode = "409", description = "Pogrešna operacija")})
-  @Counted(name = "brojZahtjeva_headPosluziteljStatus",
-      description = "Koliko puta je pozvana operacija servisa")
-  @Timed(name = "trajanjeMetode_headPosluziteljStatus", description = "Vrijeme trajanja metode")
   public Response headPosluziteljStatus(@PathParam("id") int id) {
     var status = posaljiKomandu(mreznaVrataKraj, "STATUS " + this.kodZaAdminTvrtke + " " + id);
     if (status != null && status.startsWith("OK")) {
-      // Parsirati status iz odgovora "OK 1" ili "OK 0"
       String[] dijelovi = status.split(" ");
       if (dijelovi.length == 2) {
         int statusVrijednost = Integer.parseInt(dijelovi[1]);
         if (statusVrijednost == 1) {
-          return Response.status(Response.Status.OK).build(); // aktivni rad
+          return Response.status(Response.Status.OK).build();
         } else {
-          return Response.status(Response.Status.CONFLICT).build(); // pauza
+          return Response.status(Response.Status.NO_CONTENT).build();
         }
       }
     }
-    return Response.status(Response.Status.CONFLICT).build(); // ERROR ili nema odgovora
+    return Response.status(Response.Status.NOT_FOUND).build(); 
   }
 
   @Path("pauza/{id}")
   @HEAD
-  @Operation(summary = "Postavljanje dijela poslužitelja tvrtka u pauzu")
-  @APIResponses(value = {@APIResponse(responseCode = "200", description = "Uspješna operacija"),
-      @APIResponse(responseCode = "409", description = "Pogrešna operacija")})
-  @Counted(name = "brojZahtjeva_headPosluziteljPauza",
-      description = "Koliko puta je pozvana operacija servisa")
-  @Timed(name = "trajanjeMetode_headPosluziteljPauza", description = "Vrijeme trajanja metode")
   public Response headPosluziteljPauza(@PathParam("id") int id) {
     var status = posaljiKomandu(mreznaVrataKraj, "PAUZA " + this.kodZaAdminTvrtke + " " + id);
     if (status != null && status.startsWith("OK")) {
       return Response.status(Response.Status.OK).build();
     } else {
-      return Response.status(Response.Status.CONFLICT).build();
+      return Response.status(Response.Status.NOT_FOUND).build(); 
     }
   }
 
   @Path("start/{id}")
   @HEAD
-  @Operation(summary = "Postavljanje dijela poslužitelja tvrtka u rad")
-  @APIResponses(value = {@APIResponse(responseCode = "200", description = "Uspješna operacija"),
-      @APIResponse(responseCode = "409", description = "Pogrešna operacija")})
-  @Counted(name = "brojZahtjeva_headPosluziteljStart",
-      description = "Koliko puta je pozvana operacija servisa")
-  @Timed(name = "trajanjeMetode_headPosluziteljStart", description = "Vrijeme trajanja metode")
   public Response headPosluziteljStart(@PathParam("id") int id) {
     var status = posaljiKomandu(mreznaVrataKraj, "START " + this.kodZaAdminTvrtke + " " + id);
     if (status != null && status.startsWith("OK")) {
       return Response.status(Response.Status.OK).build();
     } else {
-      return Response.status(Response.Status.CONFLICT).build();
+      return Response.status(Response.Status.NOT_FOUND).build();
     }
   }
 
   @Path("kraj")
   @HEAD
-  @Operation(summary = "Zaustavljanje poslužitelja tvrtka")
-  @APIResponses(value = {@APIResponse(responseCode = "200", description = "Uspješna operacija"),
-      @APIResponse(responseCode = "409", description = "Pogrešna operacija")})
-  @Counted(name = "brojZahtjeva_headPosluziteljKraj",
-      description = "Koliko puta je pozvana operacija servisa")
-  @Timed(name = "trajanjeMetode_headPosluziteljKraj", description = "Vrijeme trajanja metode")
   public Response headPosluziteljKraj() {
     var status = posaljiKomandu(mreznaVrataKraj, "KRAJWS " + this.kodZaKraj);
     if (status != null && status.startsWith("OK")) {
       return Response.status(Response.Status.OK).build();
     } else {
-      return Response.status(Response.Status.CONFLICT).build();
+      return Response.status(Response.Status.NOT_FOUND).build();
     }
   }
 
   @Path("kraj/info")
   @HEAD
-  @Operation(summary = "Informacija o zaustavljanju poslužitelja tvrtka")
-  @APIResponses(value = {@APIResponse(responseCode = "200", description = "Uspješna operacija"),
-      @APIResponse(responseCode = "409", description = "Pogrešna operacija")})
-  @Counted(name = "brojZahtjeva_headPosluziteljKrajInfo",
-      description = "Koliko puta je pozvana operacija servisa")
-  @Timed(name = "trajanjeMetode_headPosluziteljKrajInfo", description = "Vrijeme trajanja metode")
   public Response headPosluziteljKrajInfo() {
-    return Response.status(Response.Status.OK).build();
+    return Response.status(Response.Status.NOT_FOUND).build();
   }
 
-  // ==================== GET metode za jelovnik ====================
 
   @Path("jelovnik")
   @GET
@@ -188,7 +157,6 @@ public class TvrtkaResource {
       
       List<Jelovnik> sviJelovnici = new ArrayList<>();
       
-      // Za svakog partnera dohvati jelovnik
       for (Partner partner : partneri) {
         var jelovnik = dohvatiJelovnikPartnera(partner.id(), partner.sigurnosniKod());
         if (jelovnik != null) {
@@ -231,7 +199,6 @@ public class TvrtkaResource {
     }
   }
 
-  // ==================== GET metode za kartu pića ====================
 
   @Path("kartapica")
   @GET
@@ -246,7 +213,6 @@ public class TvrtkaResource {
       var partnerDAO = new PartnerDAO(vezaBP);
       var partneri = partnerDAO.dohvatiSve(false);
       
-      // Uzmi prvog partnera za dohvat karte pića
       if (!partneri.isEmpty()) {
         Partner partner = partneri.get(0);
         var kartaPica = dohvatiKartuPicaPartnera(partner.id(), partner.sigurnosniKod());
@@ -261,7 +227,6 @@ public class TvrtkaResource {
     }
   }
 
-  // ==================== GET metode za partnere ====================
 
   @Path("partner")
   @GET
@@ -295,13 +260,11 @@ public class TvrtkaResource {
       var partnerDAO = new PartnerDAO(vezaBP);
       var partneri = partnerDAO.dohvatiSve(false);
       
-      // Dohvati popis s poslužitelja
       var popisSPosluzitelja = dohvatiPopisPartnera();
       List<Partner> aktivniPartneri = new ArrayList<>();
       
       if (popisSPosluzitelja != null) {
         for (Partner partner : partneri) {
-          // Provjeri postoji li partner u popisu s poslužitelja
           boolean postojiNaPosluzitelju = popisSPosluzitelja.stream()
               .anyMatch(pp -> pp.id() == partner.id());
           
@@ -367,7 +330,6 @@ public class TvrtkaResource {
     }
   }
 
-  // ==================== GET metode za obračune ====================
 
   @Path("obracun")
   @GET
@@ -467,7 +429,6 @@ public class TvrtkaResource {
     }
   }
 
-  // ==================== POST metode za obračune ====================
 
   @Path("obracun")
   @POST
@@ -506,23 +467,34 @@ public class TvrtkaResource {
       boolean status = obracunDAO.dodajVise(obracuni);
       
       if (status) {
-        // Pošalji obračune na poslužitelj tvrtka
-        if (!obracuni.isEmpty()) {
-          int partnerId = obracuni.get(0).partner();
-          var partnerDAO = new PartnerDAO(vezaBP);
-          var partner = partnerDAO.dohvati(partnerId, false);
+        Map<Integer, List<Obracun>> grupirani = obracuni.stream()
+            .collect(Collectors.groupingBy(Obracun::partner));
+        
+        var partnerDAO = new PartnerDAO(vezaBP);
+        boolean sviUspjesni = true;
+        
+        for (Map.Entry<Integer, List<Obracun>> entry : grupirani.entrySet()) {
+          int partnerId = entry.getKey();
+          List<Obracun> obracuniPartnera = entry.getValue();
           
+          var partner = partnerDAO.dohvati(partnerId, false);
           if (partner != null) {
-            String jsonObracuni = gson.toJson(obracuni);
+            String jsonObracuni = gson.toJson(obracuniPartnera);
             var odgovor = posaljiObracunNaPosluzitelj(partnerId, partner.sigurnosniKod(), jsonObracuni);
             
-            if (odgovor != null && odgovor.startsWith("OK")) {
-              return Response.status(Response.Status.CREATED).build();
+            if (odgovor == null || !odgovor.startsWith("OK")) {
+              sviUspjesni = false;
             }
+          } else {
+            sviUspjesni = false;
           }
         }
         
-        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        if (sviUspjesni) {
+          return Response.status(Response.Status.CREATED).build();
+        } else {
+          return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
       } else {
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
       }
@@ -531,7 +503,6 @@ public class TvrtkaResource {
     }
   }
 
-  // ==================== GET spava ====================
 
   @Path("spava")
   @GET
@@ -549,7 +520,6 @@ public class TvrtkaResource {
     }
   }
 
-  // ==================== Privatne helper metode ====================
 
   /**
    * Šalje komandu na poslužitelj tvrtka.

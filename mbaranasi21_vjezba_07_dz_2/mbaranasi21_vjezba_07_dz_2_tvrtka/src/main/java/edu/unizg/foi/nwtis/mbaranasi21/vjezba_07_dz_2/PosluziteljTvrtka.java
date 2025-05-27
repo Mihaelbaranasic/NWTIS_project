@@ -64,7 +64,7 @@ public class PosluziteljTvrtka {
   private AtomicBoolean kraj = new AtomicBoolean(false);
   /** Zastavica za pauzu registracije. */
   private AtomicBoolean pauzaRegistracija = new AtomicBoolean(false);
-  /** Zastavica za pauzu partnera. */
+  /** Zastavicatvrt za pauzu partnera. */
   private AtomicBoolean pauzaPartneri = new AtomicBoolean(false);
 
   /** Lista partnera. */

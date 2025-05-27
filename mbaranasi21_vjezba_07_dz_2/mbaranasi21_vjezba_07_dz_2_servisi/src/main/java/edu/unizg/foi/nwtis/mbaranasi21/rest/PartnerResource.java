@@ -68,7 +68,6 @@ public class PartnerResource {
 
   private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-  // ==================== HEAD METODE ====================
 
   /**
    * Provjera statusa poslužitelja partner.
@@ -476,51 +475,64 @@ public class PartnerResource {
    * Šalje komandu na poslužitelj partner.
    */
   private String posaljiKomandu(String mreznaVrata, String komanda) {
-    try {
-      var mreznaUticnica = new Socket(this.partnerAdresa, Integer.parseInt(mreznaVrata));
-      BufferedReader in =
-          new BufferedReader(new InputStreamReader(mreznaUticnica.getInputStream(), "utf8"));
-      PrintWriter out =
-          new PrintWriter(new OutputStreamWriter(mreznaUticnica.getOutputStream(), "utf8"));
-      out.write(komanda + "\n");
-      out.flush();
-      mreznaUticnica.shutdownOutput();
-      var linija = in.readLine();
-      mreznaUticnica.shutdownInput();
-      mreznaUticnica.close();
-      return linija;
-    } catch (IOException e) {
-    }
-    return null;
-  }
+	  System.out.println("Šaljem komandu: " + komanda + " na port: " + mreznaVrata);
+	  try {
+	    var mreznaUticnica = new Socket(this.partnerAdresa, Integer.parseInt(mreznaVrata));
+	    BufferedReader in =
+	        new BufferedReader(new InputStreamReader(mreznaUticnica.getInputStream(), "utf8"));
+	    PrintWriter out =
+	        new PrintWriter(new OutputStreamWriter(mreznaUticnica.getOutputStream(), "utf8"), true);
+	    
+	    out.println(komanda);
+	    mreznaUticnica.shutdownOutput();
+	    
+	    var linija = in.readLine();
+	    System.out.println("Odgovor: " + linija);
+	    
+	    mreznaUticnica.shutdownInput();
+	    mreznaUticnica.close();
+	    return linija;
+	  } catch (IOException e) {
+	    System.err.println("Greška pri slanju komande: " + e.getMessage());
+	    e.printStackTrace();
+	  }
+	  return null;
+	}
 
   /**
    * Šalje komandu i čita više linija odgovora.
    */
   private String posaljiViseLinija(String mreznaVrata, String komanda) {
-    try {
-      var mreznaUticnica = new Socket(this.partnerAdresa, Integer.parseInt(mreznaVrata));
-      BufferedReader in =
-          new BufferedReader(new InputStreamReader(mreznaUticnica.getInputStream(), "utf8"));
-      PrintWriter out =
-          new PrintWriter(new OutputStreamWriter(mreznaUticnica.getOutputStream(), "utf8"));
-      
-      out.write(komanda + "\n");
-      out.flush();
-      mreznaUticnica.shutdownOutput();
-      
-      StringBuilder odgovor = new StringBuilder();
-      String linija;
-      while ((linija = in.readLine()) != null) {
-        odgovor.append(linija).append("\n");
-      }
-      
-      mreznaUticnica.close();
-      return odgovor.toString().trim();
-    } catch (IOException e) {
-    }
-    return null;
-  }
+	  System.out.println("Šaljem komandu (više linija): " + komanda + " na port: " + mreznaVrata);
+	  try {
+	    var mreznaUticnica = new Socket(this.partnerAdresa, Integer.parseInt(mreznaVrata));
+	    BufferedReader in =
+	        new BufferedReader(new InputStreamReader(mreznaUticnica.getInputStream(), "utf8"));
+	    PrintWriter out =
+	        new PrintWriter(new OutputStreamWriter(mreznaUticnica.getOutputStream(), "utf8"), true);
+	    
+	    out.println(komanda);
+	    mreznaUticnica.shutdownOutput();
+	    
+	    StringBuilder odgovor = new StringBuilder();
+	    String linija;
+	    int brojLinija = 0;
+	    while ((linija = in.readLine()) != null) {
+	      System.out.println("Linija " + brojLinija + ": " + linija);
+	      odgovor.append(linija).append("\n");
+	      brojLinija++;
+	    }
+	    
+	    mreznaUticnica.close();
+	    String rezultat = odgovor.toString().trim();
+	    System.out.println("Ukupan odgovor: " + rezultat);
+	    return rezultat;
+	  } catch (IOException e) {
+	    System.err.println("Greška pri slanju komande (više linija): " + e.getMessage());
+	    e.printStackTrace();
+	  }
+	  return null;
+	}
 
   /**
    * Provjerava autentikaciju korisnika.
@@ -579,37 +591,42 @@ public class PartnerResource {
    * Dohvaća kartu pića s partnera.
    */
   private List<KartaPica> dohvatiKartuPicaSPartnera(String korisnik) {
-    try {
-      var mreznaUticnica = new Socket(this.partnerAdresa, Integer.parseInt(this.mreznaVrataRadPartner));
-      BufferedReader in =
-          new BufferedReader(new InputStreamReader(mreznaUticnica.getInputStream(), "utf8"));
-      PrintWriter out =
-          new PrintWriter(new OutputStreamWriter(mreznaUticnica.getOutputStream(), "utf8"));
-      
-      out.write("KARTAPIĆA " + korisnik + "\n");
-      out.flush();
-      mreznaUticnica.shutdownOutput();
-      
-      String statusLinija = in.readLine();
-      if (statusLinija != null && statusLinija.startsWith("OK")) {
-        StringBuilder jsonBuilder = new StringBuilder();
-        String linija;
-        while ((linija = in.readLine()) != null) {
-          jsonBuilder.append(linija);
-        }
-        
-        String jsonKartaPica = jsonBuilder.toString();
-        List<KartaPica> kartaPica = gson.fromJson(jsonKartaPica, new TypeToken<List<KartaPica>>() {}.getType());
-        
-        mreznaUticnica.close();
-        return kartaPica;
-      }
-      
-      mreznaUticnica.close();
-    } catch (IOException e) {
-    }
-    return null;
-  }
+	  try {
+	    var mreznaUticnica = new Socket(this.partnerAdresa, Integer.parseInt(this.mreznaVrataRadPartner));
+	    BufferedReader in =
+	        new BufferedReader(new InputStreamReader(mreznaUticnica.getInputStream(), "utf8"));
+	    PrintWriter out =
+	        new PrintWriter(new OutputStreamWriter(mreznaUticnica.getOutputStream(), "utf8"), true);
+	    
+	    out.println("KARTAPIĆA " + korisnik);
+	    mreznaUticnica.shutdownOutput();
+	    
+	    String statusLinija = in.readLine();
+	    System.out.println("KartaPica status: " + statusLinija);
+	    
+	    if (statusLinija != null && statusLinija.startsWith("OK")) {
+	      StringBuilder jsonBuilder = new StringBuilder();
+	      String linija;
+	      while ((linija = in.readLine()) != null) {
+	        jsonBuilder.append(linija);
+	      }
+	      
+	      String jsonKartaPica = jsonBuilder.toString();
+	      System.out.println("KartaPica JSON: " + jsonKartaPica);
+	      
+	      List<KartaPica> kartaPica = gson.fromJson(jsonKartaPica, new TypeToken<List<KartaPica>>() {}.getType());
+	      
+	      mreznaUticnica.close();
+	      return kartaPica;
+	    }
+	    
+	    mreznaUticnica.close();
+	  } catch (IOException e) {
+	    System.err.println("Greška pri dohvaćanju karte pića: " + e.getMessage());
+	    e.printStackTrace();
+	  }
+	  return null;
+	}
 
   /**
    * Dohvaća stanje narudžbe s partnera.
