@@ -65,8 +65,8 @@
           <boolProp name="CacheManager.controlledByThread">false</boolProp>
         </CacheManager>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request HEAD" enabled="true">
-          <stringProp name="HTTPSampler.path">/nwtis/v1/api/tvrtka/</stringProp>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request HEAD">
+          <stringProp name="HTTPSampler.path">/nwtis/v1/api/tvrtka/kraj/info</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">HEAD</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
@@ -321,7 +321,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request GET obracun" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request GET obracun">
           <stringProp name="HTTPSampler.path">/nwtis/v1/api/tvrtka/obracun</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
@@ -365,7 +365,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request GET obracun/1?od&amp;do" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request GET obracun/1?od&amp;do">
           <stringProp name="HTTPSampler.path">/nwtis/v1/api/tvrtka/obracun/1</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
