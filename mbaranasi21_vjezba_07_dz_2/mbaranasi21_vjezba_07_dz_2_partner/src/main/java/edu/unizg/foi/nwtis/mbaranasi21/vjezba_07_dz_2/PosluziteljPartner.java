@@ -35,7 +35,6 @@ import edu.unizg.foi.nwtis.podaci.Narudzba;
 import edu.unizg.foi.nwtis.podaci.Obracun;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * Poslužitelj partnera koji obrađuje narudžbe kupaca i upravlja kontrolnim komandama.
  */
@@ -83,25 +82,25 @@ public class PosluziteljPartner {
 	/** Mapa plaćenih narudžbi po korisnicima. */
 	private Map<String, List<Narudzba>> placeneNarudzbe = new ConcurrentHashMap<>();
 
-	/** The kvota narudzbi. */
+	/** Kvota narudzbi. */
 	private int kvotaNarudzbi = 10;
 	
-	/** The kod za kraj. */
+	/** Kod za kraj. */
 	private String kodZaKraj = "";
 	
-	/** The kod za admin partnera. */
+	/** Kod za admin partnera. */
 	private String kodZaAdminPartnera = "";
 	
-	/** The pauza dretve. */
+	/** Pauza dretve. */
 	private int pauzaDretve = 1000;
 
-	/** The pauza kupci. */
+	/** Pauza kupci. */
 	private AtomicBoolean pauzaKupci = new AtomicBoolean(false);
 
 	/**
-	 * The main method.
+	 * Glavna metoda za pokretanje poslužitelja partnera.
 	 *
-	 * @param args the arguments
+	 * @param args argumenti naredbenog retka
 	 */
 	public static void main(String[] args) {
 		if (args.length > 2) {
@@ -126,9 +125,9 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Dodaj shutdown hook.
+	 * Dodaje shutdown hook za graceful zatvaranje aplikacije.
 	 *
-	 * @param program the program
+	 * @param program instanca poslužitelja partnera
 	 */
 	private static void dodajShutdownHook(PosluziteljPartner program) {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -149,9 +148,9 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Obradi argument.
+	 * Obrađuje argument iz naredbenog retka.
 	 *
-	 * @param linija the linija
+	 * @param linija argument za obradu
 	 */
 	private void obradiArgument(String linija) {
 		var poklapanjeKraj = this.predlozakKraj.matcher(linija);
@@ -170,7 +169,7 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Pokreni posluzitelj.
+	 * Pokreće glavni poslužitelj partnera.
 	 */
 	private void pokreniPosluzitelj() {
 		if (!this.konfig.postojiPostavka("sigKod")) {
@@ -186,7 +185,7 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Inicijaliziraj posluzitelj.
+	 * Inicijalizira poslužitelj s potrebnim postavkama.
 	 */
 	private void inicijalizirajPosluzitelj() {
 		var builder = Thread.ofVirtual();
@@ -203,7 +202,7 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Pokreni posluzitelje.
+	 * Pokreće sve potrebne poslužitelje.
 	 */
 	private void pokreniPosluzitelje() {
 		Future<?> dretvaZaKraj = this.executor.submit(() -> this.pokreniPosluziteljKraj());
@@ -213,9 +212,9 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Cekaj na kraj.
+	 * Čeka signal za kraj rada.
 	 *
-	 * @param dretvaZaKupce the dretva za kupce
+	 * @param dretvaZaKupce dretva koja obrađuje zahtjeve kupaca
 	 */
 	private void cekajNaKraj(Future<?> dretvaZaKupce) {
 		while (!this.kraj) {
@@ -232,9 +231,9 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Prekini dretve.
+	 * Prekida aktivne dretve.
 	 *
-	 * @param dretvaZaKupce the dretva za kupce
+	 * @param dretvaZaKupce dretva za obradu zahtjeva kupaca
 	 */
 	private void prekiniDretve(Future<?> dretvaZaKupce) {
 		if (!dretvaZaKupce.isDone()) {
@@ -307,12 +306,12 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Obrađuje komandu KRAJ.
+	 * Obrađuje komandu KRAJ za završetak rada.
 	 *
-	 * @param linija the linija
-	 * @param out the out
-	 * @param mreznaUticnica the mrezna uticnica
-	 * @return the boolean
+	 * @param linija primljena komanda
+	 * @param out izlazni tok za slanje odgovora
+	 * @param mreznaUticnica mrežna utičnica
+	 * @return Boolean.TRUE ako je obrada uspješna
 	 */
 	private Boolean obradiKomanduKraj(String linija, PrintWriter out, Socket mreznaUticnica) {
 		String[] dijelovi = linija.trim().split(" ");
@@ -333,12 +332,12 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Obrađuje komandu STATUS.
+	 * Obrađuje komandu STATUS za provjeru stanja.
 	 *
-	 * @param linija the linija
-	 * @param out the out
-	 * @param mreznaUticnica the mrezna uticnica
-	 * @return boolean
+	 * @param linija primljena komanda
+	 * @param out izlazni tok za slanje odgovora
+	 * @param mreznaUticnica mrežna utičnica
+	 * @return Boolean.TRUE ako je obrada uspješna
 	 */
 	private Boolean obradiKomanduStatus(String linija, PrintWriter out, Socket mreznaUticnica) {
 		String[] dijelovi = linija.trim().split(" ");
@@ -374,12 +373,12 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Obradi komandu pauza.
+	 * Obrađuje komandu PAUZA za pauziranje poslužitelja.
 	 *
-	 * @param linija the linija
-	 * @param out the out
-	 * @param mreznaUticnica the mrezna uticnica
-	 * @return the boolean
+	 * @param linija primljena komanda
+	 * @param out izlazni tok za slanje odgovora
+	 * @param mreznaUticnica mrežna utičnica
+	 * @return Boolean.TRUE ako je obrada uspješna
 	 */
 	private Boolean obradiKomanduPauza(String linija, PrintWriter out, Socket mreznaUticnica) {
 		String[] dijelovi = linija.trim().split(" ");
@@ -422,12 +421,12 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Obradi komandu start.
+	 * Obrađuje komandu START za pokretanje poslužitelja.
 	 *
-	 * @param linija the linija
-	 * @param out the out
-	 * @param mreznaUticnica the mrezna uticnica
-	 * @return the boolean
+	 * @param linija primljena komanda
+	 * @param out izlazni tok za slanje odgovora
+	 * @param mreznaUticnica mrežna utičnica
+	 * @return Boolean.TRUE ako je obrada uspješna
 	 */
 	private Boolean obradiKomanduStart(String linija, PrintWriter out, Socket mreznaUticnica) {
 		String[] dijelovi = linija.trim().split(" ");
@@ -470,12 +469,12 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Obradi komandu spava.
+	 * Obrađuje komandu SPAVA za postavljanje dretve u spavanje.
 	 *
-	 * @param linija the linija
-	 * @param out the out
-	 * @param mreznaUticnica the mrezna uticnica
-	 * @return the boolean
+	 * @param linija primljena komanda
+	 * @param out izlazni tok za slanje odgovora
+	 * @param mreznaUticnica mrežna utičnica
+	 * @return Boolean.TRUE ako je obrada uspješna
 	 */
 	private Boolean obradiKomanduSpava(String linija, PrintWriter out, Socket mreznaUticnica) {
 		String[] dijelovi = linija.trim().split(" ");
@@ -517,12 +516,12 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Obradi komandu osvjezi.
+	 * Obrađuje komandu OSVJEŽI za ažuriranje jelovnika i karte pića.
 	 *
-	 * @param linija the linija
-	 * @param out the out
-	 * @param mreznaUticnica the mrezna uticnica
-	 * @return the boolean
+	 * @param linija primljena komanda
+	 * @param out izlazni tok za slanje odgovora
+	 * @param mreznaUticnica mrežna utičnica
+	 * @return Boolean.TRUE ako je obrada uspješna
 	 */
 	private Boolean obradiKomanduOsvjezi(String linija, PrintWriter out, Socket mreznaUticnica) {
 		String[] dijelovi = linija.trim().split(" ");
@@ -555,7 +554,7 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Pokreni posluzitelj kupce.
+	 * Pokreće poslužitelj za obradu zahtjeva kupaca.
 	 */
 	private void pokreniPosluziteljKupce() {
 		int mreznaVrata = Integer.parseInt(this.konfig.dajPostavku("mreznaVrata"));
@@ -594,9 +593,9 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Obradi zahtjev kupca.
+	 * Obrađuje pojedinačni zahtjev kupca.
 	 *
-	 * @param socket the socket
+	 * @param socket mrežna utičnica za komunikaciju
 	 */
 	private void obradiZahtjevKupca(Socket socket) {
 		try {
@@ -627,11 +626,11 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Provjeri komandu.
+	 * Provjerava ispravnost format komande.
 	 *
-	 * @param komanda the komanda
-	 * @param out the out
-	 * @return true, if successful
+	 * @param komanda komanda za provjeru
+	 * @param out izlazni tok za slanje odgovora u slučaju greške
+	 * @return true ako je komanda ispravna, inače false
 	 */
 	private boolean provjeriKomandu(String komanda, PrintWriter out) {
 		if (komanda == null) {
@@ -679,9 +678,9 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Zatvori vezu.
+	 * Zatvaranje veze s pogreškom.
 	 *
-	 * @param out the out
+	 * @param out izlazni tok za slanje poruke o grešci
 	 */
 	private void zatvoriVezu(PrintWriter out) {
 		out.write("ERROR 49 - Došlo je do pogreške\n");
@@ -689,10 +688,10 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Obradi komandu.
+	 * Usmjerava komande na odgovarajuće metode za obradu.
 	 *
-	 * @param komanda the komanda
-	 * @param out the out
+	 * @param komanda komanda za obradu
+	 * @param out izlazni tok za slanje odgovora
 	 */
 	private void obradiKomandu(String komanda, PrintWriter out) {
 		if (komanda.startsWith("JELOVNIK ")) {
@@ -716,10 +715,10 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Obradi komandu stanje.
+	 * Obrađuje komandu STANJE za dohvaćanje stanja narudžbe.
 	 *
-	 * @param komanda the komanda
-	 * @param out the out
+	 * @param komanda komanda s korisničkim imenom
+	 * @param out izlazni tok za slanje JSON stanja narudžbe
 	 */
 	private synchronized void obradiKomanduStanje(String komanda, PrintWriter out) {
 		try {
@@ -753,7 +752,7 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Posalji kraj.
+	 * Šalje komandu za kraj rada glavnom poslužitelju.
 	 */
 	private void posaljiKraj() {
 		var kodZaKraj = this.konfig.dajPostavku("kodZaKraj");
@@ -781,7 +780,7 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Registriraj partnera.
+	 * Registrira partnera kod glavnog poslužitelja.
 	 */
 	private void registrirajPartnera() {
 		if (this.konfig.postojiPostavka("sigKod") && !this.konfig.dajPostavku("sigKod").isEmpty()) {
@@ -812,9 +811,9 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Uspostavi vezu za registraciju.
+	 * Uspostavlja mrežnu vezu za registraciju.
 	 *
-	 * @return the socket
+	 * @return mrežna utičnica ili null ako veza nije uspješna
 	 */
 	private Socket uspostaviVezuZaRegistraciju() {
 		try {
@@ -827,9 +826,9 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Kreiraj komandu za registraciju.
+	 * Kreira komandu za registraciju partnera.
 	 *
-	 * @return the string
+	 * @return formirana komanda kao string
 	 */
 	private String kreirajKomanduZaRegistraciju() {
 		int id = Integer.parseInt(this.konfig.dajPostavku("id"));
@@ -847,10 +846,10 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Obradi odgovor registracije.
+	 * Obrađuje odgovor na registraciju i sprema sigurnosni kod.
 	 *
-	 * @param in the in
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @param in ulazni tok za čitanje odgovora
+	 * @throws IOException ako dođe do greške pri čitanju
 	 */
 	private void obradiOdgovorRegistracije(BufferedReader in) throws IOException {
 		String odgovor = in.readLine();
@@ -868,9 +867,9 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Preuzmi jelovnik.
+	 * Preuzima jelovnik s glavnog poslužitelja.
 	 *
-	 * @return true, if successful
+	 * @return true ako je preuzimanje uspješno, inače false
 	 */
 	private boolean preuzmiJelovnik() {
 		Socket socket = null;
@@ -896,9 +895,9 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Uspostavi vezu za rad.
+	 * Uspostavlja mrežnu vezu za rad s glavnim poslužiteljem.
 	 *
-	 * @return the socket
+	 * @return mrežna utičnica ili null ako veza nije uspješna
 	 */
 	private Socket uspostaviVezuZaRad() {
 		try {
@@ -911,12 +910,12 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Procitaj odgovor jelovnik.
+	 * Čita i obrađuje odgovor s jelovnikom.
 	 *
-	 * @param in the in
-	 * @param socket the socket
-	 * @return true, if successful
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @param in ulazni tok za čitanje
+	 * @param socket mrežna utičnica
+	 * @return true ako je čitanje uspješno, inače false
+	 * @throws IOException ako dođe do greške pri čitanju
 	 */
 	private boolean procitajOdgovorJelovnik(BufferedReader in, Socket socket) throws IOException {
 		String odgovorStatus = in.readLine();
@@ -940,9 +939,9 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Preuzmi kartu pica.
+	 * Preuzima kartu pića s glavnog poslužitelja.
 	 *
-	 * @return true, if successful
+	 * @return true ako je preuzimanje uspješno, inače false
 	 */
 	private boolean preuzmiKartuPica() {
 		Socket socket = null;
@@ -968,12 +967,12 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Procitaj odgovor karta pica.
+	 * Čita i obrađuje odgovor s kartom pića.
 	 *
-	 * @param in the in
-	 * @param socket the socket
-	 * @return true, if successful
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @param in ulazni tok za čitanje
+	 * @param socket mrežna utičnica
+	 * @return true ako je čitanje uspješno, inače false
+	 * @throws IOException ako dođe do greške pri čitanju
 	 */
 	private boolean procitajOdgovorKartaPica(BufferedReader in, Socket socket) throws IOException {
 		String odgovorStatus = in.readLine();
@@ -997,10 +996,10 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Obradi komandu jelovnik.
+	 * Obrađuje komandu JELOVNIK za dohvaćanje jelovnika.
 	 *
-	 * @param komanda the komanda
-	 * @param out the out
+	 * @param komanda komanda s korisničkim parametrima
+	 * @param out izlazni tok za slanje JSON jelovnika
 	 */
 	private void obradiKomanduJelovnik(String komanda, PrintWriter out) {
 		try {
@@ -1024,10 +1023,10 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Obradi komandu karta pica.
+	 * Obrađuje komandu KARTAPIĆA za dohvaćanje karte pića.
 	 *
-	 * @param komanda the komanda
-	 * @param out the out
+	 * @param komanda komanda s korisničkim parametrima
+	 * @param out izlazni tok za slanje JSON karte pića
 	 */
 	private void obradiKomanduKartaPica(String komanda, PrintWriter out) {
 		try {
@@ -1051,10 +1050,10 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Obradi komandu narudzba.
+	 * Obrađuje komandu NARUDŽBA za kreiranje nove narudžbe.
 	 *
-	 * @param komanda the komanda
-	 * @param out the out
+	 * @param komanda komanda s korisničkim imenom
+	 * @param out izlazni tok za slanje odgovora
 	 */
 	private synchronized void obradiKomanduNarudzba(String komanda, PrintWriter out) {
 		try {
@@ -1085,10 +1084,10 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Obradi komandu jelo.
+	 * Obrađuje komandu JELO za dodavanje jela u narudžbu.
 	 *
-	 * @param komanda the komanda
-	 * @param out the out
+	 * @param komanda komanda s podacima o jelu
+	 * @param out izlazni tok za slanje odgovora
 	 */
 	private synchronized void obradiKomanduJelo(String komanda, PrintWriter out) {
 		try {
@@ -1126,11 +1125,11 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Provjeri postoji narudzba.
+	 * Provjerava postoji li otvorena narudžba za korisnika.
 	 *
-	 * @param korisnik the korisnik
-	 * @param out the out
-	 * @return true, if successful
+	 * @param korisnik korisničko ime
+	 * @param out izlazni tok za slanje greške ako narudžba ne postoji
+	 * @return true ako narudžba postoji, inače false
 	 */
 	private boolean provjeriPostojiNarudzba(String korisnik, PrintWriter out) {
 		if (!otvoreneNarudzbe.containsKey(korisnik) || otvoreneNarudzbe.get(korisnik) == null) {
@@ -1142,10 +1141,10 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Pronadi jelo.
+	 * Pronalazi jelo prema identifikatoru.
 	 *
-	 * @param idJela the id jela
-	 * @return the jelovnik
+	 * @param idJela identifikator jela
+	 * @return objekt jela ili null ako ne postoji
 	 */
 	private Jelovnik pronadiJelo(String idJela) {
 		for (Jelovnik j : jelovnici) {
@@ -1157,13 +1156,13 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Dodaj stavku narudzbe.
+	 * Dodaje stavku u narudžbu korisnika.
 	 *
-	 * @param korisnik the korisnik
-	 * @param id the id
-	 * @param jelo the jelo
-	 * @param kolicina the kolicina
-	 * @param cijena the cijena
+	 * @param korisnik korisničko ime
+	 * @param id identifikator stavke
+	 * @param jelo true ako je jelo, false ako je piće
+	 * @param kolicina količina stavke
+	 * @param cijena cijena stavke
 	 */
 	private void dodajStavkuNarudzbe(String korisnik, String id, boolean jelo, float kolicina, float cijena) {
 		int idPartnera = Integer.parseInt(this.konfig.dajPostavku("id"));
@@ -1172,10 +1171,10 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Obradi komandu pice.
+	 * Obrađuje komandu PIĆE za dodavanje pića u narudžbu.
 	 *
-	 * @param komanda the komanda
-	 * @param out the out
+	 * @param komanda komanda s podacima o piću
+	 * @param out izlazni tok za slanje odgovora
 	 */
 	private synchronized void obradiKomanduPice(String komanda, PrintWriter out) {
 		try {
@@ -1213,10 +1212,10 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Pronadi pice.
+	 * Pronalazi piće prema identifikatoru.
 	 *
-	 * @param idPica the id pica
-	 * @return the karta pica
+	 * @param idPica identifikator pića
+	 * @return objekt pića ili null ako ne postoji
 	 */
 	private KartaPica pronadiPice(String idPica) {
 		for (KartaPica p : kartaPica) {
@@ -1228,10 +1227,10 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Obradi komandu racun.
+	 * Obrađuje komandu RAČUN za zatvaranje narudžbe i obračun.
 	 *
-	 * @param komanda the komanda
-	 * @param out the out
+	 * @param komanda komanda s korisničkim imenom
+	 * @param out izlazni tok za slanje odgovora
 	 */
 	private synchronized void obradiKomanduRacun(String komanda, PrintWriter out) {
 		try {
@@ -1269,10 +1268,10 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Azuriraj placene narudzbe.
+	 * Ažurira popis plaćenih narudžbi.
 	 *
-	 * @param korisnik the korisnik
-	 * @param narudzba the narudzba
+	 * @param korisnik korisničko ime
+	 * @param narudzba lista stavki narudžbe
 	 */
 	private void azurirajPlaceneNarudzbe(String korisnik, List<Narudzba> narudzba) {
 		if (!placeneNarudzbe.containsKey(korisnik)) {
@@ -1283,9 +1282,9 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Posalji obracun tvrtki.
+	 * Šalje obračun glavnom poslužitelju tvrtke.
 	 *
-	 * @param out the out
+	 * @param out izlazni tok za slanje odgovora
 	 */
 	private void posaljiObracunTvrtki(PrintWriter out) {
 		List<Obracun> obracuni = kreirajObracun();
@@ -1304,9 +1303,9 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Kreiraj obracun.
+	 * Kreira obračun iz svih plaćenih narudžbi.
 	 *
-	 * @return the list
+	 * @return lista stavki obračuna
 	 */
 	private List<Obracun> kreirajObracun() {
 		List<Obracun> obracuni = new ArrayList<>();
@@ -1345,10 +1344,10 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Posalji obracun.
+	 * Šalje obračun glavnom poslužitelju.
 	 *
-	 * @param obracuni the obracuni
-	 * @return true, if successful
+	 * @param obracuni lista stavki obračuna
+	 * @return true ako je slanje uspješno, inače false
 	 */
 	private boolean posaljiObracun(List<Obracun> obracuni) {
 		try {
@@ -1382,10 +1381,10 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Ucitaj konfiguraciju.
+	 * Učitava konfiguraciju iz datoteke.
 	 *
-	 * @param nazivDatoteke the naziv datoteke
-	 * @return true, if successful
+	 * @param nazivDatoteke naziv konfiguracijske datoteke
+	 * @return true ako je učitavanje uspješno, inače false
 	 */
 	private boolean ucitajKonfiguraciju(String nazivDatoteke) {
 		try {
@@ -1398,9 +1397,9 @@ public class PosluziteljPartner {
 	}
 
 	/**
-	 * Zatvori vezu.
+	 * Zatvara mrežnu utičnicu i povećava brojač zatvorenih veza.
 	 *
-	 * @param mreznaUticnica the mrezna uticnica
+	 * @param mreznaUticnica mrežna utičnica za zatvaranje
 	 */
 	private void zatvoriVezu(Socket mreznaUticnica) {
 		if (mreznaUticnica != null && !mreznaUticnica.isClosed()) {

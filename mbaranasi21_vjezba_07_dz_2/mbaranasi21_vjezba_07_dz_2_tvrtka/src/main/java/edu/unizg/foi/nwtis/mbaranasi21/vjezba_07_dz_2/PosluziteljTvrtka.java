@@ -43,7 +43,8 @@ import edu.unizg.foi.nwtis.podaci.Partner;
 import edu.unizg.foi.nwtis.podaci.PartnerPopis;
 
 /**
- * Poslužitelj tvrtke koji upravlja partnerima, jelovnicima i kartom pića.
+ * Poslužitelj tvrtke koji upravlja partnerima, jelovnicima i obračunima.
+ * Omogućuje registraciju partnera, pristup jelovnicima i obradu obračuna.
  */
 public class PosluziteljTvrtka {
 
@@ -356,7 +357,6 @@ public class PosluziteljTvrtka {
       String linija = in.readLine();
       mreznaUticnica.shutdownInput();
 
-      // Obradi različite komande
       if (linija.startsWith("KRAJ ")) {
         return obradiKomanduKraj(linija, out, mreznaUticnica);
       } else if (linija.startsWith("STATUS ")) {
@@ -398,7 +398,6 @@ public class PosluziteljTvrtka {
       return Boolean.FALSE;
     }
 
-    // Pošalji KRAJ svim aktivnim partnerima
     boolean sviPartneriZavrsili = posaljiKrajSvimPartnerima();
     
     if (!sviPartneriZavrsili) {
@@ -408,7 +407,6 @@ public class PosluziteljTvrtka {
       return Boolean.FALSE;
     }
 
-    // Pošalji HEAD zahtjev na REST servis
     if (!posaljiRestKrajInfo()) {
       out.write("ERROR 17 - RESTful zahtjev nije uspješan\n");
       out.flush();
@@ -445,11 +443,11 @@ public class PosluziteljTvrtka {
     }
 
     int tipPosluzitelja = Integer.parseInt(dijelovi[2]);
-    int status = 1; // aktivni rad
+    int status = 1;
     
-    if (tipPosluzitelja == 1) { // registracija
+    if (tipPosluzitelja == 1) {
       status = pauzaRegistracija.get() ? 0 : 1;
-    } else if (tipPosluzitelja == 2) { // partneri
+    } else if (tipPosluzitelja == 2) {
       status = pauzaPartneri.get() ? 0 : 1;
     }
 
@@ -481,7 +479,7 @@ public class PosluziteljTvrtka {
 
     int tipPosluzitelja = Integer.parseInt(dijelovi[2]);
     
-    if (tipPosluzitelja == 1) { // registracija
+    if (tipPosluzitelja == 1) {
       if (pauzaRegistracija.get()) {
         out.write("ERROR 13 - Pogrešna promjena pauze ili starta\n");
         out.flush();
@@ -489,7 +487,7 @@ public class PosluziteljTvrtka {
         return Boolean.FALSE;
       }
       pauzaRegistracija.set(true);
-    } else if (tipPosluzitelja == 2) { // partneri
+    } else if (tipPosluzitelja == 2) {
       if (pauzaPartneri.get()) {
         out.write("ERROR 13 - Pogrešna promjena pauze ili starta\n");
         out.flush();
@@ -527,7 +525,7 @@ public class PosluziteljTvrtka {
 
     int tipPosluzitelja = Integer.parseInt(dijelovi[2]);
     
-    if (tipPosluzitelja == 1) { // registracija
+    if (tipPosluzitelja == 1) {
       if (!pauzaRegistracija.get()) {
         out.write("ERROR 13 - Pogrešna promjena pauze ili starta\n");
         out.flush();
@@ -535,7 +533,7 @@ public class PosluziteljTvrtka {
         return Boolean.FALSE;
       }
       pauzaRegistracija.set(false);
-    } else if (tipPosluzitelja == 2) { // partneri
+    } else if (tipPosluzitelja == 2) {
       if (!pauzaPartneri.get()) {
         out.write("ERROR 13 - Pogrešna promjena pauze ili starta\n");
         out.flush();
@@ -606,7 +604,6 @@ public class PosluziteljTvrtka {
       return Boolean.FALSE;
     }
 
-    // Pošalji KRAJ svim aktivnim partnerima
     boolean sviPartneriZavrsili = posaljiKrajSvimPartnerima();
     
     if (!sviPartneriZavrsili) {
@@ -943,7 +940,7 @@ public class PosluziteljTvrtka {
     String ostatakLinije = linija.substring(krajNaziva + 1).trim();
     String[] parametri = ostatakLinije.split(" ");
 
-    if (parametri.length != 7) { // Dodana 2 nova parametra
+    if (parametri.length != 7) {
       out.write("ERROR 20 - Format komande nije ispravan\n");
       out.flush();
       return false;
