@@ -13,17 +13,31 @@ import edu.unizg.foi.nwtis.podaci.Partner;
 
 
 /**
- *
+ * DAO klasa za rad s partnerima u bazi podataka.
+ * 
  * @author Dragutin Kermek
  */
 public class PartnerDAO {
+	/** Veza s bazom podataka. */
   private Connection vezaBP;
-
+  
+  /**
+   * Konstruktor koji prima vezu s bazom podataka.
+   * 
+   * @param vezaBP veza s bazom podataka
+   */
   public PartnerDAO(Connection vezaBP) {
     super();
     this.vezaBP = vezaBP;
   }
 
+  /**
+   * Dohvaća partnera iz baze podataka prema identifikatoru.
+   * 
+   * @param id identifikator partnera
+   * @param sakriKodove true ako se trebaju sakriti sigurnosni kodovi, inače false
+   * @return objekt partnera ili null ako ne postoji
+   */
   public Partner dohvati(int id, boolean sakriKodove) {
     String upit =
         "SELECT naziv, vrstaKuhinje, adresa, mreznaVrata, mreznaVrataKraj, gpsSirina, gpsDuzina, sigurnosniKod, adminKod FROM partneri WHERE id = ?";
@@ -59,6 +73,12 @@ public class PartnerDAO {
     return null;
   }
 
+  /**
+   * Dohvaća sve partnere iz baze podataka poredane po identifikatoru.
+   * 
+   * @param sakriKodove true ako se trebaju sakriti sigurnosni kodovi, inače false
+   * @return lista svih partnera ili null u slučaju greške
+   */
   public List<Partner> dohvatiSve(boolean sakriKodove) {
     String upit =
         "SELECT id, naziv, vrstaKuhinje, adresa, mreznaVrata, mreznaVrataKraj, gpsSirina, gpsDuzina, sigurnosniKod, adminKod FROM partneri ORDER BY id";
@@ -94,6 +114,12 @@ public class PartnerDAO {
     return null;
   }
 
+  /**
+   * Ažurira podatke partnera u bazi podataka.
+   * 
+   * @param p objekt partnera s novim podacima
+   * @return true ako je ažuriranje uspješno, inače false
+   */
   public boolean azuriraj(Partner p) {
     String upit = "UPDATE partneri SET naziv = ?, adresa = ?, mreznaVrata = ?, mreznaVrataKraj = ?, gpsSirina = ?, gpsDuzina = ?, sigurnosniKod = ?, adminKod = ? "
         + " WHERE korisnik = ?";
@@ -119,6 +145,12 @@ public class PartnerDAO {
     return false;
   }
 
+  /**
+   * Dodaje novog partnera u bazu podataka.
+   * 
+   * @param p objekt partnera za dodavanje
+   * @return true ako je dodavanje uspješno, inače false
+   */
   public boolean dodaj(Partner p) {
     String upit = "INSERT INTO partneri (id, naziv, vrstaKuhinje, adresa, mreznaVrata, mreznaVrataKraj, gpsSirina, gpsDuzina, sigurnosniKod, adminKod) "
         + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";

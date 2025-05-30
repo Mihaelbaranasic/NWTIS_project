@@ -14,17 +14,31 @@ import edu.unizg.foi.nwtis.podaci.Korisnik;
 
 
 /**
- *
+ * DAO klasa za rad s korisnicima u bazi podataka.
+ * 
  * @author Dragutin Kermek
  */
 public class KorisnikDAO {
+	/** Veza s bazom podataka. */
   private Connection vezaBP;
-
+  /**
+   * Konstruktor koji prima vezu s bazom podataka.
+   * 
+   * @param vezaBP veza s bazom podataka
+   */
   public KorisnikDAO(Connection vezaBP) {
     super();
     this.vezaBP = vezaBP;
   }
 
+  /**
+   * Dohvaća korisnika iz baze podataka prema korisničkom imenu i lozinki.
+   * 
+   * @param korisnik korisničko ime
+   * @param lozinka lozinka korisnika
+   * @param prijava true ako se provjerava lozinka, false inače
+   * @return objekt korisnika ili null ako ne postoji
+   */
   public Korisnik dohvati(String korisnik, String lozinka, Boolean prijava) {
     String upit = "SELECT ime, prezime, korisnik, lozinka, email FROM korisnici WHERE korisnik = ?";
 
@@ -55,6 +69,11 @@ public class KorisnikDAO {
     return null;
   }
 
+  /**
+   * Dohvaća sve korisnike iz baze podataka.
+   * 
+   * @return lista svih korisnika ili null u slučaju greške
+   */
   public List<Korisnik> dohvatiSve() {
     String upit = "SELECT ime, prezime, email, korisnik, lozinka FROM korisnici";
 
@@ -79,6 +98,13 @@ public class KorisnikDAO {
     return null;
   }
 
+  /**
+   * Dohvaća korisnike prema prezimenu i imenu koristeći LIKE pretraživanje.
+   * 
+   * @param pPrezime uzorak za pretraživanje prezimena
+   * @param pIme uzorak za pretraživanje imena
+   * @return lista korisnika koji odgovaraju uzorku ili null u slučaju greške
+   */
   public List<Korisnik> dohvatiPrezimeIme(String pPrezime, String pIme) {
     String upit =
         "SELECT ime, prezime, email, korisnik, lozinka FROM korisnici WHERE prezime LIKE ? AND ime LIKE ?";
@@ -109,6 +135,13 @@ public class KorisnikDAO {
     return null;
   }
 
+  /**
+   * Ažurira podatke korisnika u bazi podataka.
+   * 
+   * @param k objekt korisnika s novim podacima
+   * @param lozinka nova lozinka korisnika
+   * @return true ako je ažuriranje uspješno, inače false
+   */
   public boolean azuriraj(Korisnik k, String lozinka) {
     String upit = "UPDATE korisnici SET ime = ?, prezime = ?, email = ?, lozinka = ? "
         + " WHERE korisnik = ?";
@@ -131,6 +164,12 @@ public class KorisnikDAO {
     return false;
   }
 
+  /**
+   * Dodaje novog korisnika u bazu podataka.
+   * 
+   * @param k objekt korisnika za dodavanje
+   * @return true ako je dodavanje uspješno, inače false
+   */
   public boolean dodaj(Korisnik k) {
     String upit = "INSERT INTO korisnici (ime, prezime, email, korisnik, lozinka) "
         + "VALUES (?, ?, ?, ?, ?)";

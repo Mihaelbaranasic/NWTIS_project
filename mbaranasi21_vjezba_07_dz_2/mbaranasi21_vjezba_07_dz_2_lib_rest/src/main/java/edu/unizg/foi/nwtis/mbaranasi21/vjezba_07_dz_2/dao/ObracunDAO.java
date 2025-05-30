@@ -16,15 +16,22 @@ import edu.unizg.foi.nwtis.podaci.Obracun;
  * DAO klasa za rad s obračunima u bazi podataka.
  */
 public class ObracunDAO {
+	/** Veza s bazom podataka. */
   private Connection vezaBP;
-
+  /**
+   * Konstruktor koji prima vezu s bazom podataka.
+   * 
+   * @param vezaBP veza s bazom podataka
+   */
   public ObracunDAO(Connection vezaBP) {
     super();
     this.vezaBP = vezaBP;
   }
 
   /**
-   * Dohvaća sve obračune.
+   * Dohvaća sve obračune iz baze podataka poredane po vremenu.
+   * 
+   * @return lista svih obračuna ili null u slučaju greške
    */
   public List<Obracun> dohvatiSve() {
 	  String upit = "SELECT partner, id, jelo, kolicina, cijena, vrijeme FROM obracuni ORDER BY vrijeme";
@@ -56,6 +63,10 @@ public class ObracunDAO {
 
   /**
    * Dohvaća obračune s vremenskim filterom.
+   * 
+   * @param vrijemeOd početno vrijeme filtera (unix timestamp) ili null
+   * @param vrijemeDo završno vrijeme filtera (unix timestamp) ili null
+   * @return lista obračuna u zadanom vremenskom rasponu ili null u slučaju greške
    */
   public List<Obracun> dohvatiSVremenskomFilterom(Long vrijemeOd, Long vrijemeDo) {
 	  StringBuilder upit = new StringBuilder("SELECT partner, id, jelo, kolicina, cijena, vrijeme FROM obracuni WHERE 1=1");
@@ -105,6 +116,10 @@ public class ObracunDAO {
 
   /**
    * Dohvaća obračune samo za jela s vremenskim filterom.
+   * 
+   * @param vrijemeOd početno vrijeme filtera (unix timestamp) ili null
+   * @param vrijemeDo završno vrijeme filtera (unix timestamp) ili null
+   * @return lista obračuna jela u zadanom vremenskom rasponu ili null u slučaju greške
    */
   public List<Obracun> dohvatiJelaSVremenskomFilterom(Long vrijemeOd, Long vrijemeDo) {
 	  StringBuilder upit = new StringBuilder("SELECT partner, id, jelo, kolicina, cijena, vrijeme FROM obracuni WHERE jelo = true");
@@ -154,6 +169,10 @@ public class ObracunDAO {
 
   /**
    * Dohvaća obračune samo za piće s vremenskim filterom.
+   * 
+   * @param vrijemeOd početno vrijeme filtera (unix timestamp) ili null
+   * @param vrijemeDo završno vrijeme filtera (unix timestamp) ili null
+   * @return lista obračuna pića u zadanom vremenskom rasponu ili null u slučaju greške
    */
   public List<Obracun> dohvatiPiceSVremenskomFilterom(Long vrijemeOd, Long vrijemeDo) {
 	  StringBuilder upit = new StringBuilder("SELECT partner, id, jelo, kolicina, cijena, vrijeme FROM obracuni WHERE jelo = false");
@@ -203,6 +222,11 @@ public class ObracunDAO {
 
   /**
    * Dohvaća obračune za određenog partnera s vremenskim filterom.
+   * 
+   * @param partnerId identifikator partnera
+   * @param vrijemeOd početno vrijeme filtera (unix timestamp) ili null
+   * @param vrijemeDo završno vrijeme filtera (unix timestamp) ili null
+   * @return lista obračuna partnera u zadanom vremenskom rasponu ili null u slučaju greške
    */
   public List<Obracun> dohvatiZaPartneraSVremenskomFilterom(int partnerId, Long vrijemeOd, Long vrijemeDo) {
 	  StringBuilder upit = new StringBuilder("SELECT partner, id, jelo, kolicina, cijena, vrijeme FROM obracuni WHERE partner = ?");
@@ -253,7 +277,10 @@ public class ObracunDAO {
 	}
 
   /**
-   * Dodaje obračun u bazu podataka.
+   * Dodaje pojedinačni obračun u bazu podataka.
+   * 
+   * @param obracun objekt obračuna za dodavanje
+   * @return true ako je dodavanje uspješno, inače false
    */
   public boolean dodaj(Obracun obracun) {
 	  String upit = "INSERT INTO obracuni (partner, id, jelo, kolicina, cijena, vrijeme) VALUES (?, ?, ?, ?, ?, ?)";
@@ -279,7 +306,10 @@ public class ObracunDAO {
 	}
 
   /**
-   * Dodaje više obračuna u bazu podataka.
+   * Dodaje više obračuna u bazu podataka koristeći batch operaciju.
+   * 
+   * @param obracuni lista obračuna za dodavanje
+   * @return true ako su svi obračuni uspješno dodani, inače false
    */
   public boolean dodajVise(List<Obracun> obracuni) {
 	  String upit = "INSERT INTO obracuni (partner, id, jelo, kolicina, cijena, vrijeme) VALUES (?, ?, ?, ?, ?, ?)";
