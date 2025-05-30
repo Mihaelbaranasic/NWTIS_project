@@ -539,7 +539,6 @@ public class PartnerResource {
 	 * @return odgovor poslužitelja kao string
 	 */
 	private String posaljiKomandu(String mreznaVrata, String komanda) {
-		System.out.println("Šaljem komandu: " + komanda + " na port: " + mreznaVrata);
 		try {
 			var mreznaUticnica = new Socket(this.partnerAdresa, Integer.parseInt(mreznaVrata));
 			BufferedReader in = new BufferedReader(new InputStreamReader(mreznaUticnica.getInputStream(), "utf8"));
@@ -549,7 +548,6 @@ public class PartnerResource {
 			mreznaUticnica.shutdownOutput();
 
 			var linija = in.readLine();
-			System.out.println("Odgovor: " + linija);
 
 			mreznaUticnica.shutdownInput();
 			mreznaUticnica.close();
@@ -569,7 +567,6 @@ public class PartnerResource {
 	 * @return višelinijski odgovor poslužitelja
 	 */
 	private String posaljiViseLinija(String mreznaVrata, String komanda) {
-		System.out.println("Šaljem komandu (više linija): " + komanda + " na port: " + mreznaVrata);
 		try {
 			var mreznaUticnica = new Socket(this.partnerAdresa, Integer.parseInt(mreznaVrata));
 			BufferedReader in = new BufferedReader(new InputStreamReader(mreznaUticnica.getInputStream(), "utf8"));
@@ -582,14 +579,12 @@ public class PartnerResource {
 			String linija;
 			int brojLinija = 0;
 			while ((linija = in.readLine()) != null) {
-				System.out.println("Linija " + brojLinija + ": " + linija);
 				odgovor.append(linija).append("\n");
 				brojLinija++;
 			}
 
 			mreznaUticnica.close();
 			String rezultat = odgovor.toString().trim();
-			System.out.println("Ukupan odgovor: " + rezultat);
 			return rezultat;
 		} catch (IOException e) {
 			System.err.println("Greška pri slanju komande (više linija): " + e.getMessage());
@@ -673,7 +668,6 @@ public class PartnerResource {
 			mreznaUticnica.shutdownOutput();
 
 			String statusLinija = in.readLine();
-			System.out.println("KartaPica status: " + statusLinija);
 
 			if (statusLinija != null && statusLinija.startsWith("OK")) {
 				StringBuilder jsonBuilder = new StringBuilder();
@@ -683,7 +677,6 @@ public class PartnerResource {
 				}
 
 				String jsonKartaPica = jsonBuilder.toString();
-				System.out.println("KartaPica JSON: " + jsonKartaPica);
 
 				List<KartaPica> kartaPica = gson.fromJson(jsonKartaPica, new TypeToken<List<KartaPica>>() {
 				}.getType());
