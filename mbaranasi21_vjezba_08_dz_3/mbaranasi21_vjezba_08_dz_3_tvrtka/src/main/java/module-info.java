@@ -3,6 +3,7 @@ module mbaranasi21_vjezba_08_dz_3_tvrtka {
 
 	requires com.google.gson;
 	requires java.logging;
+	requires java.net.http;
 	requires mbaranasi21_vjezba_08_dz_3_lib_konfig;
 	requires mbaranasi21_vjezba_08_dz_3_lib_podaci;
 }

@@ -71,7 +71,11 @@
 			<artifactId>mbaranasi21_vjezba_08_dz_3_lib_rest</artifactId>
 			<version>1.1.0</version>
 		</dependency>
-
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.10.1</version>
+		</dependency>
 	</dependencies>
 
 	<build>
