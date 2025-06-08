@@ -12,7 +12,7 @@ import jakarta.ws.rs.core.Application;
  *
  * @author dkermek
  */
-@ApplicationPath("")
+@ApplicationPath("mvc")
 public class MvcAplikacija extends Application {
     
 }

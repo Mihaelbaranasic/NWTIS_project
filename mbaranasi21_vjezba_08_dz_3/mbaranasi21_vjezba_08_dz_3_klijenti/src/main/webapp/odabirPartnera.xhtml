@@ -1,0 +1,25 @@
+<ui:composition template="predlozak.xhtml"
+	xmlns:ui="jakarta.faces.facelets" xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core">
+
+	<ui:define name="title">Zadaća 3 - Odabir partnera/restorana</ui:define>
+	<ui:define name="content">
+		<h2>Odabir partnera/restorana</h2>
+		<br />		
+		<h:form>
+			<h:outputLabel for="partner">
+				<h:outputText value="Partner:" />
+			</h:outputLabel>
+			<h:selectOneMenu value="#{odabirParnera.partner}">
+				<f:selectItems value="#{odabirParnera.partneri}" var="p"
+					itemLabel="#{p.naziv()} - #{p.vrstaKuhinje()}"
+					itemValue="#{p.id()}" />
+			</h:selectOneMenu>
+
+			<h:commandButton id="submit" value=" Odaberi partnera "
+				action="#{odabirParnera.odaberiPartnera}" />
+		</h:form>
+	</ui:define>
+	<ui:define name="nav">
+	</ui:define>	
+</ui:composition>

@@ -1,0 +1,116 @@
+name: mbaranasi21_docker_compose
+
+services:
+  mbaranasi21_hsqldb:
+    build:
+      context: .
+      dockerfile: Dockerfile.hsql
+    container_name: mbaranasi21_hsqldb
+    networks:
+      mreza_mbaranasi21:
+        ipv4_address: 20.24.5.30
+    ports:
+      - "9001:9001"
+    env_file:
+      - hsqldb.env
+    volumes:
+      - svezak_mbaranasi21:/usr/app/podaci
+    healthcheck:
+      test: ["CMD", "sh", "-c", "ps aux | grep -v grep | grep hsqldb"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 45s
+
+  mbaranasi21_h2:
+    build:
+      context: .
+      dockerfile: Dockerfile.h2
+    container_name: mbaranasi21_h2
+    networks:
+      mreza_mbaranasi21:
+        ipv4_address: 20.24.5.31
+    ports:
+      - "9092:9092"
+    volumes:
+      - svezak_mbaranasi21:/usr/app/podaci
+    healthcheck:
+      test: ["CMD", "sh", "-c", "ps aux | grep -v grep | grep h2"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 45s
+
+  mbaranasi21_servisi:
+    build: ./mbaranasi21_vjezba_08_dz_3_servisi
+    container_name: mbaranasi21_servisi
+    networks:
+      mreza_mbaranasi21:
+        ipv4_address: 20.24.5.20
+    depends_on:
+      mbaranasi21_hsqldb:
+        condition: service_healthy
+      mbaranasi21_h2:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "sh", "-c", "ps aux | grep -v grep | grep payara"]
+      interval: 20s
+      timeout: 15s
+      retries: 6
+      start_period: 90s
+
+  mbaranasi21_tvrtka:
+    build: ./mbaranasi21_vjezba_08_dz_3_tvrtka
+    container_name: mbaranasi21_tvrtka
+    networks:
+      mreza_mbaranasi21:
+        ipv4_address: 20.24.5.2
+    volumes:
+      - svezak_mbaranasi21:/usr/app/podaci
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+      - "8002:8002"
+    depends_on:
+      mbaranasi21_servisi:
+        condition: service_healthy
+    working_dir: /usr/app/podaci
+    command: ["/usr/app/bin/java", "-m", "mbaranasi21_vjezba_08_dz_3_tvrtka/edu.unizg.foi.nwtis.mbaranasi21.vjezba_08_dz_3.PosluziteljTvrtka", "NWTiS_04_tvrtka.txt"]
+    healthcheck:
+      test: ["CMD", "sh", "-c", "ps aux | grep -v grep | grep PosluziteljTvrtka"]
+      interval: 20s
+      timeout: 15s
+      retries: 5
+      start_period: 60s
+
+  mbaranasi21_partner:
+    build: ./mbaranasi21_vjezba_08_dz_3_partner
+    container_name: mbaranasi21_partner
+    networks:
+      mreza_mbaranasi21:
+        ipv4_address: 20.24.5.3
+    volumes:
+      - svezak_mbaranasi21:/usr/app/podaci
+    ports:
+      - "8010:8010"
+      - "8011:8011"
+    depends_on:
+      mbaranasi21_tvrtka:
+        condition: service_healthy
+    working_dir: /usr/app/podaci
+    restart: unless-stopped
+    command: ["/usr/app/bin/java", "-m", "mbaranasi21_vjezba_08_dz_3_partner/edu.unizg.foi.nwtis.mbaranasi21.vjezba_08_dz_3.PosluziteljPartner", "NWTiS_04_partner_1.txt", "PARTNER"]
+    healthcheck:
+      test: ["CMD", "sh", "-c", "ps aux | grep -v grep | grep PosluziteljPartner"]
+      interval: 30s
+      timeout: 15s
+      retries: 3
+      start_period: 60s
+
+networks:
+  mreza_mbaranasi21:
+    external: true
+
+volumes:
+  svezak_mbaranasi21:
+    external: true

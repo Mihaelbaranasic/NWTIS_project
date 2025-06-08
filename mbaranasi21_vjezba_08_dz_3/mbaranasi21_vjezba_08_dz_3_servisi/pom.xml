@@ -7,7 +7,7 @@
 		<artifactId>mbaranasi21_vjezba_08_dz_3</artifactId>
 		<version>1.0.0</version>
 	</parent>
-    <version>1.1.0.</version>
+    <version>1.1.0</version>
 	<artifactId>mbaranasi21_vjezba_08_dz_3_servisi</artifactId>
 	<name>mbaranasi21_vjezba_08_dz_3_servisi</name>
 	<packaging>war</packaging>

@@ -90,6 +90,13 @@ public class Kontroler {
    }
  }
 
+ @GET
+ @Path("nadzornaKonzolaTvrtka")
+ @View("nadzornaKonzolaTvrtka.jsp")
+ public void nadzornaKonzolaTvrtka() {
+   
+ }
+ 
  private void dohvatiStatuse() {
    this.model.put("samoOperacija", false);
    var statusT = this.servisTvrtka.headPosluzitelj().getStatus();
