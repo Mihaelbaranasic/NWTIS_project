@@ -91,5 +91,6 @@
 		<module>mbaranasi21_vjezba_08_dz_3_lib_rest</module>
 		<module>mbaranasi21_vjezba_08_dz_3_servisi</module>
 		<module>mbaranasi21_vjezba_08_dz_3_klijenti</module>
+		<module>mbaranasi21_vjezba_08_dz_3_JPA</module>
 	</modules>
 </project>

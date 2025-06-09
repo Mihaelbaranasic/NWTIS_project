@@ -1,1 +1,1 @@
-{"resources":{"Scripts/Script.sql":{"default-datasource":"hsqldb_server-196c324996e-213657368a92c371"}}}
+{"resources":{"Scripts/Script-1.sql":{"default-datasource":"hsqldb_server-196c324984f-6b674ce31788285e","default-catalog":"PUBLIC"},"Scripts/Script.sql":{"default-datasource":"hsqldb_server-196c324996e-213657368a92c371","default-catalog":"PUBLIC"}}}
