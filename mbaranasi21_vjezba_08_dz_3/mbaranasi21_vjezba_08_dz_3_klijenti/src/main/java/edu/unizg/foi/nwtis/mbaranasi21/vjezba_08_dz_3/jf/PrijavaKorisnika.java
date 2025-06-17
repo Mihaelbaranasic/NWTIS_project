@@ -1,12 +1,15 @@
 package edu.unizg.foi.nwtis.mbaranasi21.vjezba_08_dz_3.jf;
 
 import java.io.Serializable;
-import edu.unizg.foi.nwtis.mbaranasi21.vjezba_08_dz_3.dao.KorisnikDAO;
+import edu.unizg.foi.nwtis.mbaranasi21.vjezba_08_dz_3.jpa.pomocnici.KorisniciFacade;
 import edu.unizg.foi.nwtis.podaci.Korisnik;
 import edu.unizg.foi.nwtis.podaci.Partner;
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.SessionScoped;
+import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import jakarta.security.enterprise.SecurityContext;
 
 @SessionScoped
 @Named("prijavaKorisnika")
@@ -22,6 +25,12 @@ public class PrijavaKorisnika implements Serializable {
 
   @Inject
   RestConfiguration restConfiguration;
+
+  @Inject
+  KorisniciFacade korisniciFacade;
+
+  @Inject
+  private SecurityContext securityContext;
 
   public String getKorisnickoIme() {
     return korisnickoIme;
@@ -52,7 +61,10 @@ public class PrijavaKorisnika implements Serializable {
   }
 
   public boolean isPrijavljen() {
-    return prijavljen;
+    if (!this.prijavljen) {
+      provjeriPrijavuKorisnika();
+    }
+    return this.prijavljen;
   }
 
   public String getPoruka() {
@@ -76,33 +88,29 @@ public class PrijavaKorisnika implements Serializable {
     this.partnerOdabran = partnerOdabran;
   }
 
-  public String prijavaKorisnika() {
-    if (this.korisnickoIme != null && this.korisnickoIme.trim().length() > 3 && this.lozinka != null
-        && this.lozinka.trim().length() > 5) {
-      try (var vezaBP = this.restConfiguration.dajVezu()) {
-        var korisnikDAO = new KorisnikDAO(vezaBP);
-        this.korisnik = korisnikDAO.dohvati(korisnickoIme, lozinka, true);
-        if (this.korisnik != null) {
-          this.prijavljen = true;
-          this.poruka = "";
-          return "index.xhtml";
-        }
-      } catch (Exception e) {
-        e.printStackTrace();
+  @PostConstruct
+  private void provjeriPrijavuKorisnika() {
+    if (this.securityContext.getCallerPrincipal() != null) {
+      var korIme = this.securityContext.getCallerPrincipal().getName();
+      this.korisnik = this.korisniciFacade.pretvori(this.korisniciFacade.find(korIme));
+      if (this.korisnik != null) {
+        this.prijavljen = true;
+        this.korisnickoIme = korIme;
+        this.lozinka = this.korisnik.lozinka();
       }
     }
-    this.prijavljen = false;
-    this.poruka = "Neuspješna prijava korisnika.";
-    return "prijavaKorisnika.xhtml";
   }
 
   public String odjavaKorisnika() {
     if (this.prijavljen) {
       this.prijavljen = false;
-      return "index.xhtml?faces-redirect=true";
-    } else {
-      return "prijavaKorisnika.xhtml?faces-redirect=true";
+
+      FacesContext facesContext = FacesContext.getCurrentInstance();
+      facesContext.getExternalContext().invalidateSession();
+
+      return "/index.xhtml?faces-redirect=true";
     }
+    return "";
   }
 
 

@@ -1,31 +1,17 @@
 <ui:composition template="predlozak.xhtml"
 	xmlns:ui="jakarta.faces.facelets" xmlns:h="jakarta.faces.html"
 	xmlns:f="jakarta.faces.core">
+
 	<ui:define name="title">Zadaća 3 - Prijava korisnika</ui:define>
 	<ui:define name="content">
-		<h2>Zadaća 3 - Prijava korisnika</h2>
-		<br />
-		<h:outputText style="color: red" value="#{prijavaKorisnika.poruka}" />
-		<br />
-		<h:form>
-			<h:outputLabel for="korisnickoIme">
-				<h:outputText value="Korisničko ime:" />
-			</h:outputLabel>
-			<h:inputText id="korisnickoIme"
-				value="#{prijavaKorisnika.korisnickoIme}" required="true"
-				requiredMessage="Potrebno je upisati korisničko ime" />
-			<br />
-			<h:outputLabel for="lozinka">
-				<h:outputText value="Korisnička lozinka:" />
-			</h:outputLabel>
-			<h:inputSecret id="lozinka" value="#{prijavaKorisnika.lozinka}"
-				required="true" requiredMessage="Potrebno je upisati lozinku" />
-			<br />
-			<h:commandButton id="submit" value=" Prijavi se "
-				action="#{prijavaKorisnika.prijavaKorisnika}" />
-		</h:form>
+		<h2>Prijava korisnika</h2>
+		<br />	
+        <form method="POST" action="j_security_check">
+                <label>Korisničko ime </label> <input type="text" name="j_username"/><br/>
+                <label>Lozinka </label> <input type="password" name="j_password"/><br/>
+                <input type="submit" value=" Prijavi se "/>
+        </form>
 	</ui:define>
 	<ui:define name="nav">
 	</ui:define>	
 </ui:composition>
-

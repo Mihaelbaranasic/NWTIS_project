@@ -104,11 +104,11 @@
 			<artifactId>hsqldb</artifactId>
 			<version>2.7.4</version>
 		</dependency>
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<version>2.3.232</version>
-		</dependency>		
+<!--		<dependency>-->
+<!--			<groupId>com.h2database</groupId>-->
+<!--			<artifactId>h2</artifactId>-->
+<!--			<version>2.3.232</version>-->
+<!--		</dependency>		-->
 		<dependency>
 			<groupId>edu.unizg.foi.nwtis.mbaranasi21</groupId>
 			<artifactId>mbaranasi21_vjezba_08_dz_3_lib_podaci</artifactId>
@@ -118,7 +118,12 @@
 			<groupId>edu.unizg.foi.nwtis.mbaranasi21</groupId>
 			<artifactId>mbaranasi21_vjezba_08_dz_3_lib_rest</artifactId>
 			<version>1.1.0</version>
-		</dependency>		
+		</dependency>
+		<dependency>
+			<groupId>edu.unizg.foi.nwtis.mbaranasi21</groupId>
+			<artifactId>mbaranasi21_vjezba_08_dz_3_jpa</artifactId>
+			<version>1.0.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>

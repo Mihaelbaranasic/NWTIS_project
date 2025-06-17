@@ -1,0 +1,18 @@
+<ui:composition template="/predlozak.xhtml"
+	xmlns:ui="jakarta.faces.facelets" xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core">
+	<ui:define name="title">Zadaća 3 - Odjava korisnika</ui:define>
+	<ui:define name="content">
+		<h2>Zadaća 3 - Odjava korisnika</h2>
+		<br />
+		<h:outputText style="color: red" value="#{prijavaKorisnika.poruka}" />
+		<br />
+		<h:form>
+			<h:commandButton id="submit" value=" Odjavi se "
+				action="#{prijavaKorisnika.odjavaKorisnika}" />
+		</h:form>
+	</ui:define>
+	<ui:define name="nav">
+	</ui:define>	
+</ui:composition>
+

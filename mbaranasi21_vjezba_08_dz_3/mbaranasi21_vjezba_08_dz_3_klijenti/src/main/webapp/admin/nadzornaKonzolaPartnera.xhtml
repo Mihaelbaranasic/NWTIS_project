@@ -1,0 +1,44 @@
+<ui:composition template="predlozak.xhtml"
+	xmlns:ui="jakarta.faces.facelets" xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core">
+
+	<ui:define name="title">Zadaća 3 - Nadzorna konzola partnera/restoranaa</ui:define>
+	<ui:define name="content">
+		<h2>Nadzorna konzola partnera/restorana</h2>
+		<br />
+		<div>
+			<p>
+				Poruka: <span id="poruka"></span>
+			</p>
+		</div>
+		<script type="text/javascript">
+			var wsocket;
+			function connect() {
+				var adresa = window.location.pathname;
+				var dijelovi = adresa.split("/");
+				adresa = "ws://" + window.location.hostname + ":"
+						+ window.location.port + "/" + dijelovi[1]
+						+ "/ws/partneri";
+				if ('WebSocket' in window) {
+					wsocket = new WebSocket(adresa);
+				} else if ('MozWebSocket' in window) {
+					wsocket = new MozWebSocket(adresa);
+				} else {
+					alert('WebSocket nije podržan od web preglednika.');
+					return;
+				}
+				wsocket.onmessage = onMessage;
+			}
+
+			function onMessage(evt) {
+				var poruka = evt.data;
+				var porukaElem = document.getElementById("poruka");
+				porukaElem.innerHTML = poruka;
+			}
+
+			window.addEventListener("load", connect, false);
+		</script>
+	</ui:define>
+	<ui:define name="nav">
+	</ui:define>
+</ui:composition>

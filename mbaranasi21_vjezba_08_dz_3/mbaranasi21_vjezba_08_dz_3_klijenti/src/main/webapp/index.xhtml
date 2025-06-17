@@ -5,16 +5,13 @@
 	<ui:define name="title">Zadaća 3 - Početak Partner</ui:define>
 	<ui:define name="content">
 		<ul>
-			<ui:fragment rendered="#{!prijavaKorisnika.prijavljen}">
-				<li><h:link outcome="prijavaKorisnika.xhtml" value="Prijava korisnika" /></li>
-			</ui:fragment>
 			<ui:fragment
 				rendered="#{prijavaKorisnika.prijavljen and (!prijavaKorisnika.partnerOdabran)}">
 				<li><h:link outcome="odabirPartnera.xhtml"
 						value="Odabir partnera" /></li>
 			</ui:fragment>
 			<ui:fragment>
-				<li><h:link outcome="nadzornaKonzolaPartnera.xhtml" value="Nadzorna konzola partnera/restorana" /></li>
+				<li><h:link outcome="/admin/nadzornaKonzolaPartnera.xhtml" value="Nadzorna konzola partnera/restorana" /></li>
 			</ui:fragment>
 		</ul>
 	</ui:define>
