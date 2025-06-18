@@ -61,13 +61,21 @@ public class Kontroler {
   @Path("partner")
   @View("partneri.jsp")
   public void partneri() {
-    var odgovor = this.servisTvrtka.getPartneri();
-    var status = odgovor.getStatus();
-    if (status == 200) {
-      var partneri = odgovor.readEntity(new GenericType<List<Partner>>() {});
-      this.model.put("status", status);
-      this.model.put("partneri", partneri);
-    }
+      try {
+          var odgovor = this.servisTvrtka.getPartneri();
+          var status = odgovor.getStatus();
+          this.model.put("status", status);
+          
+          if (status == 200) {
+              var partneri = odgovor.readEntity(new GenericType<List<Partner>>() {});
+              this.model.put("partneri", partneri);
+          } else {
+              this.model.put("greska", "REST servis nije dostupan. Status: " + status);
+          }
+      } catch (Exception e) {
+          this.model.put("greska", "Greška pri komunikaciji s REST servisom: " + e.getMessage());
+          this.model.put("status", 500);
+      }
   }
 
   /**
