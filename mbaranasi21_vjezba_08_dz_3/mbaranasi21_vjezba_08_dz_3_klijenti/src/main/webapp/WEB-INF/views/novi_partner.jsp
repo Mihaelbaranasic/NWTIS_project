@@ -9,11 +9,15 @@
 <body>
     <h1>Dodavanje novog partnera</h1>
     
-    <c:if test="${not empty poruka}">
-        <div class="message ${status == 201 ? 'success' : 'error'}">
-            ${poruka}
+    <% 
+    String poruka = (String) request.getAttribute("poruka");
+    Integer status = (Integer) request.getAttribute("status");
+    if (poruka != null) { 
+    %>
+        <div class="message <%= (status != null && status == 201) ? "success" : "error" %>">
+            <%= poruka %>
         </div>
-    </c:if>
+    <% } %>
     
     <form method="post" class="partner-form">
         <div class="form-group">

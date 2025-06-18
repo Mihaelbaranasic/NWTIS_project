@@ -15,32 +15,32 @@
         <table class="status-table">
             <tr>
                 <td><strong>Glavni poslužitelj:</strong></td>
-                <td class="${statusT == 200 ? 'status-ok' : 'status-error'}">
-                    ${statusT == 200 ? 'RADI' : 'NE RADI'}
+                <td class="<%= (Integer.valueOf(200).equals(request.getAttribute("statusT"))) ? "status-ok" : "status-error" %>">
+                    <%= (Integer.valueOf(200).equals(request.getAttribute("statusT"))) ? "RADI" : "NE RADI" %>
                 </td>
                 <td>
-                    <a href="../pauza/0" class="btn-warning">Pauza</a>
-                    <a href="../start/0" class="btn-success">Start</a>
+                    <button onclick="pauzaPosluzitelj(0)" class="btn-warning">Pauza</button>
+                    <button onclick="startPosluzitelj(0)" class="btn-success">Start</button>
                 </td>
             </tr>
             <tr>
                 <td><strong>Dio 1:</strong></td>
-                <td class="${statusT1 == 200 ? 'status-ok' : 'status-error'}">
-                    ${statusT1 == 200 ? 'RADI' : 'NE RADI'}
+                <td class="<%= (Integer.valueOf(200).equals(request.getAttribute("statusT1"))) ? "status-ok" : "status-error" %>">
+                    <%= (Integer.valueOf(200).equals(request.getAttribute("statusT1"))) ? "RADI" : "NE RADI" %>
                 </td>
                 <td>
-                    <a href="../pauza/1" class="btn-warning">Pauza</a>
-                    <a href="../start/1" class="btn-success">Start</a>
+                    <button onclick="pauzaPosluzitelj(1)" class="btn-warning">Pauza</button>
+                    <button onclick="startPosluzitelj(1)" class="btn-success">Start</button>
                 </td>
             </tr>
             <tr>
                 <td><strong>Dio 2:</strong></td>
-                <td class="${statusT2 == 200 ? 'status-ok' : 'status-error'}">
-                    ${statusT2 == 200 ? 'RADI' : 'NE RADI'}
+                <td class="<%= (Integer.valueOf(200).equals(request.getAttribute("statusT2"))) ? "status-ok" : "status-error" %>">
+                    <%= (Integer.valueOf(200).equals(request.getAttribute("statusT2"))) ? "RADI" : "NE RADI" %>
                 </td>
                 <td>
-                    <a href="../pauza/2" class="btn-warning">Pauza</a>
-                    <a href="../start/2" class="btn-success">Start</a>
+                    <button onclick="pauzaPosluzitelj(2)" class="btn-warning">Pauza</button>
+                    <button onclick="startPosluzitelj(2)" class="btn-success">Start</button>
                 </td>
             </tr>
         </table>
@@ -48,7 +48,7 @@
         <div class="danger-zone">
             <a href="../kraj" class="btn-danger" 
                onclick="return confirm('Jeste li sigurni da želite zaustaviti poslužitelj?')">
-               Zaustavi poslužitelj
+               🛑 Zaustavi poslužitelj
             </a>
         </div>
     </div>
@@ -78,7 +78,7 @@
         </div>
     </div>
     
-    <!-- WebSocket status - kao na nadzornoj konzoli -->
+    <!-- WebSocket status -->
     <div class="websocket-section">
         <h2>Real-time informacije</h2>
         <div class="websocket-info">
@@ -135,12 +135,15 @@
                 var brojObracuna = dijelovi[1];
                 var internaPoruka = dijelovi[2];
                 
+                // Ažuriraj status rada
                 var statusElem = document.getElementById("statusRada");
                 statusElem.innerHTML = status;
                 statusElem.className = status === "RADI" ? "status-ok" : "status-error";
                 
+                // Ažuriraj broj obračuna
                 document.getElementById("brojObracuna").innerHTML = brojObracuna;
                 
+                // Ažuriraj internu poruku ako postoji
                 if (internaPoruka && internaPoruka.trim() !== "") {
                     document.getElementById("internaPoruka").innerHTML = internaPoruka;
                 }
@@ -155,10 +158,61 @@
             }
         }
         
-        document.getElementById("novaPoruka").addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                posaljiPoruku();
-            }
+        // AJAX funkcije za pauzu i start
+        function pauzaPosluzitelj(id) {
+            fetch('../pauza/' + id, { method: 'GET' })
+                .then(response => {
+                    if (response.ok) {
+                        showMessage('Pauza aktivirana za dio ' + id, 'success');
+                        setTimeout(refreshStatus, 1000);
+                    } else {
+                        showMessage('Greška pri aktiviranju pauze', 'error');
+                    }
+                })
+                .catch(error => {
+                    showMessage('Greška pri komunikaciji s poslužiteljem', 'error');
+                });
+        }
+
+        function startPosluzitelj(id) {
+            fetch('../start/' + id, { method: 'GET' })
+                .then(response => {
+                    if (response.ok) {
+                        showMessage('Start aktiviran za dio ' + id, 'success');
+                        setTimeout(refreshStatus, 1000);
+                    } else {
+                        showMessage('Greška pri aktiviranju starta', 'error');
+                    }
+                })
+                .catch(error => {
+                    showMessage('Greška pri komunikaciji s poslužiteljem', 'error');
+                });
+        }
+
+        function refreshStatus() {
+            location.reload();
+        }
+
+        function showMessage(message, type) {
+            var messageDiv = document.createElement('div');
+            messageDiv.className = 'message ' + type;
+            messageDiv.textContent = message;
+            
+            var container = document.querySelector('.status-section');
+            container.insertBefore(messageDiv, container.firstChild);
+            
+            setTimeout(function() {
+                messageDiv.remove();
+            }, 3000);
+        }
+        
+        // Omogući slanje poruke pritiskom na Enter
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("novaPoruka").addEventListener("keypress", function(event) {
+                if (event.key === "Enter") {
+                    posaljiPoruku();
+                }
+            });
         });
 
         window.addEventListener("load", connect, false);

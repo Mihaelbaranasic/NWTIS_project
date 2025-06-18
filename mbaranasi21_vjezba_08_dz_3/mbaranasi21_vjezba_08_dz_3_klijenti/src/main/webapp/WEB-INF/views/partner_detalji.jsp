@@ -9,7 +9,7 @@
 <body>
     <h1>Detalji partnera/restorana</h1>
     
-    <c:if test="${status == 200}">
+    <% if (request.getAttribute("status") != null && (Integer)request.getAttribute("status") == 200) { %>
         <div class="partner-detalji">
             <h2>${partner.naziv()}</h2>
             <table class="partner-info">
@@ -47,13 +47,11 @@
                 </tr>
             </table>
         </div>
-    </c:if>
-    
-    <c:if test="${status != 200}">
+    <% } else { %>
         <div class="error">
             <p>Greška pri dohvaćanju podataka o partneru. Status: ${status}</p>
         </div>
-    </c:if>
+    <% } %>
     
     <div class="navigation">
         <a href="../partner">← Povratak na popis partnera</a>

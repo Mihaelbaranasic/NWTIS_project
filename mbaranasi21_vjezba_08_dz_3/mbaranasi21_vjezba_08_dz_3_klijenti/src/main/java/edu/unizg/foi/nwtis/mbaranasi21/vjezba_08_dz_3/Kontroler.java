@@ -147,14 +147,14 @@ public class Kontroler {
   public void obracunPartner(@PathParam("id") int partnerId, 
                             @QueryParam("od") String od, 
                             @QueryParam("do") String doVrijeme) {
-    var odgovor = this.servisTvrtka.getObracuniPartner(partnerId, od, doVrijeme);
-    var status = odgovor.getStatus();
-    this.model.put("status", status);
-    if (status == 200) {
-      var obracuni = odgovor.readEntity(new GenericType<List<Obracun>>() {});
-      this.model.put("obracuni", obracuni);
-    }
-    this.model.put("partnerId", partnerId);
+      var odgovor = this.servisTvrtka.getObracuniPartner(partnerId, od, doVrijeme);
+      var status = odgovor.getStatus();
+      this.model.put("status", status);
+      if (status == 200) {
+          var obracuni = odgovor.readEntity(new GenericType<List<Obracun>>() {});
+          this.model.put("obracuni", obracuni);
+      }
+      this.model.put("partnerId", partnerId);
   }
 
 
