@@ -4,35 +4,35 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import edu.unizg.foi.nwtis.podaci.Partner;
-import edu.unizg.foi.nwtis.podaci.Obracun;
-import edu.unizg.foi.nwtis.mbaranasi21.vjezba_08_dz_3.jpa.pomocnici.PartneriFacade;
-import edu.unizg.foi.nwtis.mbaranasi21.vjezba_08_dz_3.jpa.pomocnici.ObracuniFacade;
+import edu.unizg.foi.nwtis.podaci.Korisnik;
+import edu.unizg.foi.nwtis.podaci.Zapis; // POJO klasa
+import edu.unizg.foi.nwtis.mbaranasi21.vjezba_08_dz_3.jpa.pomocnici.KorisniciFacade;
+import edu.unizg.foi.nwtis.mbaranasi21.vjezba_08_dz_3.jpa.pomocnici.ZapisiFacade;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 /**
- * Backing bean za pregled obračuna
+ * Backing bean za pregled zapisa rada korisnika
  * 
  * @author mbaranasi21
  */
 @RequestScoped
-@Named("obracuni")
-public class Obracuni implements Serializable {
+@Named("zapisi")
+public class ZapisiBean implements Serializable {
     
     private static final long serialVersionUID = 1L;
     
     @Inject
-    private ObracuniFacade obracuniFacade;
+    private ZapisiFacade zapisiFacade;
     
     @Inject
-    private PartneriFacade partneriFacade;
+    private KorisniciFacade korisniciFacade;
     
-    private List<Partner> partneri;
-    private List<Obracun> obracuni;
-    private int odabraniPartnerId;
+    private List<Korisnik> korisnici;
+    private List<Zapis> zapisi;
+    private String odabraniKorisnik;
     private String datumOd;
     private String datumDo;
     private String poruka;
@@ -43,28 +43,28 @@ public class Obracuni implements Serializable {
 
     @PostConstruct
     public void init() {
-        ucitajPartnere();
+        ucitajKorisnike();
     }
 
     /**
-     * Učitava partnere iz baze podataka
+     * Učitava korisnike iz baze podataka
      */
-    private void ucitajPartnere() {
+    private void ucitajKorisnike() {
         try {
-            var partneriEntiteti = partneriFacade.findAll();
-            partneri = partneriFacade.pretvori(partneriEntiteti);
+            var korisniciEntiteti = korisniciFacade.findAll();
+            korisnici = korisniciFacade.pretvori(korisniciEntiteti);
         } catch (Exception e) {
-            System.err.println("Greška pri dohvaćanju partnera: " + e.getMessage());
+            System.err.println("Greška pri dohvaćanju korisnika: " + e.getMessage());
         }
     }
 
     /**
-     * Pretražuje obračune na temelju kriterija
+     * Pretražuje zapise na temelju kriterija
      */
-    public String pretraziObracune() {
+    public String pretraziZapise() {
         try {
-            if (odabraniPartnerId == 0) {
-                poruka = "Morate odabrati partnera.";
+            if (odabraniKorisnik == null || odabraniKorisnik.trim().isEmpty()) {
+                poruka = "Morate odabrati korisnika.";
                 porukaKlasa = "greska";
                 return null;
             }
@@ -78,24 +78,27 @@ public class Obracuni implements Serializable {
                 return null;
             }
             
-            var obracuniEntiteti = obracuniFacade.findByPartnerAndTimeRange(odabraniPartnerId, vrijemeOd, vrijemeDo);
-            obracuni = obracuniFacade.pretvori(obracuniEntiteti);
+            var zapisiEntiteti = zapisiFacade.findByUserAndTimeRange(odabraniKorisnik, vrijemeOd, vrijemeDo);
+            zapisi = zapisiFacade.pretvori(zapisiEntiteti);
             
-            poruka = "Pronađeno je " + obracuni.size() + " obračuna.";
+            poruka = "Pronađeno je " + zapisi.size() + " zapisa.";
             porukaKlasa = "uspjeh";
             pretrazeno = true;
             
         } catch (Exception e) {
-            poruka = "Greška pri pretraživanju obračuna: " + e.getMessage();
+            poruka = "Greška pri pretraživanju zapisa: " + e.getMessage();
             porukaKlasa = "greska";
             pretrazeno = true;
         }
         return null;
     }
 
+    /**
+     * Parsira datum string u millisekunde
+     */
     private long parseDate(String datum) {
         if (datum == null || datum.trim().isEmpty()) {
-            return System.currentTimeMillis();
+            return System.currentTimeMillis() - (7 * 24 * 60 * 60 * 1000L);
         }
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -112,28 +115,29 @@ public class Obracuni implements Serializable {
         return dateFormat.format(new Date(vrijeme));
     }
 
-    public List<Partner> getPartneri() {
-        return partneri;
+    // Getteri i setteri
+    public List<Korisnik> getKorisnici() {
+        return korisnici;
     }
 
-    public void setPartneri(List<Partner> partneri) {
-        this.partneri = partneri;
+    public void setKorisnici(List<Korisnik> korisnici) {
+        this.korisnici = korisnici;
     }
 
-    public List<Obracun> getObracuni() {
-        return obracuni;
+    public List<Zapis> getZapisi() {
+        return zapisi;
     }
 
-    public void setObracuni(List<Obracun> obracuni) {
-        this.obracuni = obracuni;
+    public void setZapisi(List<Zapis> zapisi) {
+        this.zapisi = zapisi;
     }
 
-    public int getOdabraniPartnerId() {
-        return odabraniPartnerId;
+    public String getOdabraniKorisnik() {
+        return odabraniKorisnik;
     }
 
-    public void setOdabraniPartnerId(int odabraniPartnerId) {
-        this.odabraniPartnerId = odabraniPartnerId;
+    public void setOdabraniKorisnik(String odabraniKorisnik) {
+        this.odabraniKorisnik = odabraniKorisnik;
     }
 
     public String getDatumOd() {

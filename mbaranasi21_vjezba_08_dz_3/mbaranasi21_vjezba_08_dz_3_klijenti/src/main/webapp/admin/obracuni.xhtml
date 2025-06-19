@@ -45,9 +45,9 @@
             #{obracun.id()}
         </h:column>
         <h:column>
-            <f:facet name="header">Partner</f:facet>
-            #{obracun.naziv()}
-        </h:column>
+		    <f:facet name="header">Partner ID</f:facet>
+		    #{obracun.partner()}
+		</h:column>
         <h:column>
             <f:facet name="header">Jelo/Piće</f:facet>
             #{obracun.jelo() ? 'Jelo' : 'Piće'}
