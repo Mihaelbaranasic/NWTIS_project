@@ -25,7 +25,7 @@ import jakarta.ws.rs.core.GenericType;
  * @author mbaranasi21
  */
 @Controller
-@Path("tvrtka")
+@Path("")
 @RequestScoped
 public class Kontroler {
 
@@ -40,7 +40,7 @@ public class Kontroler {
   ServisTvrtkaKlijent servisTvrtka;
 
   @GET
-  @Path("pocetak")
+  @Path("tvrtka/pocetak")
   @View("index.jsp")
   public void pocetak() {}
 
@@ -48,7 +48,7 @@ public class Kontroler {
    * Provjera rada poslužitelja (koristi REST api/tvrtka metodu HEAD)
    */
   @GET
-  @Path("status")
+  @Path("tvrtka/status")
   @View("status.jsp")
   public void status() {
     dohvatiStatuse();
@@ -58,7 +58,7 @@ public class Kontroler {
    * Pregled naziva partnera/restorana (koristi REST api/tvrtka metodu GET/partner)
    */
   @GET
-  @Path("partner")
+  @Path("tvrtka/partner")
   @View("partneri.jsp")
   public void partneri() {
       try {
@@ -82,7 +82,7 @@ public class Kontroler {
    * Pregled odabranog partnera/restorana (koristi REST api/tvrtka metodu GET/partner/{id})
    */
   @GET
-  @Path("partner/{id}")
+  @Path("tvrtka/partner/{id}")
   @View("partner_detalji.jsp")
   public void partnerDetalji(@PathParam("id") int id) {
     var odgovor = this.servisTvrtka.getPartner(id);
@@ -94,14 +94,14 @@ public class Kontroler {
     }
   }
 
-
   /**
    * Pregled obračuna u razdoblju - jelo i piće
    */
   @GET
-  @Path("privatno/obracun")
+  @Path("tvrtka/privatno/obracun")
   @View("obracun_pregled.jsp")
   public void obracunPregled(@QueryParam("od") String od, @QueryParam("do") String doVrijeme) {
+    System.out.println("Pristup obracun pregled - korisnik autentificiran");
     var odgovor = this.servisTvrtka.getObracuni(od, doVrijeme);
     var status = odgovor.getStatus();
     this.model.put("status", status);
@@ -116,7 +116,7 @@ public class Kontroler {
    * Pregled obračuna u razdoblju - samo jelo
    */
   @GET
-  @Path("privatno/obracun/jelo")
+  @Path("tvrtka/privatno/obracun/jelo")
   @View("obracun_pregled.jsp")
   public void obracunJelo(@QueryParam("od") String od, @QueryParam("do") String doVrijeme) {
     var odgovor = this.servisTvrtka.getObracuniJelo(od, doVrijeme);
@@ -133,7 +133,7 @@ public class Kontroler {
    * Pregled obračuna u razdoblju - samo piće
    */
   @GET
-  @Path("privatno/obracun/pice")
+  @Path("tvrtka/privatno/obracun/pice")
   @View("obracun_pregled.jsp")
   public void obracunPice(@QueryParam("od") String od, @QueryParam("do") String doVrijeme) {
     var odgovor = this.servisTvrtka.getObracuniPice(od, doVrijeme);
@@ -150,7 +150,7 @@ public class Kontroler {
    * Pregled obračuna određenog partnera u razdoblju
    */
   @GET
-  @Path("privatno/obracun/partner/{id}")
+  @Path("tvrtka/privatno/obracun/partner/{id}")
   @View("obracun_partner.jsp")
   public void obracunPartner(@PathParam("id") int partnerId, 
                             @QueryParam("od") String od, 
@@ -165,12 +165,11 @@ public class Kontroler {
       this.model.put("partnerId", partnerId);
   }
 
-
   /**
    * Prikaz obrasca za dodavanje novog partnera
    */
   @GET
-  @Path("admin/partner/novi")
+  @Path("tvrtka/admin/partner/novi")
   @View("novi_partner.jsp")
   public void noviPartnerObrazac() {}
 
@@ -178,7 +177,7 @@ public class Kontroler {
    * Dodavanje novog partnera (koristi REST api/tvrtka metodu POST/partner)
    */
   @POST
-  @Path("admin/partner/novi")
+  @Path("tvrtka/admin/partner/novi")
   @View("novi_partner.jsp")
   public void dodajPartnera(@FormParam("naziv") String naziv,
                            @FormParam("vrstaKuhinje") String vrstaKuhinje,
@@ -213,7 +212,7 @@ public class Kontroler {
    * Prikaz obrasca za aktiviranje spavanja
    */
   @GET
-  @Path("admin/spavanje")
+  @Path("tvrtka/admin/spavanje")
   @View("spavanje.jsp")
   public void spavanje() {}
 
@@ -221,7 +220,7 @@ public class Kontroler {
    * Aktiviranje spavanja (koristi REST api/tvrtka metodu GET/spava&vrijeme=trajanje)
    */
   @POST
-  @Path("admin/spavanje")
+  @Path("tvrtka/admin/spavanje")
   @View("spavanje.jsp")
   public void aktivirajSpavanje(@FormParam("vrijeme") int vrijeme) {
     var odgovor = this.servisTvrtka.getSpavanje(vrijeme);
@@ -236,20 +235,19 @@ public class Kontroler {
    * Konzola za upravljanje poslužiteljem Tvrtka
    */
   @GET
-  @Path("admin/konzola")
+  @Path("tvrtka/admin/konzola")
   @View("admin_konzola.jsp")
   public void adminKonzola() {
     dohvatiStatuse();
   }
 
   @GET
-  @Path("admin/nadzornaKonzolaTvrtka")
+  @Path("tvrtka/admin/nadzornaKonzolaTvrtka")
   @View("nadzornaKonzolaTvrtka.jsp")
   public void nadzornaKonzolaTvrtka() {}
 
-
   @GET
-  @Path("kraj")
+  @Path("tvrtka/kraj")
   @View("status.jsp")
   public void kraj() {
     var status = this.servisTvrtka.headPosluziteljKraj().getStatus();
@@ -258,7 +256,7 @@ public class Kontroler {
   }
 
   @GET
-  @Path("start/{id}")
+  @Path("tvrtka/start/{id}")
   @View("status.jsp")
   public void startId(@PathParam("id") int id) {
     var status = this.servisTvrtka.headPosluziteljStart(id).getStatus();
@@ -267,14 +265,13 @@ public class Kontroler {
   }
 
   @GET
-  @Path("pauza/{id}")
+  @Path("tvrtka/pauza/{id}")
   @View("status.jsp")
   public void pauzatId(@PathParam("id") int id) {
     var status = this.servisTvrtka.headPosluziteljPauza(id).getStatus();
     this.model.put("status", status);
     this.model.put("samoOperacija", true);
   }
-
 
   private void dohvatiStatuse() {
     this.model.put("samoOperacija", false);
