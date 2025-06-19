@@ -1,10 +1,8 @@
 package edu.unizg.foi.nwtis.mbaranasi21.vjezba_08_dz_3;
 
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
-import edu.unizg.foi.nwtis.podaci.Partner;
+
 import edu.unizg.foi.nwtis.podaci.Korisnik;
-import edu.unizg.foi.nwtis.podaci.Jelovnik;
-import edu.unizg.foi.nwtis.podaci.KartaPica;
 import edu.unizg.foi.nwtis.podaci.Narudzba;
 import jakarta.ws.rs.FormParam;
 import jakarta.ws.rs.GET;
@@ -26,14 +24,6 @@ public interface ServisPartnerKlijent {
 
     @HEAD
     Response headPosluzitelj();
-
-    @GET
-    @Path("partneri")
-    Response getPartneri();
-
-    @GET
-    @Path("partner/{id}")
-    Response getPartner(@PathParam("id") int id);
 
     @POST
     @Path("korisnik")
