@@ -1,0 +1,80 @@
+<ui:composition template="../predlozak.xhtml"
+    xmlns:ui="jakarta.faces.facelets" xmlns:h="jakarta.faces.html"
+    xmlns:f="jakarta.faces.core">
+
+<ui:define name="title">Pregled obračuna</ui:define>
+<ui:define name="content">
+    <h2>Pregled obračuna u razdoblju</h2>
+    
+    <h:form>
+        <h3>Odabir kriterija</h3>
+        <table class="obrazac">
+            <tr>
+                <td><h:outputLabel for="partner" value="Partner:" /></td>
+                <td>
+                    <h:selectOneMenu id="partner" value="#{obracuni.odabraniPartnerId}">
+                        <f:selectItem itemValue="0" itemLabel="-- Odaberite partnera --" />
+                        <f:selectItems value="#{obracuni.partneri}" var="p"
+                                      itemLabel="#{p.naziv()}" itemValue="#{p.id()}" />
+                    </h:selectOneMenu>
+                </td>
+            </tr>
+            <tr>
+                <td><h:outputLabel for="datumOd" value="Datum od:" /></td>
+                <td><h:inputText id="datumOd" value="#{obracuni.datumOd}" 
+                                placeholder="yyyy-MM-dd" /></td>
+            </tr>
+            <tr>
+                <td><h:outputLabel for="datumDo" value="Datum do:" /></td>
+                <td><h:inputText id="datumDo" value="#{obracuni.datumDo}" 
+                                placeholder="yyyy-MM-dd" /></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <h:commandButton value="Pretraži obračune" 
+                                   action="#{obracuni.pretraziObracune}" />
+                </td>
+            </tr>
+        </table>
+    </h:form>
+    
+    <h:dataTable value="#{obracuni.obracuni}" var="obracun" 
+                 styleClass="table" rendered="#{not empty obracuni.obracuni}">
+        <h:column>
+            <f:facet name="header">ID</f:facet>
+            #{obracun.id()}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Partner</f:facet>
+            #{obracun.naziv()}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Jelo/Piće</f:facet>
+            #{obracun.jelo() ? 'Jelo' : 'Piće'}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Količina</f:facet>
+            #{obracun.kolicina()}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Cijena</f:facet>
+            #{obracun.cijena()}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Vrijeme</f:facet>
+            <h:outputText value="#{obracuni.formatirajVrijeme(obracun.vrijeme())}" />
+        </h:column>
+    </h:dataTable>
+    
+    <h:outputText value="Nema obračuna za odabrane kriterije." 
+                  rendered="#{empty obracuni.obracuni and obracuni.pretrazeno}" />
+                  
+    <h:panelGroup rendered="#{not empty obracuni.poruka}">
+        <div class="poruka #{obracuni.porukaKlasa}">
+            <h:outputText value="#{obracuni.poruka}" />
+        </div>
+    </h:panelGroup>
+</ui:define>
+<ui:define name="nav">
+</ui:define>
+</ui:composition>

@@ -1,0 +1,66 @@
+<ui:composition template="../predlozak.xhtml"
+    xmlns:ui="jakarta.faces.facelets" xmlns:h="jakarta.faces.html"
+    xmlns:f="jakarta.faces.core">
+
+<ui:define name="title">Pregled korisnika</ui:define>
+<ui:define name="content">
+    <h2>Pregled korisnika s pretraživanjem</h2>
+    
+    <h:form>
+        <h3>Pretraživanje</h3>
+        <table class="obrazac">
+            <tr>
+                <td><h:outputLabel for="prezime" value="Prezime:" /></td>
+                <td><h:inputText id="prezime" value="#{korisnici.prezime}" /></td>
+            </tr>
+            <tr>
+                <td><h:outputLabel for="ime" value="Ime:" /></td>
+                <td><h:inputText id="ime" value="#{korisnici.ime}" /></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <h:commandButton value="Pretraži" action="#{korisnici.pretraziKorisnike}" />
+                    <h:commandButton value="Prikaži sve" action="#{korisnici.prikaziSveKorisnike}" />
+                </td>
+            </tr>
+        </table>
+    </h:form>
+    
+    <h:dataTable value="#{korisnici.korisnici}" var="korisnik" 
+                 styleClass="table" rendered="#{not empty korisnici.korisnici}">
+        <h:column>
+            <f:facet name="header">Korisničko ime</f:facet>
+            #{korisnik.korisnik()}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Ime</f:facet>
+            #{korisnik.ime()}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Prezime</f:facet>
+            #{korisnik.prezime()}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Email</f:facet>
+            #{korisnik.email()}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Akcije</f:facet>
+            <h:link outcome="korisnikDetalji.xhtml" value="Detalji">
+                <f:param name="korisnik" value="#{korisnik.korisnik()}" />
+            </h:link>
+        </h:column>
+    </h:dataTable>
+    
+    <h:outputText value="Nema korisnika za prikaz." 
+                  rendered="#{empty korisnici.korisnici and korisnici.pretrazeno}" />
+                  
+    <h:panelGroup rendered="#{not empty korisnici.poruka}">
+        <div class="poruka #{korisnici.porukaKlasa}">
+            <h:outputText value="#{korisnici.poruka}" />
+        </div>
+    </h:panelGroup>
+</ui:define>
+<ui:define name="nav">
+</ui:define>
+</ui:composition>
