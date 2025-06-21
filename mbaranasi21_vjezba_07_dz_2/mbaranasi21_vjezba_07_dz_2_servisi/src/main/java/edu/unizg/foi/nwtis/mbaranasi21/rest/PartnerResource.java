@@ -44,7 +44,6 @@ import jakarta.ws.rs.core.Response;
  */
 @Path("api/partner")
 public class PartnerResource {
-
 	/** Adresa partnera. */
 	@Inject
 	@ConfigProperty(name = "adresaPartner")

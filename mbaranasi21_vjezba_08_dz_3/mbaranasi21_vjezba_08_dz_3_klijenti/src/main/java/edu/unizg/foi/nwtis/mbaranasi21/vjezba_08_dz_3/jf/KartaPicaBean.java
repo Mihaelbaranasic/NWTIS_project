@@ -25,6 +25,9 @@ public class KartaPicaBean implements Serializable {
     @RestClient
     private ServisPartnerKlijent servisPartner;
     
+    @Inject
+    private PrijavaKorisnika prijavaKorisnika;
+    
     private List<KartaPica> stavkeKarte;
     private String poruka;
     private String porukaKlasa;
@@ -35,13 +38,19 @@ public class KartaPicaBean implements Serializable {
      */
     public String ucitajKartuPica() {
         try {
-            var odgovor = servisPartner.getKartaPica();
+            String korisnickoIme = prijavaKorisnika.getKorisnickoIme();
+            String lozinka = prijavaKorisnika.getLozinka();
+            
+            var odgovor = servisPartner.getKartaPica(korisnickoIme, lozinka);
             int status = odgovor.getStatus();
             
             if (status == 200) {
                 stavkeKarte = odgovor.readEntity(new GenericType<List<KartaPica>>() {});
                 poruka = "Karta pića je uspješno učitana.";
                 porukaKlasa = "uspjeh";
+            } else if (status == 401) {
+                poruka = "Greška pri komunikaciji s REST servisom: Unknown error, status code 401";
+                porukaKlasa = "greska";
             } else {
                 poruka = "Greška pri dohvaćanju karte pića. Status: " + status;
                 porukaKlasa = "greska";

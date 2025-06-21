@@ -13,7 +13,7 @@
             <h:commandButton value="Učitaj kartu pića" action="#{kartaPica.ucitajKartuPica}" />
         </h:form>
         
-        <h:dataTable value="#{kartaPica.stavkeKarte}" var="stavka" 
+        <h:dataTable value="#{kartaPica.stavkeKarte}" var="stavka"
                      styleClass="table" rendered="#{not empty kartaPica.stavkeKarte}">
             <h:column>
                 <f:facet name="header">ID</f:facet>
@@ -24,8 +24,8 @@
                 #{stavka.naziv()}
             </h:column>
             <h:column>
-                <f:facet name="header">Opis</f:facet>
-                #{stavka.opis()}
+                <f:facet name="header">Količina</f:facet>
+                #{stavka.kolicina()}
             </h:column>
             <h:column>
                 <f:facet name="header">Cijena</f:facet>
@@ -35,7 +35,7 @@
         
         <h:outputText value="Karta pića nije dostupna ili je prazna." 
                       rendered="#{empty kartaPica.stavkeKarte and kartaPica.ucitana}" />
-                      
+        
         <h:panelGroup rendered="#{not empty kartaPica.poruka}">
             <div class="poruka #{kartaPica.porukaKlasa}">
                 <h:outputText value="#{kartaPica.poruka}" />

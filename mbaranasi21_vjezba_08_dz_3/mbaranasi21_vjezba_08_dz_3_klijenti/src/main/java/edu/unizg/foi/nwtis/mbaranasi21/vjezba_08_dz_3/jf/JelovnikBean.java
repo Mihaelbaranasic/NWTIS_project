@@ -25,6 +25,9 @@ public class JelovnikBean implements Serializable {
     @RestClient
     private ServisPartnerKlijent servisPartner;
     
+    @Inject
+    private PrijavaKorisnika prijavaKorisnika;
+    
     private List<Jelovnik> stavkeJelovnika;
     private String poruka;
     private String porukaKlasa;
@@ -35,13 +38,19 @@ public class JelovnikBean implements Serializable {
      */
     public String ucitajJelovnik() {
         try {
-            var odgovor = servisPartner.getJelovnik();
+            String korisnickoIme = prijavaKorisnika.getKorisnickoIme();
+            String lozinka = prijavaKorisnika.getLozinka();
+            
+            var odgovor = servisPartner.getJelovnik(korisnickoIme, lozinka);
             int status = odgovor.getStatus();
             
             if (status == 200) {
                 stavkeJelovnika = odgovor.readEntity(new GenericType<List<Jelovnik>>() {});
                 poruka = "Jelovnik je uspješno učitan.";
                 porukaKlasa = "uspjeh";
+            } else if (status == 401) {
+                poruka = "Greška pri komunikaciji s REST servisom: Unknown error, status code 401";
+                porukaKlasa = "greska";
             } else {
                 poruka = "Greška pri dohvaćanju jelovnika. Status: " + status;
                 porukaKlasa = "greska";

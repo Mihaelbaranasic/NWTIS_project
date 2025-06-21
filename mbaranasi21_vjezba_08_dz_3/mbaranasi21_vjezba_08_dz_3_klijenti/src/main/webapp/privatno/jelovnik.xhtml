@@ -13,7 +13,7 @@
             <h:commandButton value="Učitaj jelovnik" action="#{jelovnik.ucitajJelovnik}" />
         </h:form>
         
-        <h:dataTable value="#{jelovnik.stavkeJelovnika}" var="stavka" 
+        <h:dataTable value="#{jelovnik.stavkeJelovnika}" var="stavka"
                      styleClass="table" rendered="#{not empty jelovnik.stavkeJelovnika}">
             <h:column>
                 <f:facet name="header">ID</f:facet>
@@ -24,10 +24,6 @@
                 #{stavka.naziv()}
             </h:column>
             <h:column>
-                <f:facet name="header">Opis</f:facet>
-                #{stavka.opis()}
-            </h:column>
-            <h:column>
                 <f:facet name="header">Cijena</f:facet>
                 #{stavka.cijena()} kn
             </h:column>
@@ -35,7 +31,7 @@
         
         <h:outputText value="Jelovnik nije dostupan ili je prazan." 
                       rendered="#{empty jelovnik.stavkeJelovnika and jelovnik.ucitan}" />
-                      
+        
         <h:panelGroup rendered="#{not empty jelovnik.poruka}">
             <div class="poruka #{jelovnik.porukaKlasa}">
                 <h:outputText value="#{jelovnik.poruka}" />

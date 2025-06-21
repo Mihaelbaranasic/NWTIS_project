@@ -50,8 +50,11 @@ public class Narudzbe implements Serializable {
      */
     public String kreirajNovuNarudzbu() {
         try {
+            String korisnickoIme = prijavaKorisnika.getKorisnickoIme();
+            String lozinka = prijavaKorisnika.getLozinka();
+            
             Narudzba novaNarudzba = new Narudzba(
-                prijavaKorisnika.getKorisnickoIme(),
+                korisnickoIme,
                 "0",
                 true,
                 0.0f,
@@ -59,7 +62,7 @@ public class Narudzbe implements Serializable {
                 System.currentTimeMillis()
             );
             
-            var odgovor = servisPartner.postNarudzba(novaNarudzba);
+            var odgovor = servisPartner.postNarudzba(korisnickoIme, lozinka, novaNarudzba);
             int status = odgovor.getStatus();
             
             if (status == 201) {
@@ -91,10 +94,13 @@ public class Narudzbe implements Serializable {
      */
     public String dodajJelo() {
         try {
-            var odgovor = servisPartner.postJelo(jeloId, jeloKolicina);
+            String korisnickoIme = prijavaKorisnika.getKorisnickoIme();
+            String lozinka = prijavaKorisnika.getLozinka();
+            
+            var odgovor = servisPartner.postJelo(korisnickoIme, lozinka, jeloId, jeloKolicina);
             int status = odgovor.getStatus();
             
-            if (status == 200) {
+            if (status == 201) {
                 jelaStavke.add(new NarudzbaStavka(
                     "Jelo ID: " + jeloId, 
                     jeloKolicina, 
@@ -121,10 +127,13 @@ public class Narudzbe implements Serializable {
      */
     public String dodajPice() {
         try {
-            var odgovor = servisPartner.postPice(piceId, piceKolicina);
+            String korisnickoIme = prijavaKorisnika.getKorisnickoIme();
+            String lozinka = prijavaKorisnika.getLozinka();
+            
+            var odgovor = servisPartner.postPice(korisnickoIme, lozinka, piceId, piceKolicina);
             int status = odgovor.getStatus();
             
-            if (status == 200) {
+            if (status == 201) {
                 picaStavke.add(new NarudzbaStavka(
                     "Piće ID: " + piceId, 
                     piceKolicina, 
@@ -151,10 +160,13 @@ public class Narudzbe implements Serializable {
      */
     public String platiNarudzbu() {
         try {
-            var odgovor = servisPartner.postRacun();
+            String korisnickoIme = prijavaKorisnika.getKorisnickoIme();
+            String lozinka = prijavaKorisnika.getLozinka();
+            
+            var odgovor = servisPartner.postRacun(korisnickoIme, lozinka);
             int status = odgovor.getStatus();
             
-            if (status == 200) {
+            if (status == 201) {
                 imaAktivnuNarudzbu = false;
                 narudzbaStavke.clear();
                 jelaStavke.clear();
@@ -185,7 +197,10 @@ public class Narudzbe implements Serializable {
      */
     public String osvjeziNarudzbu() {
         try {
-            var odgovor = servisPartner.getNarudzba();
+            String korisnickoIme = prijavaKorisnika.getKorisnickoIme();
+            String lozinka = prijavaKorisnika.getLozinka();
+            
+            var odgovor = servisPartner.getNarudzba(korisnickoIme, lozinka);
             int status = odgovor.getStatus();
             
             if (status == 200) {
@@ -202,6 +217,7 @@ public class Narudzbe implements Serializable {
         return null;
     }
 
+    
     public boolean isImaAktivnuNarudzbu() {
         return imaAktivnuNarudzbu;
     }

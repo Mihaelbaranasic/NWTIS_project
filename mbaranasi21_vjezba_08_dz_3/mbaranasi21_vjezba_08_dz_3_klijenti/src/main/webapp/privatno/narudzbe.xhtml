@@ -9,7 +9,6 @@
     <h:panelGroup rendered="#{prijavaKorisnika.partnerOdabran}">
         <p><strong>Odabrani partner:</strong> #{prijavaKorisnika.odabraniPartner.naziv()}</p>
         
-        <!-- Nova narudžba - samo ako nema aktivne -->
         <h:panelGroup rendered="#{!narudzbe.imaAktivnuNarudzbu}">
             <h3>Nova narudžba</h3>
             <h:form>
@@ -18,18 +17,15 @@
             </h:form>
         </h:panelGroup>
         
-        <!-- Upravljanje aktivnom narudžbom -->
         <h:panelGroup rendered="#{narudzbe.imaAktivnuNarudzbu}">
             <h3>Aktivna narudžba</h3>
             
-            <!-- Gumb za plaćanje -->
             <h:form style="margin-bottom: 20px;">
                 <h:commandButton value="Plati narudžbu" 
                                action="#{narudzbe.platiNarudzbu}"
                                styleClass="plati-btn" />
             </h:form>
             
-            <!-- Dodavanje jela -->
             <h:form style="margin-bottom: 15px;">
                 <h3>Dodaj jelo</h3>
                 <table>
@@ -50,7 +46,6 @@
                 </table>
             </h:form>
             
-            <!-- Dodavanje pića -->
             <h:form style="margin-bottom: 15px;">
                 <h3>Dodaj piće</h3>
                 <table>
@@ -71,13 +66,11 @@
                 </table>
             </h:form>
             
-            <!-- Pregled trenutne narudžbe -->
             <h:form>
                 <h:commandButton value="Osvježi pregled narudžbe" 
                                action="#{narudzbe.osvjeziNarudzbu}" />
             </h:form>
             
-            <!-- Prikaz stavki narudžbe -->
             <h:panelGroup rendered="#{not empty narudzbe.narudzbaStavke}">
                 <h3>Stavke narudžbe</h3>
                 <div style="display: flex;">
