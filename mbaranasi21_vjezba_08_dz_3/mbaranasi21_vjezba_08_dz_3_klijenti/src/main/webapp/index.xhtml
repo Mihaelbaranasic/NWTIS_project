@@ -10,6 +10,9 @@
 	    <li><h:link outcome="provjera.xhtml" value="Provjera rada poslužitelja" /></li>
 	    <li><h:link outcome="partneri.xhtml" value="Pregled partnera/restorana" /></li>
 	    <li><h:link outcome="noviKorisnik.xhtml" value="Dodavanje novog korisnika" /></li>
+	    <ui:fragment rendered="#{!prijavaKorisnika.prijavljen}">
+        <li><h:link outcome="prijavaKorisnika.xhtml" value="Prijava korisnika" /></li>
+    </ui:fragment>
 	</ul>
 
     <ui:fragment rendered="#{prijavaKorisnika.prijavljen}">
