@@ -4,43 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Zadaća 3 - Nadzorna konzola Tvrtka</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        .status-panel {
-            border: 1px solid #ccc;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 5px;
-        }
-        .status-radi {
-            background-color: #d4edda;
-            border-color: #c3e6cb;
-            color: #155724;
-        }
-        .status-ne-radi {
-            background-color: #f8d7da;
-            border-color: #f5c6cb;
-            color: #721c24;
-        }
-        #poruka {
-            font-weight: bold;
-        }
-        #statusTvrtka {
-            font-size: 18px;
-            font-weight: bold;
-        }
-        #brojObracuna {
-            font-size: 16px;
-            color: #007bff;
-        }
-        #internaPoruka {
-            font-style: italic;
-            margin-top: 10px;
-        }
-    </style>
 </head>
 <body>
     <h1>Nadzorna konzola Tvrtka</h1>

@@ -1,6 +1,6 @@
 CREATE USER "nwtis_1" PASSWORD "nwtis#1";
 
-SELECT * FROM obracuni;
+SELECT * FROM korisnici;
 
 CREATE ROLE "aplikacija";
 

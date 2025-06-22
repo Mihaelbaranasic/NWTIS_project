@@ -114,13 +114,13 @@
 			<artifactId>mbaranasi21_vjezba_08_dz_3_lib_podaci</artifactId>
 			<version>1.3.0</version>
 		</dependency>
-		<!--
+		
 		<dependency>
 			<groupId>edu.unizg.foi.nwtis.mbaranasi21</groupId>
 			<artifactId>mbaranasi21_vjezba_08_dz_3_lib_rest</artifactId>
 			<version>1.1.0</version>
 		</dependency>
-		-->
+		
 		<dependency>
 			<groupId>edu.unizg.foi.nwtis.mbaranasi21</groupId>
 			<artifactId>mbaranasi21_vjezba_08_dz_3_jpa</artifactId>

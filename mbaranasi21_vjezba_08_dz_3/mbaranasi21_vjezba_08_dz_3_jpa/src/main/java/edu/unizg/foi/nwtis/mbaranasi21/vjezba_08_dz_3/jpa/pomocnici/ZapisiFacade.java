@@ -138,4 +138,86 @@ public class ZapisiFacade extends EntityManagerProducer implements Serializable 
         }
         return zapisi;
     }
+    
+    /**
+     * Pronalazi zapise za određenog korisnika u vremenskom rasponu
+     * 
+     * @param korisnickoIme korisničko ime
+     * @param vrijemeOd početno vrijeme filtera (unix timestamp)
+     * @param vrijemeDo završno vrijeme filtera (unix timestamp)
+     * @return lista zapis entiteta za korisnika
+     */
+    public List<Zapisi> findByUserAndTimeRange(String korisnickoIme, Long vrijemeOd, Long vrijemeDo) {
+        CriteriaQuery<Zapisi> cq = cb.createQuery(Zapisi.class);
+        Root<Zapisi> zapisi = cq.from(Zapisi.class);
+        
+        Expression<String> zaKorisnika = zapisi.get(Zapisi_.korisnickoime);
+        Expression<Timestamp> zaVrijeme = zapisi.get(Zapisi_.vrijeme);
+        
+        if (vrijemeOd != null && vrijemeDo != null) {
+            cq.where(cb.and(
+                cb.equal(zaKorisnika, korisnickoIme),
+                cb.between(zaVrijeme, new Timestamp(vrijemeOd), new Timestamp(vrijemeDo))
+            ));
+        } else {
+            cq.where(cb.equal(zaKorisnika, korisnickoIme));
+        }
+        
+        cq.orderBy(cb.desc(zaVrijeme));
+        
+        TypedQuery<Zapisi> q = getEntityManager().createQuery(cq);
+        return q.getResultList();
+    }
+
+    /**
+     * Pronalazi sve zapise u vremenskom rasponu
+     * 
+     * @param vrijemeOd početno vrijeme filtera (unix timestamp)
+     * @param vrijemeDo završno vrijeme filtera (unix timestamp)
+     * @return lista zapis entiteta
+     */
+    public List<Zapisi> findByTimeRange(Long vrijemeOd, Long vrijemeDo) {
+        CriteriaQuery<Zapisi> cq = cb.createQuery(Zapisi.class);
+        Root<Zapisi> zapisi = cq.from(Zapisi.class);
+        
+        Expression<Timestamp> zaVrijeme = zapisi.get(Zapisi_.vrijeme);
+        
+        if (vrijemeOd != null && vrijemeDo != null) {
+            cq.where(cb.between(zaVrijeme, new Timestamp(vrijemeOd), new Timestamp(vrijemeDo)));
+        }
+        
+        cq.orderBy(cb.desc(zaVrijeme));
+        
+        TypedQuery<Zapisi> q = getEntityManager().createQuery(cq);
+        return q.getResultList();
+    }
+
+    /**
+     * Dodaje novi zapis s trenutnim vremenom
+     * 
+     * @param korisnickoIme korisničko ime
+     * @param opisRada opis aktivnosti
+     * @param adresaRacunala adresa računala
+     * @param ipAdresa IP adresa računala
+     */
+    public void dodajZapis(String korisnickoIme, String opisRada, String adresaRacunala, String ipAdresa) {
+        Zapisi zapis = new Zapisi();
+        zapis.setKorisnickoime(korisnickoIme);
+        zapis.setOpisrada(opisRada);
+        zapis.setAdresaracunala(adresaRacunala);
+        zapis.setIpadresaracunala(ipAdresa);
+        zapis.setVrijeme(new Timestamp(System.currentTimeMillis()));
+        
+        create(zapis);
+    }
+
+    /**
+     * Dohvaća sve zapise kao POJO listu
+     * 
+     * @return lista zapis POJO objekata
+     */
+    public List<Zapis> dohvatiSve() {
+        List<Zapisi> entiteti = findAll();
+        return pretvori(entiteti);
+    }
 }

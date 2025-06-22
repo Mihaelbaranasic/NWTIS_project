@@ -1,15 +1,14 @@
 package edu.unizg.foi.nwtis.mbaranasi21.vjezba_08_dz_3.jf;
 
 import java.io.Serializable;
-import org.eclipse.microprofile.rest.client.inject.RestClient;
 import edu.unizg.foi.nwtis.podaci.Korisnik;
-import edu.unizg.foi.nwtis.mbaranasi21.vjezba_08_dz_3.ServisPartnerKlijent;
+import edu.unizg.foi.nwtis.mbaranasi21.vjezba_08_dz_3.jpa.pomocnici.KorisniciFacade;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 /**
- * Backing bean za prikaz detalja korisnika putem REST servisa
+ * Backing bean za prikaz detalja korisnika
  * 
  * @author mbaranasi21
  */
@@ -20,25 +19,38 @@ public class KorisnikDetalji implements Serializable {
     private static final long serialVersionUID = 1L;
     
     @Inject
-    @RestClient
-    private ServisPartnerKlijent servisPartner;
+    private KorisniciFacade korisniciFacade;
     
     private String korisnickoIme;
     private Korisnik korisnik;
+    private String poruka;
+    private String porukaKlasa;
 
     /**
-     * Učitava korisnika putem REST servisa na temelju korisničkog imena
+     * Učitava korisnika iz baze podataka na temelju korisničkog imena
      */
     public void ucitajKorisnika() {
         if (korisnickoIme != null && !korisnickoIme.trim().isEmpty()) {
             try {
-                var odgovor = servisPartner.getKorisnici();
-                if (odgovor.getStatus() == 200) {
-                    System.out.println("Tražim korisnika: " + korisnickoIme);
+                var korisnikEntitet = korisniciFacade.find(korisnickoIme.trim());
+                if (korisnikEntitet != null) {
+                    korisnik = korisniciFacade.pretvori(korisnikEntitet);
+                    poruka = "Korisnik uspješno učitan.";
+                    porukaKlasa = "uspjeh";
+                } else {
+                    korisnik = null;
+                    poruka = "Korisnik s tim korisničkim imenom nije pronađen.";
+                    porukaKlasa = "greska";
                 }
             } catch (Exception e) {
-                System.err.println("Greška pri dohvaćanju korisnika: " + e.getMessage());
+                korisnik = null;
+                poruka = "Greška pri dohvaćanju korisnika: " + e.getMessage();
+                porukaKlasa = "greska";
             }
+        } else {
+            korisnik = null;
+            poruka = "Unesite korisničko ime.";
+            porukaKlasa = "greska";
         }
     }
 
@@ -56,5 +68,21 @@ public class KorisnikDetalji implements Serializable {
 
     public void setKorisnik(Korisnik korisnik) {
         this.korisnik = korisnik;
+    }
+
+    public String getPoruka() {
+        return poruka;
+    }
+
+    public void setPoruka(String poruka) {
+        this.poruka = poruka;
+    }
+
+    public String getPorukaKlasa() {
+        return porukaKlasa;
+    }
+
+    public void setPorukaKlasa(String porukaKlasa) {
+        this.porukaKlasa = porukaKlasa;
     }
 }

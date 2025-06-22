@@ -22,7 +22,7 @@
     </div>
 
     <div class="section">
-        <h2>🏢 MVC - Tvrtka</h2>
+        <h2>MVC - Tvrtka</h2>
         
         <h3>Javni dio</h3>
         <ul>
@@ -61,7 +61,7 @@
     </div>
 
     <div class="section">
-        <h2>🍽️ Jakarta Faces - Partner</h2>
+        <h2>Jakarta Faces - Partner</h2>
         <ul>
             <li><a href="${pageContext.servletContext.contextPath}/index.xhtml">Početna stranica Partner</a></li>
         </ul>
@@ -69,7 +69,7 @@
     
     <% if (request.getUserPrincipal() != null) { %>
         <div class="section">
-            <h2>🚪 Odjava</h2>
+            <h2>Odjava</h2>
             <ul>
                 <li><a href="${pageContext.servletContext.contextPath}/privatno/odjavaKorisnika.xhtml">Odjava korisnika</a></li>
             </ul>

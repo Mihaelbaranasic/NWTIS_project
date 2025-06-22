@@ -155,4 +155,116 @@ public class ObracuniFacade extends EntityManagerProducer implements Serializabl
         }
         return obracuni;
     }
+    
+    /**
+     * Pronalazi obračune samo za jela u vremenskom rasponu
+     * 
+     * @param vrijemeOd početno vrijeme filtera (unix timestamp)
+     * @param vrijemeDo završno vrijeme filtera (unix timestamp)
+     * @return lista obračun entiteta za jela
+     */
+    public List<Obracuni> findJelaByTimeRange(Long vrijemeOd, Long vrijemeDo) {
+        CriteriaQuery<Obracuni> cq = cb.createQuery(Obracuni.class);
+        Root<Obracuni> obracuni = cq.from(Obracuni.class);
+        
+        Expression<Timestamp> zaVrijeme = obracuni.get(Obracuni_.vrijeme);
+        Expression<Boolean> zaJelo = obracuni.get(Obracuni_.jelo);
+        
+        if (vrijemeOd != null && vrijemeDo != null) {
+            cq.where(cb.and(
+                cb.equal(zaJelo, true),
+                cb.between(zaVrijeme, new Timestamp(vrijemeOd), new Timestamp(vrijemeDo))
+            ));
+        } else {
+            cq.where(cb.equal(zaJelo, true));
+        }
+        
+        cq.orderBy(cb.desc(zaVrijeme));
+        
+        TypedQuery<Obracuni> q = getEntityManager().createQuery(cq);
+        return q.getResultList();
+    }
+
+    /**
+     * Pronalazi obračune samo za pića u vremenskom rasponu
+     * 
+     * @param vrijemeOd početno vrijeme filtera (unix timestamp)
+     * @param vrijemeDo završno vrijeme filtera (unix timestamp)
+     * @return lista obračun entiteta za pića
+     */
+    public List<Obracuni> findPicaByTimeRange(Long vrijemeOd, Long vrijemeDo) {
+        CriteriaQuery<Obracuni> cq = cb.createQuery(Obracuni.class);
+        Root<Obracuni> obracuni = cq.from(Obracuni.class);
+        
+        Expression<Timestamp> zaVrijeme = obracuni.get(Obracuni_.vrijeme);
+        Expression<Boolean> zaJelo = obracuni.get(Obracuni_.jelo);
+        
+        if (vrijemeOd != null && vrijemeDo != null) {
+            cq.where(cb.and(
+                cb.equal(zaJelo, false),
+                cb.between(zaVrijeme, new Timestamp(vrijemeOd), new Timestamp(vrijemeDo))
+            ));
+        } else {
+            cq.where(cb.equal(zaJelo, false));
+        }
+        
+        cq.orderBy(cb.desc(zaVrijeme));
+        
+        TypedQuery<Obracuni> q = getEntityManager().createQuery(cq);
+        return q.getResultList();
+    }
+
+    /**
+     * Pronalazi obračune za određenog partnera u vremenskom rasponu
+     * 
+     * @param partnerId identifikator partnera
+     * @param vrijemeOd početno vrijeme filtera (unix timestamp)
+     * @param vrijemeDo završno vrijeme filtera (unix timestamp)
+     * @return lista obračun entiteta za partnera
+     */
+    public List<Obracuni> findByPartnerAndTimeRange(int partnerId, Long vrijemeOd, Long vrijemeDo) {
+        CriteriaQuery<Obracuni> cq = cb.createQuery(Obracuni.class);
+        Root<Obracuni> obracuni = cq.from(Obracuni.class);
+        Join<Obracuni, Partneri> partnerJoin = obracuni.join(Obracuni_.partneri);
+        
+        Expression<Integer> zaPartner = partnerJoin.get("id");
+        Expression<Timestamp> zaVrijeme = obracuni.get(Obracuni_.vrijeme);
+        
+        if (vrijemeOd != null && vrijemeDo != null) {
+            cq.where(cb.and(
+                cb.equal(zaPartner, partnerId),
+                cb.between(zaVrijeme, new Timestamp(vrijemeOd), new Timestamp(vrijemeDo))
+            ));
+        } else {
+            cq.where(cb.equal(zaPartner, partnerId));
+        }
+        
+        cq.orderBy(cb.desc(zaVrijeme));
+        
+        TypedQuery<Obracuni> q = getEntityManager().createQuery(cq);
+        return q.getResultList();
+    }
+
+    /**
+     * Pronalazi sve obračune u vremenskom rasponu
+     * 
+     * @param vrijemeOd početno vrijeme filtera (unix timestamp)
+     * @param vrijemeDo završno vrijeme filtera (unix timestamp)
+     * @return lista obračun entiteta
+     */
+    public List<Obracuni> findByTimeRange(Long vrijemeOd, Long vrijemeDo) {
+        CriteriaQuery<Obracuni> cq = cb.createQuery(Obracuni.class);
+        Root<Obracuni> obracuni = cq.from(Obracuni.class);
+        
+        Expression<Timestamp> zaVrijeme = obracuni.get(Obracuni_.vrijeme);
+        
+        if (vrijemeOd != null && vrijemeDo != null) {
+            cq.where(cb.between(zaVrijeme, new Timestamp(vrijemeOd), new Timestamp(vrijemeDo)));
+        }
+        
+        cq.orderBy(cb.desc(zaVrijeme));
+        
+        TypedQuery<Obracuni> q = getEntityManager().createQuery(cq);
+        return q.getResultList();
+    }
 }

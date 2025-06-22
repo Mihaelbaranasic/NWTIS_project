@@ -15,7 +15,11 @@ public class Zapisi implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="ZAPISI_ID_GENERATOR", sequenceName="ZAPISI_ID")
+	@SequenceGenerator(
+		    name="ZAPISI_ID_GENERATOR",
+		    sequenceName="ZAPISI_ID",
+		    allocationSize=1
+		)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="ZAPISI_ID_GENERATOR")
 	private int id;
 

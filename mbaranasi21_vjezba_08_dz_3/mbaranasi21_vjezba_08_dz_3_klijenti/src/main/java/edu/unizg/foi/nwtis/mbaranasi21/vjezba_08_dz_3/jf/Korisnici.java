@@ -16,12 +16,12 @@ import jakarta.inject.Named;
 @RequestScoped
 @Named("korisnici")
 public class Korisnici implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     @Inject
     private KorisniciFacade korisniciFacade;
-    
+
     private String ime;
     private String prezime;
     private List<Korisnik> korisnici;
@@ -31,15 +31,17 @@ public class Korisnici implements Serializable {
 
     /**
      * Pretražuje korisnike po imenu i prezimenu
+     * 
+     * @return navigacija (null za ostanak na istoj stranici)
      */
     public String pretraziKorisnike() {
         try {
-            String imePattern = (ime != null && !ime.trim().isEmpty()) ? "%" + ime.trim() + "%" : "%";
-            String prezimePattern = (prezime != null && !prezime.trim().isEmpty()) ? "%" + prezime.trim() + "%" : "%";
-            
-            var korisniciFacade = this.korisniciFacade.findAll(prezimePattern, imePattern);
-            korisnici = this.korisniciFacade.pretvori(korisniciFacade);
-            
+            String imePattern = (ime != null && !ime.trim().isEmpty()) ? ime.trim() : "";
+            String prezimePattern = (prezime != null && !prezime.trim().isEmpty()) ? prezime.trim() : "";
+
+            var korisniciEntiteti = korisniciFacade.findAll(prezimePattern, imePattern);
+            korisnici = korisniciFacade.pretvori(korisniciEntiteti);
+
             poruka = "Pronađeno je " + korisnici.size() + " korisnika.";
             porukaKlasa = "uspjeh";
             pretrazeno = true;
@@ -53,16 +55,17 @@ public class Korisnici implements Serializable {
 
     /**
      * Prikazuje sve korisnike
+     * 
+     * @return navigacija (null za ostanak na istoj stranici)
      */
     public String prikaziSveKorisnike() {
         try {
-            var korisniciEntiteti = korisniciFacade.findAll();
-            korisnici = korisniciFacade.pretvori(korisniciEntiteti);
-            
+            korisnici = korisniciFacade.dohvatiSve();
+
             poruka = "Prikazano je " + korisnici.size() + " korisnika.";
             porukaKlasa = "uspjeh";
             pretrazeno = true;
-            
+
             ime = null;
             prezime = null;
         } catch (Exception e) {

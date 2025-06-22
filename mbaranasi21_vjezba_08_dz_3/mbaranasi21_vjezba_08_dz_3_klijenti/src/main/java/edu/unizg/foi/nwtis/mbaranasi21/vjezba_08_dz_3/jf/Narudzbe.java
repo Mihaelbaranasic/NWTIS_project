@@ -97,7 +97,17 @@ public class Narudzbe implements Serializable {
             String korisnickoIme = prijavaKorisnika.getKorisnickoIme();
             String lozinka = prijavaKorisnika.getLozinka();
             
-            var odgovor = servisPartner.postJelo(korisnickoIme, lozinka, jeloId, jeloKolicina);
+            // Kreiraj Narudzba objekt s podacima jela
+            Narudzba jeloNarudzba = new Narudzba(
+                String.valueOf(jeloId),
+                "jelo",
+                true,
+                0.0f,
+                (float) jeloKolicina,
+                System.currentTimeMillis()
+            );
+            
+            var odgovor = servisPartner.postJelo(korisnickoIme, lozinka, jeloNarudzba);
             int status = odgovor.getStatus();
             
             if (status == 201) {
@@ -130,7 +140,17 @@ public class Narudzbe implements Serializable {
             String korisnickoIme = prijavaKorisnika.getKorisnickoIme();
             String lozinka = prijavaKorisnika.getLozinka();
             
-            var odgovor = servisPartner.postPice(korisnickoIme, lozinka, piceId, piceKolicina);
+            // Kreiraj Narudzba objekt s podacima pića
+            Narudzba piceNarudzba = new Narudzba(
+                String.valueOf(piceId),
+                "pice",
+                true,
+                0.0f,
+                (float) piceKolicina,
+                System.currentTimeMillis()
+            );
+            
+            var odgovor = servisPartner.postPice(korisnickoIme, lozinka, piceNarudzba);
             int status = odgovor.getStatus();
             
             if (status == 201) {
@@ -217,6 +237,7 @@ public class Narudzbe implements Serializable {
         return null;
     }
 
+    // Getter i setter metode
     
     public boolean isImaAktivnuNarudzbu() {
         return imaAktivnuNarudzbu;
@@ -302,13 +323,36 @@ public class Narudzbe implements Serializable {
             this.iznos = kolicina * cijena;
         }
 
-        public String getNaziv() { return naziv; }
-        public void setNaziv(String naziv) { this.naziv = naziv; }
-        public int getKolicina() { return kolicina; }
-        public void setKolicina(int kolicina) { this.kolicina = kolicina; }
-        public double getCijena() { return cijena; }
-        public void setCijena(double cijena) { this.cijena = cijena; }
-        public double getIznos() { return iznos; }
-        public void setIznos(double iznos) { this.iznos = iznos; }
+        public String getNaziv() { 
+            return naziv; 
+        }
+        
+        public void setNaziv(String naziv) { 
+            this.naziv = naziv; 
+        }
+        
+        public int getKolicina() { 
+            return kolicina; 
+        }
+        
+        public void setKolicina(int kolicina) { 
+            this.kolicina = kolicina; 
+        }
+        
+        public double getCijena() { 
+            return cijena; 
+        }
+        
+        public void setCijena(double cijena) { 
+            this.cijena = cijena; 
+        }
+        
+        public double getIznos() { 
+            return iznos; 
+        }
+        
+        public void setIznos(double iznos) { 
+            this.iznos = iznos; 
+        }
     }
 }

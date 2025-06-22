@@ -9,6 +9,7 @@ import jakarta.inject.Named;
 
 /**
  * Backing bean za aktiviranje spavanja Partner servisa
+ * Spavanje ne zahtijeva autentifikaciju jer je administrativna funkcija
  * 
  * @author mbaranasi21
  */
@@ -28,6 +29,7 @@ public class Spavanje implements Serializable {
 
     /**
      * Aktivira spavanje Partner servisa
+     * Spavanje ne zahtijeva autentifikaciju
      */
     public String aktivirajSpavanje() {
         try {
@@ -45,6 +47,7 @@ public class Spavanje implements Serializable {
         } catch (Exception e) {
             poruka = "Greška pri komunikaciji s REST servisom: " + e.getMessage();
             porukaKlasa = "greska";
+            e.printStackTrace();
         }
         return null;
     }

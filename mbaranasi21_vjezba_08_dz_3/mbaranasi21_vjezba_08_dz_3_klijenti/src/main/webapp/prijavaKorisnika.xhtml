@@ -7,10 +7,19 @@
 		<h2>Prijava korisnika</h2>
 		<br />	
         <form method="POST" action="j_security_check">
-                <label>Korisničko ime </label> <input type="text" name="j_username"/><br/>
-                <label>Lozinka </label> <input type="password" name="j_password"/><br/>
-                <input type="submit" value=" Prijavi se "/>
-        </form>
+    <label>Korisničko ime </label> 
+    <input type="text" name="j_username"/><br/>
+    <label>Lozinka </label> 
+    <input type="password" name="j_password"/><br/>
+    <input type="submit" value=" Prijavi se "/>
+    <script>
+        window.addEventListener('load', function() {
+            if (#{prijavaKorisnika.prijavljen}) {
+                window.location.href = '#{request.contextPath}/index.xhtml';
+            }
+        });
+    </script>
+</form>
 	</ui:define>
 	<ui:define name="nav">
 	</ui:define>	
