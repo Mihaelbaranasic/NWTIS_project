@@ -1,0 +1,49 @@
+<ui:composition template="predlozak.xhtml"
+    xmlns:ui="jakarta.faces.facelets" xmlns:h="jakarta.faces.html"
+    xmlns:f="jakarta.faces.core">
+
+<ui:define name="title">Zadaća 3 - Početak Partner</ui:define>
+<ui:define name="content">
+
+    <h2>Javni dio</h2>
+    <ul>
+	    <li><h:link outcome="provjera.xhtml" value="Provjera rada poslužitelja" /></li>
+	    <li><h:link outcome="partneri.xhtml" value="Pregled partnera/restorana" /></li>
+	    <li><h:link outcome="noviKorisnik.xhtml" value="Dodavanje novog korisnika" /></li>
+	    <ui:fragment rendered="#{!prijavaKorisnika.prijavljen}">
+        <li><h:link outcome="prijavaKorisnika.xhtml" value="Prijava korisnika" /></li>
+    </ui:fragment>
+	</ul>
+
+    <ui:fragment rendered="#{prijavaKorisnika.prijavljen}">
+        <h2>Privatni dio</h2>
+        <ul>
+            <ui:fragment rendered="#{!prijavaKorisnika.partnerOdabran}">
+                <li><h:link outcome="privatno/odabirPartnera.xhtml" value="Odabir partnera" /></li>
+            </ui:fragment>
+            
+            <ui:fragment rendered="#{prijavaKorisnika.partnerOdabran}">
+                <li><h:link outcome="privatno/jelovnik.xhtml" value="Pregled jelovnika" /></li>
+                <li><h:link outcome="privatno/kartaPica.xhtml" value="Pregled karte pića" /></li>
+                <li><h:link outcome="privatno/narudzbe.xhtml" value="Upravljanje narudžbama" /></li>
+            </ui:fragment>
+            
+            <li><h:link outcome="privatno/odjavaKorisnika.xhtml" value="Odjava korisnika" /></li>
+        </ul>
+    </ui:fragment>
+
+    <ui:fragment rendered="#{prijavaKorisnika.prijavljen and request.isUserInRole('admin')}">
+        <h2>Administracijski dio</h2>
+        <ul>
+            <li><h:link outcome="admin/spavanje.xhtml" value="Aktiviranje spavanja" /></li>
+            <li><h:link outcome="admin/korisnici.xhtml" value="Pregled korisnika" /></li>
+            <li><h:link outcome="admin/obracuni.xhtml" value="Pregled obračuna" /></li>
+            <li><h:link outcome="admin/zapisi.xhtml" value="Pregled rada" /></li>
+            <li><h:link outcome="admin/nadzornaKonzolaPartnera.xhtml" value="Nadzorna konzola partnera" /></li>
+        </ul>
+    </ui:fragment>
+
+</ui:define>
+<ui:define name="nav">
+</ui:define>
+</ui:composition>

@@ -1,0 +1,40 @@
+<ui:composition template="predlozak.xhtml"
+    xmlns:ui="jakarta.faces.facelets" xmlns:h="jakarta.faces.html"
+    xmlns:f="jakarta.faces.core">
+
+<ui:define name="title">Pregled partnera/restorana</ui:define>
+<ui:define name="content">
+    <h2>Pregled partnera/restorana</h2>
+    
+    <h:dataTable value="#{partneri.partneri}" var="partner" 
+                 styleClass="table" rendered="#{not empty partneri.partneri}">
+        <h:column>
+            <f:facet name="header">ID</f:facet>
+            #{partner.id()}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Naziv</f:facet>
+            #{partner.naziv()}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Vrsta kuhinje</f:facet>
+            #{partner.vrstaKuhinje()}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Adresa</f:facet>
+            #{partner.adresa()}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Akcije</f:facet>
+            <h:link outcome="partnerDetalji.xhtml" value="Detalji">
+                <f:param name="id" value="#{partner.id()}" />
+            </h:link>
+        </h:column>
+    </h:dataTable>
+    
+    <h:outputText value="Nema dostupnih partnera." 
+                  rendered="#{empty partneri.partneri}" />
+</ui:define>
+<ui:define name="nav">
+</ui:define>
+</ui:composition>

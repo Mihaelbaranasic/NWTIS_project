@@ -1,0 +1,24 @@
+<ui:composition template="predlozak.xhtml"
+    xmlns:ui="jakarta.faces.facelets" xmlns:h="jakarta.faces.html"
+    xmlns:f="jakarta.faces.core">
+
+<ui:define name="title">Provjera rada poslužitelja Partner</ui:define>
+<ui:define name="content">
+    <h2>Provjera rada poslužitelja Partner</h2>
+    
+    <h:form>
+        <h:commandButton value="Provjeri status poslužitelja" 
+                        action="#{provjera.provjeriStatus}" />
+        
+        <br/><br/>
+        
+        <h:panelGroup rendered="#{not empty provjera.statusPoruka}">
+            <div class="poruka #{provjera.statusKlasa}">
+                <h:outputText value="#{provjera.statusPoruka}" />
+            </div>
+        </h:panelGroup>
+    </h:form>
+</ui:define>
+<ui:define name="nav">
+</ui:define>
+</ui:composition>
