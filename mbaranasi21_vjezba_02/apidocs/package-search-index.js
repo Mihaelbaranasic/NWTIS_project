@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"edu.unizg.foi.nwtis.konfiguracije"}];updateSearchResults();

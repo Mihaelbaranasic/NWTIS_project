@@ -1,0 +1,26 @@
+<ui:composition template="predlozak.xhtml"
+	xmlns:ui="jakarta.faces.facelets" xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core">
+
+	<ui:define name="title">Zadaća 3 - Prijava korisnika</ui:define>
+	<ui:define name="content">
+		<h2>Prijava korisnika</h2>
+		<br />	
+        <form method="POST" action="j_security_check">
+    <label>Korisničko ime </label> 
+    <input type="text" name="j_username"/><br/>
+    <label>Lozinka </label> 
+    <input type="password" name="j_password"/><br/>
+    <input type="submit" value=" Prijavi se "/>
+    <script>
+        window.addEventListener('load', function() {
+            if (#{prijavaKorisnika.prijavljen}) {
+                window.location.href = '#{request.contextPath}/index.xhtml';
+            }
+        });
+    </script>
+</form>
+	</ui:define>
+	<ui:define name="nav">
+	</ui:define>	
+</ui:composition>

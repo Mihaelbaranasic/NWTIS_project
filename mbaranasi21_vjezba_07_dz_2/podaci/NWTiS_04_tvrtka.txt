@@ -1,0 +1,14 @@
+kuhinja_1=MK;Mediteranska kuhinja
+kuhinja_2=KK;Kontinentalna kuhinja
+kuhinja_3=VK;Vegetarijanska kuhinja
+mreznaVrataKraj=8000
+mreznaVrataRegistracija=8001
+mreznaVrataRad=8002
+brojCekaca=10
+pauzaDretve=100
+datotekaPartnera=tvrtka.json
+datotekaKartaPica=kartaPica.json
+kodZaKraj=BABECABACC
+kodZaAdminTvrtke=AB12CD23EF45
+datotekaObracuna=obracun.json
+restAdresa=http://20.24.5.20:8080/nwtis/v1/api/tvrtka

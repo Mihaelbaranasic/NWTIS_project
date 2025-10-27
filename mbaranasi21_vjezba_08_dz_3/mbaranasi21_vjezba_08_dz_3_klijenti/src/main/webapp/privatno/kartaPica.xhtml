@@ -1,0 +1,51 @@
+<ui:composition template="../predlozak.xhtml"
+    xmlns:ui="jakarta.faces.facelets" xmlns:h="jakarta.faces.html"
+    xmlns:f="jakarta.faces.core">
+
+<ui:define name="title">Pregled karte pića</ui:define>
+<ui:define name="content">
+    <h2>Pregled karte pića odabranog partnera</h2>
+    
+    <h:panelGroup rendered="#{prijavaKorisnika.partnerOdabran}">
+        <p><strong>Odabrani partner:</strong> #{prijavaKorisnika.odabraniPartner.naziv()}</p>
+        
+        <h:form>
+            <h:commandButton value="Učitaj kartu pića" action="#{kartaPica.ucitajKartuPica}" />
+        </h:form>
+        
+        <h:dataTable value="#{kartaPica.stavkeKarte}" var="stavka"
+                     styleClass="table" rendered="#{not empty kartaPica.stavkeKarte}">
+            <h:column>
+                <f:facet name="header">ID</f:facet>
+                #{stavka.id()}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Naziv</f:facet>
+                #{stavka.naziv()}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Količina</f:facet>
+                #{stavka.kolicina()}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Cijena</f:facet>
+                #{stavka.cijena()} kn
+            </h:column>
+        </h:dataTable>
+        
+        <h:outputText value="Karta pića nije dostupna ili je prazna." 
+                      rendered="#{empty kartaPica.stavkeKarte and kartaPica.ucitana}" />
+        
+        <h:panelGroup rendered="#{not empty kartaPica.poruka}">
+            <div class="poruka #{kartaPica.porukaKlasa}">
+                <h:outputText value="#{kartaPica.poruka}" />
+            </div>
+        </h:panelGroup>
+    </h:panelGroup>
+    
+    <h:outputText value="Morate prvo odabrati partnera." 
+                  rendered="#{!prijavaKorisnika.partnerOdabran}" />
+</ui:define>
+<ui:define name="nav">
+</ui:define>
+</ui:composition>

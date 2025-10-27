@@ -1,0 +1,17 @@
+#NWTiS 2024.
+#Tue Apr 08 23:04:37 CEST 2025
+adresa=localhost
+brojCekaca=10
+gpsDuzina=16.32023
+gpsSirina=46.30154 
+id=3
+kodZaKraj=BABECABACC
+kuhinja=VK
+kvotaNarudzbi=5
+mreznaVrata=8030
+mreznaVrataKraj=8000
+mreznaVrataRad=8002
+mreznaVrataRegistracija=8001
+naziv=FOLT 3 - Vara\u00C5\u00BEdin, Ul. Bra\u00C4\u0087e Radi\u00C4\u0087 102
+pauzaDretve=100
+sigKod=1c37dd3e

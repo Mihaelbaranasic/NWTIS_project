@@ -1,0 +1,43 @@
+<ui:composition template="../predlozak.xhtml"
+    xmlns:ui="jakarta.faces.facelets" xmlns:h="jakarta.faces.html"
+    xmlns:f="jakarta.faces.core">
+
+<ui:define name="title">Detalji korisnika</ui:define>
+<ui:define name="content">
+    <f:metadata>
+        <f:viewParam name="korisnik" value="#{korisnikDetalji.korisnickoIme}" />
+        <f:viewAction action="#{korisnikDetalji.ucitajKorisnika}" />
+    </f:metadata>
+    
+    <h2>Detalji korisnika</h2>
+    
+    <h:panelGroup rendered="#{not empty korisnikDetalji.korisnik}">
+        <table class="detalji">
+            <tr>
+                <td><strong>Korisničko ime:</strong></td>
+                <td>#{korisnikDetalji.korisnik.korisnik()}</td>
+            </tr>
+            <tr>
+                <td><strong>Ime:</strong></td>
+                <td>#{korisnikDetalji.korisnik.ime()}</td>
+            </tr>
+            <tr>
+                <td><strong>Prezime:</strong></td>
+                <td>#{korisnikDetalji.korisnik.prezime()}</td>
+            </tr>
+            <tr>
+                <td><strong>Email:</strong></td>
+                <td>#{korisnikDetalji.korisnik.email()}</td>
+            </tr>
+        </table>
+    </h:panelGroup>
+    
+    <h:outputText value="Korisnik nije pronađen." 
+                  rendered="#{empty korisnikDetalji.korisnik}" />
+    
+    <br/><br/>
+    <h:link outcome="korisnici.xhtml" value="Povratak na popis korisnika" />
+</ui:define>
+<ui:define name="nav">
+</ui:define>
+</ui:composition>

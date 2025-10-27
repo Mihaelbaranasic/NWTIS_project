@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "naziv": "FOLT 1 - Varaždin, Pavlinska 9",
+    "vrstaKuhinje": "MK",
+    "adresa": "localhost",
+    "mreznaVrata": 8010,
+    "mreznaVrataKraj": 8011,
+    "gpsSirina": 46.30807,
+    "gpsDuzina": 16.34009,
+    "sigurnosniKod": "da53e5e7",
+    "adminKod": "CACEDACEAA"
+  },
+  {
+    "id": 2,
+    "naziv": "FOLT 2 - Varaždin, Ul. Julija Merlića 9",
+    "vrstaKuhinje": "KK",
+    "adresa": "localhost",
+    "mreznaVrata": 8020,
+    "mreznaVrataKraj": 8021,
+    "gpsSirina": 46.30838,
+    "gpsDuzina": 16.34782,
+    "sigurnosniKod": "e57a5998",
+    "adminKod": "CACEDACEAA"
+  }
+]

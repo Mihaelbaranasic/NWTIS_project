@@ -1,0 +1,47 @@
+<ui:composition template="../predlozak.xhtml"
+    xmlns:ui="jakarta.faces.facelets" xmlns:h="jakarta.faces.html"
+    xmlns:f="jakarta.faces.core">
+
+<ui:define name="title">Pregled jelovnika</ui:define>
+<ui:define name="content">
+    <h2>Pregled jelovnika odabranog partnera</h2>
+    
+    <h:panelGroup rendered="#{prijavaKorisnika.partnerOdabran}">
+        <p><strong>Odabrani partner:</strong> #{prijavaKorisnika.odabraniPartner.naziv()}</p>
+        
+        <h:form>
+            <h:commandButton value="Učitaj jelovnik" action="#{jelovnik.ucitajJelovnik}" />
+        </h:form>
+        
+        <h:dataTable value="#{jelovnik.stavkeJelovnika}" var="stavka"
+                     styleClass="table" rendered="#{not empty jelovnik.stavkeJelovnika}">
+            <h:column>
+                <f:facet name="header">ID</f:facet>
+                #{stavka.id()}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Naziv</f:facet>
+                #{stavka.naziv()}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Cijena</f:facet>
+                #{stavka.cijena()} kn
+            </h:column>
+        </h:dataTable>
+        
+        <h:outputText value="Jelovnik nije dostupan ili je prazan." 
+                      rendered="#{empty jelovnik.stavkeJelovnika and jelovnik.ucitan}" />
+        
+        <h:panelGroup rendered="#{not empty jelovnik.poruka}">
+            <div class="poruka #{jelovnik.porukaKlasa}">
+                <h:outputText value="#{jelovnik.poruka}" />
+            </div>
+        </h:panelGroup>
+    </h:panelGroup>
+    
+    <h:outputText value="Morate prvo odabrati partnera." 
+                  rendered="#{!prijavaKorisnika.partnerOdabran}" />
+</ui:define>
+<ui:define name="nav">
+</ui:define>
+</ui:composition>

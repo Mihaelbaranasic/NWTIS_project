@@ -1,0 +1,19 @@
+pero;localhost;8001;10;POPIS
+pero;localhost;8020;10;JELOVNIK mato
+pero;localhost;8020;10;JELOVNIK pero
+pero;localhost;8020;10;KARTAPIĆA mato
+pero;localhost;8020;10;KARTAPIĆA pero
+pero;localhost;8020;100;NARUDŽBA pero
+pero;localhost;8020;100;JELO pero KK1 2.0
+pero;localhost;8020;100;JELO pero KK3 5.0
+pero;localhost;8020;100;JELO pero KK5 4.0
+pero;localhost;8020;100;JELO pero KK7 3.0
+pero;localhost;8020;100;PIĆE pero p1 8.0
+mato;localhost;8020;10;NARUDŽBA mato
+mato;localhost;8020;20;PIĆE mato p10 2.0
+mato;localhost;8020;10;RAČUN mato
+pero;localhost;8020;10;PIĆE pero p14 9.0
+pero;localhost;8020;10;PIĆE pero p13 4.0
+pero;localhost;8020;100;RAČUN pero
+mato;localhost;8020;10;NARUDŽBA robi
+pero;localhost;8020;100;RAČUN robi

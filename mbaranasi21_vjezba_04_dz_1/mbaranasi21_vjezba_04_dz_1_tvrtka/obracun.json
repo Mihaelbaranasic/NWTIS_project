@@ -1,0 +1,34 @@
+[
+  {
+    "partner": 1,
+    "id": "MK2",
+    "jelo": true,
+    "kolicina": 12.0,
+    "cijena": 10.0,
+    "vrijeme": 1744827993116
+  },
+  {
+    "partner": 1,
+    "id": "MK1",
+    "jelo": true,
+    "kolicina": 24.0,
+    "cijena": 10.0,
+    "vrijeme": 1744827993116
+  },
+  {
+    "partner": 1,
+    "id": "MK1",
+    "jelo": true,
+    "kolicina": 30.0,
+    "cijena": 10.0,
+    "vrijeme": 1744833898366
+  },
+  {
+    "partner": 1,
+    "id": "MK2",
+    "jelo": true,
+    "kolicina": 15.0,
+    "cijena": 10.0,
+    "vrijeme": 1744833898366
+  }
+]

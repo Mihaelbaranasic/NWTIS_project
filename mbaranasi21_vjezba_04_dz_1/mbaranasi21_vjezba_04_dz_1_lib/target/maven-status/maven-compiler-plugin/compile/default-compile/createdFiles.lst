@@ -1,0 +1,7 @@
+edu/unizg/foi/nwtis/konfiguracije/KonfiguracijaJson.class
+edu/unizg/foi/nwtis/konfiguracije/NeispravnaKonfiguracija.class
+edu/unizg/foi/nwtis/konfiguracije/KonfiguracijaApstraktna.class
+edu/unizg/foi/nwtis/konfiguracije/KonfiguracijaXml.class
+edu/unizg/foi/nwtis/konfiguracije/KonfiguracijaBin.class
+edu/unizg/foi/nwtis/konfiguracije/KonfiguracijaTxt.class
+edu/unizg/foi/nwtis/konfiguracije/Konfiguracija.class

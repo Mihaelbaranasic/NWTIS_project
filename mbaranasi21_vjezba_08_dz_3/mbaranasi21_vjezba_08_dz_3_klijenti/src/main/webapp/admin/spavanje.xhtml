@@ -1,0 +1,32 @@
+<ui:composition template="../predlozak.xhtml"
+    xmlns:ui="jakarta.faces.facelets" xmlns:h="jakarta.faces.html"
+    xmlns:f="jakarta.faces.core">
+
+<ui:define name="title">Aktiviranje spavanja Partner servisa</ui:define>
+<ui:define name="content">
+    <h2>Aktiviranje spavanja Partner servisa</h2>
+    
+    <h:form>
+        <table class="obrazac">
+            <tr>
+                <td><h:outputLabel for="vrijeme" value="Vrijeme spavanja (sekunde):" /></td>
+                <td><h:inputText id="vrijeme" value="#{spavanje.vrijeme}" required="true" /></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <h:commandButton value="Aktiviraj spavanje" 
+                                   action="#{spavanje.aktivirajSpavanje}" />
+                </td>
+            </tr>
+        </table>
+        
+        <h:panelGroup rendered="#{not empty spavanje.poruka}">
+            <div class="poruka #{spavanje.porukaKlasa}">
+                <h:outputText value="#{spavanje.poruka}" />
+            </div>
+        </h:panelGroup>
+    </h:form>
+</ui:define>
+<ui:define name="nav">
+</ui:define>
+</ui:composition>

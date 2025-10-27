@@ -1,0 +1,62 @@
+[
+	{
+		"id": "p1",
+		"naziv": "Voda",
+		"kolicina": 0.7,
+		"cijena": 3
+	},
+	{
+		"id": "p2",
+		"naziv": "Mineralna voda",
+		"kolicina": 1,
+		"cijena": 3
+	},
+	{
+		"id": "p3",
+		"naziv": "Coca Cola",
+		"kolicina": 0.25,
+		"cijena": 4
+	},
+	{
+		"id": "p4",
+		"naziv": "Schweppes Bitter Lemon",
+		"kolicina": 0.25,
+		"cijena": 4
+	},
+	{
+		"id": "p5",
+		"naziv": "Sok od borovnice",
+		"kolicina": 0.2,
+		"cijena": 4
+	},
+	{
+		"id": "p10",
+		"naziv": "Laško pivo",
+		"kolicina": 0.5,
+		"cijena": 5
+	},
+	{
+		"id": "p11",
+		"naziv": "Bijelo vino",
+		"kolicina": 0.75,
+		"cijena": 15
+	},
+	{
+		"id": "p12",
+		"naziv": "Crno vino",
+		"kolicina": 0.75,
+		"cijena": 15
+	},
+	{
+		"id": "p13",
+		"naziv": "Čaj",
+		"kolicina": 0.2,
+		"cijena": 3
+	},
+	{
+		"id": "p14",
+		"naziv": "Kava",
+		"kolicina": 0.05,
+		"cijena": 3
+	}
+]

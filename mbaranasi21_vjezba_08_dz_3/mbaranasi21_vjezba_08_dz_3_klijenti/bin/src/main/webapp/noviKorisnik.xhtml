@@ -1,0 +1,48 @@
+<ui:composition template="predlozak.xhtml"
+    xmlns:ui="jakarta.faces.facelets" xmlns:h="jakarta.faces.html"
+    xmlns:f="jakarta.faces.core">
+
+<ui:define name="title">Dodavanje novog korisnika</ui:define>
+<ui:define name="content">
+    <h2>Dodavanje novog korisnika</h2>
+    
+    <h:form>
+        <table class="obrazac">
+            <tr>
+                <td><h:outputLabel for="korisnik" value="Korisničko ime:" /></td>
+                <td><h:inputText id="korisnik" value="#{noviKorisnik.korisnik}" required="true" /></td>
+            </tr>
+            <tr>
+                <td><h:outputLabel for="lozinka" value="Lozinka:" /></td>
+                <td><h:inputSecret id="lozinka" value="#{noviKorisnik.lozinka}" required="true" /></td>
+            </tr>
+            <tr>
+                <td><h:outputLabel for="ime" value="Ime:" /></td>
+                <td><h:inputText id="ime" value="#{noviKorisnik.ime}" required="true" /></td>
+            </tr>
+            <tr>
+                <td><h:outputLabel for="prezime" value="Prezime:" /></td>
+                <td><h:inputText id="prezime" value="#{noviKorisnik.prezime}" required="true" /></td>
+            </tr>
+            <tr>
+                <td><h:outputLabel for="email" value="Email:" /></td>
+                <td><h:inputText id="email" value="#{noviKorisnik.email}" required="true" /></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <h:commandButton value="Dodaj korisnika" 
+                                   action="#{noviKorisnik.dodajKorisnika}" />
+                </td>
+            </tr>
+        </table>
+        
+        <h:panelGroup rendered="#{not empty noviKorisnik.poruka}">
+            <div class="poruka #{noviKorisnik.porukaKlasa}">
+                <h:outputText value="#{noviKorisnik.poruka}" />
+            </div>
+        </h:panelGroup>
+    </h:form>
+</ui:define>
+<ui:define name="nav">
+</ui:define>
+</ui:composition>

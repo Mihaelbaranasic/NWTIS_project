@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!-- =========== FULL CONFIGURATION FILE ================================== -->
+
+<faces-config xmlns="https://jakarta.ee/xml/ns/jakartaee"
+              version="4.0">
+
+    <factory>
+        <exception-handler-factory>
+            edu.unizg.foi.nwtis.mbaranasi21.vjezba_08_dz_3.jf.konfig.UpravljanjeIznimkomFactory
+        </exception-handler-factory>
+    </factory>
+
+</faces-config>
+

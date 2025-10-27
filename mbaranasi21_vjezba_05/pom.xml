@@ -1,0 +1,89 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>edu.unizg.foi.nwtis.mbaranasi21</groupId>
+	<artifactId>mbaranasi21_vjezba_05</artifactId>
+	<version>1.0.0</version>
+	<packaging>pom</packaging>
+	<name>mbaranasi21_vjezba_05</name>
+	
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java.version>23</java.version>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
+		<maven.compiler.release>${java.version}</maven.compiler.release>
+
+		<!-- Plugin versions -->
+
+		<maven.clean>3.4.1</maven.clean>
+		<maven.resources>3.3.1</maven.resources>
+		<maven.compiler>3.14.0</maven.compiler>
+		<maven.surefire>3.5.2</maven.surefire>
+		<maven.javadoc>3.11.2</maven.javadoc>
+		<maven.dependency>3.8.1</maven.dependency>
+		<maven.assembly>3.7.1</maven.assembly>
+		<maven.jar>3.4.2</maven.jar>
+		<maven.install>3.1.4</maven.install>
+	</properties>
+
+	<dependencies>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>${maven.clean}</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>${maven.resources}</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven.compiler}</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>${maven.javadoc}</version>
+				<configuration>
+					<show>private</show>
+					<nohelp>true</nohelp>
+					<doctitle>NWTiS API ${project.name} ${project.version}</doctitle>
+					<windowtitle>NWTiS API for ${project.name}
+						${project.version}</windowtitle>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>${maven.jar}</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>lib/</classpathPrefix>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
+				<version>${maven.install}</version>
+			</plugin>
+		</plugins>
+	</build>
+	<modules>
+		<module>mbaranasi21_vjezba_05_lib_konfig</module>
+		<module>mbaranasi21_vjezba_05_lib_dnevnik</module>
+		<module>mbaranasi21_vjezba_05_app</module>
+	</modules>	
+</project>

@@ -1,0 +1,34 @@
+FROM amd64/eclipse-temurin:23 AS builder
+
+ENV HSQLDB_VERSION=2.7.4
+
+RUN  apt-get update && \
+	apt-get install -y wget unzip && \
+	wget -O /tmp/hsqldb.zip https://sourceforge.net/projects/hsqldb/files/hsqldb/hsqldb_$(echo ${HSQLDB_VERSION%.*} | tr '.' '_')/hsqldb-${HSQLDB_VERSION}.zip/download && \
+	unzip -o -j /tmp/hsqldb.zip "**/hsqldb.jar" "**/sqltool.jar" "**/hsqldb_lic.txt" -d /tmp/hsqldb
+
+FROM amd64/eclipse-temurin:23
+
+# Image Environment Variables
+ENV JAVA_VM_PARAMETERS= \
+    HSQLDB_TRACE=false \
+    HSQLDB_SILENT=true \
+    HSQLDB_REMOTE=true \
+	HSQLDB_PORT=9001 \
+    HSQLDB_DATABASE_NAME=nwtis_1 \
+    HSQLDB_DATABASE_ALIAS=nwtis_1
+
+RUN mkdir -p /opt/hsqldb && \
+	mkdir -p /opt/database && \
+    chmod -R 777 /opt/database && \
+    mkdir -p /docker-entrypoint-initdb.d 
+
+EXPOSE 9001
+WORKDIR /opt/hsqldb
+
+COPY --from=builder /tmp/hsqldb /opt/hsqldb
+COPY ./docker-entrypoint.hsql.sh /docker-entrypoint.sh
+RUN chmod -R 777 /docker-entrypoint.sh
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["hsqldb"]

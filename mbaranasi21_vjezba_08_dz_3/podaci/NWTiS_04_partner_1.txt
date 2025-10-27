@@ -1,0 +1,17 @@
+adresa=20.24.5.2
+brojCekaca=10
+gpsDuzina=16.34009
+gpsSirina=46.30803
+id=1
+kodZaKraj=BABECABACC
+kodZaAdminPartnera=CACEDACEAA
+kuhinja=MK
+kvotaNarudzbi=2
+mreznaVrata=8010
+mreznaVrataKrajPartner=8011
+mreznaVrataKraj=8000
+mreznaVrataRad=8002
+mreznaVrataRegistracija=8001
+naziv=FOLT 1 - Varaždin, Pavlinska 9
+pauzaDretve=100
+sigKod=da53e5e7

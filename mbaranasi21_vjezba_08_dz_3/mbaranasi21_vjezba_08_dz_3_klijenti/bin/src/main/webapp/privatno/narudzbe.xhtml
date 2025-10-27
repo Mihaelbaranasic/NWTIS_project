@@ -1,0 +1,140 @@
+<ui:composition template="../predlozak.xhtml"
+    xmlns:ui="jakarta.faces.facelets" xmlns:h="jakarta.faces.html"
+    xmlns:f="jakarta.faces.core">
+
+<ui:define name="title">Upravljanje narudžbama</ui:define>
+<ui:define name="content">
+    <h2>Upravljanje narudžbama</h2>
+    
+    <h:panelGroup rendered="#{prijavaKorisnika.partnerOdabran}">
+        <p><strong>Odabrani partner:</strong> #{prijavaKorisnika.odabraniPartner.naziv()}</p>
+        
+        <h:panelGroup rendered="#{!narudzbe.imaAktivnuNarudzbu}">
+            <h3>Nova narudžba</h3>
+            <h:form>
+                <h:commandButton value="Kreiraj novu narudžbu" 
+                               action="#{narudzbe.kreirajNovuNarudzbu}" />
+            </h:form>
+        </h:panelGroup>
+        
+        <h:panelGroup rendered="#{narudzbe.imaAktivnuNarudzbu}">
+            <h3>Aktivna narudžba</h3>
+            
+            <h:form style="margin-bottom: 20px;">
+                <h:commandButton value="Plati narudžbu" 
+                               action="#{narudzbe.platiNarudzbu}"
+                               styleClass="plati-btn" />
+            </h:form>
+            
+            <h:form style="margin-bottom: 15px;">
+                <h3>Dodaj jelo</h3>
+                <table>
+                    <tr>
+                        <td>Jelo ID:</td>
+                        <td><h:inputText value="#{narudzbe.jeloId}" /></td>
+                    </tr>
+                    <tr>
+                        <td>Količina:</td>
+                        <td><h:inputText value="#{narudzbe.jeloKolicina}" /></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <h:commandButton value="Dodaj jelo" 
+                                           action="#{narudzbe.dodajJelo}" />
+                        </td>
+                    </tr>
+                </table>
+            </h:form>
+            
+            <h:form style="margin-bottom: 15px;">
+                <h3>Dodaj piće</h3>
+                <table>
+                    <tr>
+                        <td>Piće ID:</td>
+                        <td><h:inputText value="#{narudzbe.piceId}" /></td>
+                    </tr>
+                    <tr>
+                        <td>Količina:</td>
+                        <td><h:inputText value="#{narudzbe.piceKolicina}" /></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <h:commandButton value="Dodaj piće" 
+                                           action="#{narudzbe.dodajPice}" />
+                        </td>
+                    </tr>
+                </table>
+            </h:form>
+            
+            <h:form>
+                <h:commandButton value="Osvježi pregled narudžbe" 
+                               action="#{narudzbe.osvjeziNarudzbu}" />
+            </h:form>
+            
+            <h:panelGroup rendered="#{not empty narudzbe.narudzbaStavke}">
+                <h3>Stavke narudžbe</h3>
+                <div style="display: flex;">
+                    <!-- Jela -->
+                    <div style="width: 50%; margin-right: 20px;">
+                        <h4>Jela</h4>
+                        <h:dataTable value="#{narudzbe.jelaStavke}" var="stavka" 
+                                     styleClass="table">
+                            <h:column>
+                                <f:facet name="header">Naziv</f:facet>
+                                #{stavka.naziv}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">Količina</f:facet>
+                                #{stavka.kolicina}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">Cijena</f:facet>
+                                #{stavka.cijena}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">Iznos</f:facet>
+                                #{stavka.iznos}
+                            </h:column>
+                        </h:dataTable>
+                    </div>
+                    
+                    <!-- Pića -->
+                    <div style="width: 50%;">
+                        <h4>Pića</h4>
+                        <h:dataTable value="#{narudzbe.picaStavke}" var="stavka" 
+                                     styleClass="table">
+                            <h:column>
+                                <f:facet name="header">Naziv</f:facet>
+                                #{stavka.naziv}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">Količina</f:facet>
+                                #{stavka.kolicina}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">Cijena</f:facet>
+                                #{stavka.cijena}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">Iznos</f:facet>
+                                #{stavka.iznos}
+                            </h:column>
+                        </h:dataTable>
+                    </div>
+                </div>
+            </h:panelGroup>
+        </h:panelGroup>
+        
+        <h:panelGroup rendered="#{not empty narudzbe.poruka}">
+            <div class="poruka #{narudzbe.porukaKlasa}">
+                <h:outputText value="#{narudzbe.poruka}" />
+            </div>
+        </h:panelGroup>
+    </h:panelGroup>
+    
+    <h:outputText value="Morate prvo odabrati partnera." 
+                  rendered="#{!prijavaKorisnika.partnerOdabran}" />
+</ui:define>
+<ui:define name="nav">
+</ui:define>
+</ui:composition>

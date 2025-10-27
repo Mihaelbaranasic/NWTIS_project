@@ -1,0 +1,59 @@
+<ui:composition template="predlozak.xhtml"
+    xmlns:ui="jakarta.faces.facelets" xmlns:h="jakarta.faces.html"
+    xmlns:f="jakarta.faces.core">
+
+<ui:define name="title">Detalji partnera</ui:define>
+<ui:define name="content">
+    <f:metadata>
+        <f:viewParam name="id" value="#{partnerDetalji.partnerId}" />
+        <f:viewAction action="#{partnerDetalji.ucitajPartnera}" />
+    </f:metadata>
+    
+    <h2>Detalji partnera</h2>
+    
+    <h:panelGroup rendered="#{not empty partnerDetalji.partner}">
+        <table class="detalji">
+            <tr>
+                <td><strong>ID:</strong></td>
+                <td>#{partnerDetalji.partner.id()}</td>
+            </tr>
+            <tr>
+                <td><strong>Naziv:</strong></td>
+                <td>#{partnerDetalji.partner.naziv()}</td>
+            </tr>
+            <tr>
+                <td><strong>Vrsta kuhinje:</strong></td>
+                <td>#{partnerDetalji.partner.vrstaKuhinje()}</td>
+            </tr>
+            <tr>
+                <td><strong>Adresa:</strong></td>
+                <td>#{partnerDetalji.partner.adresa()}</td>
+            </tr>
+            <tr>
+                <td><strong>Mrežna vrata:</strong></td>
+                <td>#{partnerDetalji.partner.mreznaVrata()}</td>
+            </tr>
+            <tr>
+                <td><strong>Mrežna vrata kraj:</strong></td>
+                <td>#{partnerDetalji.partner.mreznaVrataKraj()}</td>
+            </tr>
+            <tr>
+                <td><strong>GPS širina:</strong></td>
+                <td>#{partnerDetalji.partner.gpsSirina()}</td>
+            </tr>
+            <tr>
+                <td><strong>GPS dužina:</strong></td>
+                <td>#{partnerDetalji.partner.gpsDuzina()}</td>
+            </tr>
+        </table>
+    </h:panelGroup>
+    
+    <h:outputText value="Partner nije pronađen." 
+                  rendered="#{empty partnerDetalji.partner}" />
+    
+    <br/><br/>
+    <h:link outcome="partneri.xhtml" value="Povratak na popis partnera" />
+</ui:define>
+<ui:define name="nav">
+</ui:define>
+</ui:composition>

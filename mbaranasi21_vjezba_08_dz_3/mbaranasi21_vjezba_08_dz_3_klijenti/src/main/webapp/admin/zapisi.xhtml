@@ -1,0 +1,73 @@
+<ui:composition template="../predlozak.xhtml"
+    xmlns:ui="jakarta.faces.facelets" xmlns:h="jakarta.faces.html"
+    xmlns:f="jakarta.faces.core">
+
+<ui:define name="title">Pregled rada</ui:define>
+<ui:define name="content">
+    <h2>Pregled rada korisnika</h2>
+    
+    <h:form>
+        <h3>Odabir kriterija</h3>
+        <table class="obrazac">
+            <tr>
+                <td><h:outputLabel for="korisnik" value="Korisnik:" /></td>
+                <td>
+                    <h:selectOneMenu id="korisnik" value="#{zapisi.odabraniKorisnik}">
+                        <f:selectItem itemValue="" itemLabel="-- Odaberite korisnika --" />
+                        <f:selectItems value="#{zapisi.korisnici}" var="k"
+                                      itemLabel="#{k.ime()} #{k.prezime()} (#{k.korisnik()})" 
+                                      itemValue="#{k.korisnik()}" />
+                    </h:selectOneMenu>
+                </td>
+            </tr>
+            <tr>
+                <td><h:outputLabel for="datumOd" value="Datum od:" /></td>
+                <td><h:inputText id="datumOd" value="#{zapisi.datumOd}" 
+                                placeholder="yyyy-MM-dd" /></td>
+            </tr>
+            <tr>
+                <td><h:outputLabel for="datumDo" value="Datum do:" /></td>
+                <td><h:inputText id="datumDo" value="#{zapisi.datumDo}" 
+                                placeholder="yyyy-MM-dd" /></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <h:commandButton value="Pretraži zapise" 
+                                   action="#{zapisi.pretraziZapise}" />
+                </td>
+            </tr>
+        </table>
+    </h:form>
+    
+    <h:dataTable value="#{zapisi.zapisi}" var="zapis" 
+                 styleClass="table" rendered="#{not empty zapisi.zapisi}">
+        <h:column>
+            <f:facet name="header">ID</f:facet>
+            #{zapis.id()}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Korisnik</f:facet>
+            #{zapis.korisnik()}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Aktivnost</f:facet>
+            #{zapis.aktivnost()}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Vrijeme</f:facet>
+            <h:outputText value="#{zapisi.formatirajVrijeme(zapis.vrijeme())}" />
+        </h:column>
+    </h:dataTable>
+    
+    <h:outputText value="Nema zapisa za odabrane kriterije." 
+                  rendered="#{empty zapisi.zapisi and zapisi.pretrazeno}" />
+                  
+    <h:panelGroup rendered="#{not empty zapisi.poruka}">
+        <div class="poruka #{zapisi.porukaKlasa}">
+            <h:outputText value="#{zapisi.poruka}" />
+        </div>
+    </h:panelGroup>
+</ui:define>
+<ui:define name="nav">
+</ui:define>
+</ui:composition>
